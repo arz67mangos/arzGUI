@@ -21,10 +21,12 @@ namespace AutoActions
         private bool _globalAutoActions = true;
         private bool _createLogFile = true;
         private bool _autoStart = false;
-        private bool _autoUpdate = true;
+        // Off by default in this fork: the updater still points at Codectory/AutoActions and would
+        // replace this build with the upstream release (see Phase 5 in AUTOACTIONS_PLAN.md).
+        private bool _autoUpdate = false;
         private bool _startMinimizedToTray;
         private bool _closeToTray;
-        private bool _checkForNewVersion = true;
+        private bool _checkForNewVersion = false;
         private bool _hideSplashScreenOnStartup = false;
         private bool _hideSplashScreenOnAutoUpdate = false;
 
