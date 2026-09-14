@@ -17,7 +17,8 @@ works through that plan in phases:
 | Phase | Status | What |
 |---|---|---|
 | 1 | done | Process watcher can no longer crash the app; unhandled-exception handlers write `AutoActions.crash.log`; logging on by default; `ChangeDisplaySettingsEx` results logged instead of discarded; native `HDRController.dll` rebuilt from source (upstream's prebuilt one was a stub); upstream auto-update off by default |
-| 2 | planned | Snapshot display state on app start and restore it on close, with verify-and-retry |
+| 1b | done | **The restore bug.** Switching back from a GPU-scaled custom resolution failed with `BadMode` because the request inherited the custom mode's scaling value. Resolution + refresh rate are now one verified mode change with retries |
+| 2 | planned | Snapshot display state on app start and restore it on close automatically (no hand-written Closed action) |
 | 3 | planned | Built-in microphone-monitoring (listen-to-this-device) control, manual and per-profile |
 | 4 | planned | UI refresh and a real dark mode |
 | 5 | planned | Rebrand and detach from the upstream auto-updater |
