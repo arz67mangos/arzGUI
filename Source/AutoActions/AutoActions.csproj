@@ -294,7 +294,6 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CheckUpdateResult.cs" />
     <Compile Include="Globals.cs" />
     <Compile Include="LoopManager.cs" />
     <Compile Include="MicMonitoringStatus.cs" />
@@ -336,9 +335,6 @@
     <Compile Include="Profiles\Actions\ApplicationAction.cs" />
     <Compile Include="Profiles\Actions\DisplayAction.cs" />
     <Compile Include="Info\AutoActionsInfo.cs" />
-    <Compile Include="Info\Github\GitHubData.cs" />
-    <Compile Include="Info\Github\GitHubIntegration.cs" />
-    <Compile Include="Info\ReleaseEntry.cs" />
     <Compile Include="Profiles\Actions\IProfileAction.cs" />
     <Compile Include="Profiles\Actions\ListOfProfileActions.cs" />
     <Compile Include="Profiles\Actions\ProfileActionAdder.cs" />

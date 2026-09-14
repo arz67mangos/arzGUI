@@ -31,7 +31,8 @@ namespace AutoActions
         private bool _startMinimizedToTray;
         private bool _closeToTray;
         private bool _checkForNewVersion = false;
-        private bool _hideSplashScreenOnStartup = false;
+        // The splash bitmap still carries the upstream branding; off by default in the fork.
+        private bool _hideSplashScreenOnStartup = true;
         private bool _hideSplashScreenOnAutoUpdate = false;
 
         readonly object _audioDevicesLock = new object();

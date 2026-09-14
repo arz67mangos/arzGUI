@@ -142,7 +142,7 @@
     <value>All displays</value>
   </data>
   <data name="AlreadyRunning" xml:space="preserve">
-    <value>AutoActions is already running.</value>
+    <value>ArzActions is already running.</value>
   </data>
   <data name="AppClosedActions" xml:space="preserve">
     <value>Application closed actions</value>
@@ -175,7 +175,7 @@
     <value>Audio</value>
   </data>
   <data name="AutoActions" xml:space="preserve">
-    <value>AutoActions</value>
+    <value>ArzActions</value>
   </data>
   <data name="AutoActionsToolTip" xml:space="preserve">
     <value>Enable HDR on this monitor, based on the applications</value>
@@ -1143,7 +1143,7 @@ Public License instead of this License.  But first, please read
     <value>Status</value>
   </data>
   <data name="Updating" xml:space="preserve">
-    <value>Updating AutoActions...</value>
+    <value>Updating ArzActions...</value>
   </data>
   <data name="Version" xml:space="preserve">
     <value>Version</value>
@@ -1207,5 +1207,14 @@ Public License instead of this License.  But first, please read
   </data>
   <data name="ThemeDark" xml:space="preserve">
     <value>Dark</value>
+  </data>
+  <data name="AboutBasedOn" xml:space="preserve">
+    <value>A personal fork of AutoActions by Codectory, licensed under the GNU GPL v3. Display, audio and microphone-monitoring automation per application.</value>
+  </data>
+  <data name="UpstreamProject" xml:space="preserve">
+    <value>Original project</value>
+  </data>
+  <data name="ForkRepository" xml:space="preserve">
+    <value>This fork</value>
   </data>
 </root>

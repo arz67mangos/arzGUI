@@ -1,7 +1,6 @@
 ﻿using AutoActions.Audio;
 using AutoActions.Displays;
 using AutoActions.Info;
-using AutoActions.Info.Github;
 using AutoActions.Profiles;
 using AutoActions.Profiles.Actions;
 using AutoActions.ProjectResources;
@@ -71,7 +70,6 @@ namespace AutoActions
         public RelayCommand LoadingCommand { get; private set; }
         public RelayCommand ClosingCommand { get; private set; }
         public RelayCommand ShutdownCommand { get; private set; }
-        public RelayCommand BuyBeerCommand { get; private set; }
 
         public RelayCommand<ApplicationProfileAssignment> StartApplicationCommand { get; private set; }
 
@@ -151,31 +149,7 @@ namespace AutoActions
                     InitializeSettings();
               
                     Globals.Logs.Add("Initializing...", false);
-                    Task.Run(() =>
-                    {
-                        if (Settings.CheckForNewVersion)
-                        {
-
-                            CheckUpdateResult result = Globals.Instance.CheckUpdate();
-                            if (result.UpdateAvailable && Settings.AutoUpdate)
-                            {
-                            Application.Current.Dispatcher.Invoke(() =>
-                            {
-                                CodectoryCore.UI.Wpf.SplashScreen updateScreen = new CodectoryCore.UI.Wpf.SplashScreen();
-                                updateScreen.SetImageFromBitmap(ProjectLocales.SplashScreen);
-                                updateScreen.Text = ProjectLocales.Updating;
-                                if (!Settings.HideSplashScreenOnAutoUpdate)
-                                {
-                                    updateScreen.Show();
-                                    System.Threading.Thread.Sleep(1000);
-                                }
-                            });
-
-                                Globals.Instance.AutoUpdate(result.GitHubData);
-                            }
-                        }
-                    });
-            
+                    // No update check: the upstream updater (Codectory/AutoActions releases) was removed in this fork.
                     InitializeDisplayManager();
                     InitializeAudioManager();
                     InitializeTrayMenuHelper();
@@ -377,7 +351,6 @@ namespace AutoActions
             ShowInfoCommand = new RelayCommand(Globals.Instance.ShowInfo);
             ShowLogsCommand = new RelayCommand(ShowLogs);
 
-            BuyBeerCommand = new RelayCommand(BuyBeer);
         }
 
 
@@ -416,6 +389,7 @@ namespace AutoActions
 
 
             Settings.PropertyChanged += Settings_PropertyChanged;
+            MigrateAutoStartEntry();
 
             ApplicationProfileAssigments_CollectionChanged(Settings.ApplicationProfileAssignments, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, Settings.ApplicationProfileAssignments.ToList()));
             ApplicationProfiles_CollectionChanged(Settings.ApplicationProfiles, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, Settings.ApplicationProfiles.ToList()));
@@ -852,9 +826,26 @@ namespace AutoActions
 
 
 
-        private void BuyBeer()
+        /// <summary>
+        /// The Run-key entry is named after the product. Builds before the rename registered it as
+        /// "AutoActions"; re-register under the current name once so autostart keeps working and the
+        /// stale entry does not launch a second (mutex-blocked) instance.
+        /// </summary>
+        private void MigrateAutoStartEntry()
         {
-            Process.Start(new ProcessStartInfo((string)Application.Current.Resources["DonateLink"]));
+            const string previousName = "AutoActions";
+            if (!Settings.AutoStart || ProjectLocales.AutoActions == previousName)
+                return;
+            try
+            {
+                string location = System.Reflection.Assembly.GetEntryAssembly().Location;
+                AutoStart.Deactivate(previousName, location);
+                AutoStart.Activate(ProjectLocales.AutoActions, location);
+            }
+            catch (Exception ex)
+            {
+                Globals.Logs.AddException(ex);
+            }
         }
     }
 }

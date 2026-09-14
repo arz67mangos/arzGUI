@@ -1,141 +1,43 @@
-﻿using CodectoryCore.UI.Wpf;
-using AutoActions.Info.Github;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using CodectoryCore;
 using AutoActions.ProjectResources;
+using CodectoryCore;
+using CodectoryCore.UI.Wpf;
+using System;
+using System.Diagnostics;
+using System.Windows;
 
 namespace AutoActions.Info
 {
+    /// <summary>
+    /// The About dialog: product, version, and the credit to the upstream project. The online
+    /// section (newest release, changelog, download) went with the upstream updater.
+    /// </summary>
     public class AutoActionsInfo : DialogViewModelBase
     {
-        private GitHubData _gitHubData = null;
+        public string ProductName => ProjectLocales.AutoActions;
 
-        private string _applicationTitle;
-        public string ApplicationTitle
-        {
-            get { return _applicationTitle; }
-            set { _applicationTitle = value; OnPropertyChanged(); OnPropertyChanged(nameof(NewUpdateAvailabe)); }
-        }
+        public Version Version { get; private set; }
 
-        private Version _version;
-
-        public Version Version
-        {
-            get { return _version; }
-            set { _version = value; OnPropertyChanged(); }
-        }
-
-        private Version _newestVersion;
-
-        public Version NewestVersion
-        {
-            get { return _newestVersion; }
-            set { _newestVersion = value; OnPropertyChanged(); OnPropertyChanged(nameof(NewUpdateAvailabe)); }
-        }
-
-        private string _changelog;
-
-        public string ChangeLog
-        {
-            get { return _changelog; }
-            set { _changelog = value; OnPropertyChanged(); }
-        }
-
-        private string _downloadLink;
-
-        public string DownloadLink
-        {
-            get { return _downloadLink; }
-            set { _downloadLink = value; OnPropertyChanged(); }
-        }
-
-        private DateTime _lastReleaseDate;
-
-        public DateTime LastReleaseDate
-        {
-            get { return _lastReleaseDate; }
-            set { _lastReleaseDate = value; OnPropertyChanged(); }
-        }
-
-
-        public bool NewUpdateAvailabe
-        {
-            get 
-            {
-                return Version.CompareTo(NewestVersion) < 0;
-            }
-        }
-
-
-
-        private Image _logo;
-
-        public Image Logo
-        {
-            get { return _logo; }
-            set { _logo = value; }
-        }
-
-        public RelayCommand LoadedCommand { get; private set; }
-        public RelayCommand BuyBeerCommand { get; private set; }
-        public RelayCommand OpenGitHubCommand { get; private set; }
-
-        public RelayCommand DownloadCommand { get; private set; }
-
-
+        public RelayCommand OpenUpstreamCommand { get; private set; }
+        public RelayCommand OpenForkCommand { get; private set; }
 
         public AutoActionsInfo()
         {
-            CreateRelayCommands();
             Version = VersionExtension.ApplicationVersion(System.Reflection.Assembly.GetExecutingAssembly());
             Title = ProjectLocales.Info;
+            OpenUpstreamCommand = new RelayCommand(() => OpenLink("UpstreamRepoLink"));
+            OpenForkCommand = new RelayCommand(() => OpenLink("ForkRepoLink"));
         }
 
-        private void CreateRelayCommands()
+        private static void OpenLink(string resourceKey)
         {
-            LoadedCommand = new RelayCommand(LoadingGitHubData);
-            BuyBeerCommand = new RelayCommand(BuyBeer);
-            OpenGitHubCommand = new RelayCommand(OpenGitHub);
-            DownloadCommand = new RelayCommand(OpenDownloadLink);
+            try
+            {
+                Process.Start(new ProcessStartInfo((string)Application.Current.Resources[resourceKey]) { UseShellExecute = true });
+            }
+            catch (Exception ex)
+            {
+                Globals.Logs.AddException(ex);
+            }
         }
-
-        public AutoActionsInfo(GitHubData gitHubData) : this()
-        {
-            _gitHubData = gitHubData;
-
-        }
-
-        private void LoadingGitHubData()
-        {
-            if (_gitHubData == null)
-                _gitHubData = GitHubIntegration.GetGitHubData();
-            NewestVersion = _gitHubData.CurrentVersion;
-            ChangeLog = _gitHubData.ChangeLog;
-            LastReleaseDate = _gitHubData.LastReleaseDate;
-            DownloadLink = _gitHubData.DownloadLink;
-        }
-
-        private void BuyBeer()
-        {
-            Process.Start(new ProcessStartInfo((string)Application.Current.Resources["DonateLink"]));
-        }
-
-        private void OpenGitHub()
-        {
-            Process.Start(new ProcessStartInfo((string)Application.Current.Resources["GitHubRepoLink"]));
-        }
-
-        private void OpenDownloadLink()
-        {
-            Process.Start(new ProcessStartInfo(DownloadLink));
-        }
-
     }
 }

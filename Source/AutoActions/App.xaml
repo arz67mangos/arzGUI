@@ -23,8 +23,8 @@
                 <ResourceDictionary Source="Controls\AppResources.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
-            <system:String x:Key="DonateLink">https://www.paypal.com/donate/?hosted_button_id=JXDUAZC7DX7U2</system:String>
-            <system:String x:Key="GitHubRepoLink">https://github.com/Codectory/AutoActions</system:String>
+            <system:String x:Key="UpstreamRepoLink">https://github.com/Codectory/AutoActions</system:String>
+            <system:String x:Key="ForkRepoLink">https://github.com/arz67mangos/arz-AutoActions-edit</system:String>
 
             <!-- Tabs default to the sidebar look; dialogs that still use a plain TabControl get it too. -->
             <Style x:Key="DefaultTabHeader" TargetType="TabItem" BasedOn="{StaticResource SidebarTabItem}"/>

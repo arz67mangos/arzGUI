@@ -1329,5 +1329,32 @@ namespace AutoActions.ProjectResources {
                 return ResourceManager.GetString("ThemeDark", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die A personal fork of AutoActions by Codectory ... ähnelt.
+        /// </summary>
+        public static string AboutBasedOn {
+            get {
+                return ResourceManager.GetString("AboutBasedOn", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Original project ähnelt.
+        /// </summary>
+        public static string UpstreamProject {
+            get {
+                return ResourceManager.GetString("UpstreamProject", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die This fork ähnelt.
+        /// </summary>
+        public static string ForkRepository {
+            get {
+                return ResourceManager.GetString("ForkRepository", resourceCulture);
+            }
+        }
     }
 }

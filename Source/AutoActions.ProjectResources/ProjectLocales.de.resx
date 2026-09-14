@@ -136,7 +136,7 @@
     <value>Alle Displays</value>
   </data>
   <data name="AlreadyRunning" xml:space="preserve">
-    <value>AutoActions wurde bereits gestartet.</value>
+    <value>ArzActions wurde bereits gestartet.</value>
   </data>
   <data name="AppClosedActions" xml:space="preserve">
     <value>"Anwendung beendet"-Aktionen</value>
@@ -169,7 +169,7 @@
     <value>Audio</value>
   </data>
   <data name="AutoActions" xml:space="preserve">
-    <value>AutoActions</value>
+    <value>ArzActions</value>
   </data>
   <data name="AutoActionsToolTip" xml:space="preserve">
     <value>Aktivere HDR für diesen Monitor, basierend auf der Anwendung.</value>
@@ -427,7 +427,7 @@
     <value>Status</value>
   </data>
   <data name="Updating" xml:space="preserve">
-    <value>Aktualisiere AutoActions...</value>
+    <value>Aktualisiere ArzActions...</value>
   </data>
   <data name="Version" xml:space="preserve">
     <value>Version</value>
@@ -491,5 +491,14 @@
   </data>
   <data name="ThemeDark" xml:space="preserve">
     <value>Dunkel</value>
+  </data>
+  <data name="AboutBasedOn" xml:space="preserve">
+    <value>Ein persönlicher Fork von AutoActions von Codectory, lizenziert unter der GNU GPL v3. Anzeige-, Audio- und Mikrofon-Mithör-Automatisierung pro Anwendung.</value>
+  </data>
+  <data name="UpstreamProject" xml:space="preserve">
+    <value>Originalprojekt</value>
+  </data>
+  <data name="ForkRepository" xml:space="preserve">
+    <value>Dieser Fork</value>
   </data>
 </root>
