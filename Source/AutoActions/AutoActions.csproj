@@ -301,7 +301,8 @@
     <Compile Include="ProfileActionShortcut.cs" />
     <Compile Include="Profiles\Actions\CloseProgramAction.cs" />
     <Compile Include="Profiles\Actions\ReferenceProfileAction.cs" />
-    <Compile Include="Theming\ThemeResourceDirectory.cs" />
+    <Compile Include="Theming\Sidebar.cs" />
+    <Compile Include="Theming\ThemeManager.cs" />
     <Compile Include="Theming\Theme.cs" />
     <Compile Include="UserAppSettings.cs" />
     <Compile Include="UWP\WWAHostHandler.cs" />
@@ -403,7 +404,11 @@
       <SubType>Designer</SubType>
       <Generator>XamlIntelliSenseFileGenerator</Generator>
     </Page>
-    <Page Include="Theming\LightColors.xaml">
+    <Page Include="Theming\0_DarkColors.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Theming\0_LightColors.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

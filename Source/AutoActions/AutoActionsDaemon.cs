@@ -610,6 +610,8 @@ namespace AutoActions
                         else
                             AutoStart.Deactivate(ProjectLocales.AutoActions, System.Reflection.Assembly.GetEntryAssembly().Location);
                     }
+                    else if (e.PropertyName.Equals(nameof(Settings.Theme)))
+                        AutoActions.Theming.ThemeManager.Apply(Settings.Theme);
                     else if (e.PropertyName.Equals(nameof(Settings.MicMonitoringDeviceId)) || e.PropertyName.Equals(nameof(Settings.MicMonitoringLineId)))
                     {
                         if (MicMonitoringStatus != null)

@@ -31,6 +31,6 @@
         <Slider Grid.Row="1" Grid.Column="2" Margin="5" MinWidth="200" Minimum="0" Maximum="100" TickFrequency="1" IsSnapToTickEnabled="True" Value="{Binding Volume, Mode=TwoWay}" IsEnabled="{Binding ElementName=VolumeCheckBox, Path=IsChecked}" Visibility="{Binding ChangeVolume, Converter={StaticResource VisibilityBooleanConverter}}" VerticalAlignment="Center"/>
         <TextBlock Style="{StaticResource DefaultTextBlock}" Grid.Row="1" Grid.Column="3" Margin="5" MinWidth="40" TextAlignment="Right" Text="{Binding Volume, StringFormat={}{0:0}%}" Visibility="{Binding ChangeVolume, Converter={StaticResource VisibilityBooleanConverter}}" VerticalAlignment="Center"/>
 
-        <TextBlock Style="{StaticResource DefaultTextBlock}" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="4" Margin="5,10,5,5" Foreground="Gray" TextWrapping="Wrap" Text="{x:Static pres:ProjectLocales.MicMonitoringSettingsHint}"/>
+        <TextBlock Style="{StaticResource DefaultTextBlock}" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="4" Margin="5,10,5,5" Foreground="{DynamicResource TextSecondaryBrush}" TextWrapping="Wrap" Text="{x:Static pres:ProjectLocales.MicMonitoringSettingsHint}"/>
     </Grid>
 </UserControl>

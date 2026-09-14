@@ -168,8 +168,8 @@
                 <ColumnDefinition/>
 
             </Grid.ColumnDefinitions>
-            <Button Grid.Column="1"  Width="30" FontSize="20" Command="{Binding AddProfileCommand}" Content="+" Margin="10,5,5,10" Height="Auto"  />
-            <Button Grid.Column="2" Width="30" FontSize="20" Command="{Binding RemoveProfileCommand}" CommandParameter="{Binding ElementName=ProfileList, Path=SelectedItem}"  Height="Auto" Content="-" IsEnabled="{Binding ElementName=ProfileList, Path=SelectedItem, Converter={StaticResource IsNotNullConverter}}"   Margin="5,5,5,10" />
+            <Button Grid.Column="1"  Style="{StaticResource IconButton}" Command="{Binding AddProfileCommand}" Content="+" Margin="10,5,5,10" Height="Auto"  />
+            <Button Grid.Column="2" Style="{StaticResource IconButton}" Command="{Binding RemoveProfileCommand}" CommandParameter="{Binding ElementName=ProfileList, Path=SelectedItem}"  Height="Auto" Content="-" IsEnabled="{Binding ElementName=ProfileList, Path=SelectedItem, Converter={StaticResource IsNotNullConverter}}"   Margin="5,5,5,10" />
         </Grid>
 
     </Grid>

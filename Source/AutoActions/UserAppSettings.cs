@@ -2,6 +2,7 @@
 using AutoActions.Audio;
 using AutoActions.Profiles;
 using AutoActions.Profiles.Actions;
+using AutoActions.Theming;
 using CodectoryCore;
 using CodectoryCore.UI.Wpf;
 using Newtonsoft.Json;
@@ -77,6 +78,12 @@ namespace AutoActions
 
         [JsonProperty]
         public bool CheckForNewVersion { get => _checkForNewVersion; set { _checkForNewVersion = value; OnPropertyChanged(); } }
+
+        private ThemeSetting _theme = ThemeSetting.System;
+
+        /// <summary>System follows Windows' app mode; applied live by ThemeManager. Missing in old settings files -> System.</summary>
+        [JsonProperty]
+        public ThemeSetting Theme { get => _theme; set { _theme = value; OnPropertyChanged(); } }
 
         private string _micMonitoringDeviceId = string.Empty;
         private string _micMonitoringLineId = string.Empty;

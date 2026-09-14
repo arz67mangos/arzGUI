@@ -19,7 +19,7 @@
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Border Width="50" Grid.Column="0"  CornerRadius="{StaticResource DefaultCornerRadius}" Margin="5" Background="{StaticResource IconBackgroundBrush}">
+                <Border Width="50" Grid.Column="0"  CornerRadius="{StaticResource DefaultCornerRadius}" Margin="5" Background="{DynamicResource IconBackgroundBrush}">
                     <Border  Height="49" Width="49"  CornerRadius="{StaticResource DefaultCornerRadius}" Margin="1">
                         <Border.Background>
                             <ImageBrush Stretch="Fill" ImageSource="{Binding Icon, Converter={StaticResource BitmapToBitmapImageConverter}}"/>

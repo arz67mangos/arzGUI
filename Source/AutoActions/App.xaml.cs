@@ -51,6 +51,8 @@ namespace AutoActions
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
+            ThemeManager.Apply(Globals.Instance.Settings.Theme);
+            ThemeManager.FollowSystem(() => Globals.Instance.Settings.Theme);
             Views.AutoActionsMainView mainView = new Views.AutoActionsMainView();
             if (!Globals.Instance.Settings.StartMinimizedToTray)
                 mainView.Show();
