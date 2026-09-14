@@ -19,12 +19,30 @@ works through that plan in phases:
 | 1 | done | Process watcher can no longer crash the app; unhandled-exception handlers write `AutoActions.crash.log`; logging on by default; `ChangeDisplaySettingsEx` results logged instead of discarded; native `HDRController.dll` rebuilt from source (upstream's prebuilt one was a stub); upstream auto-update off by default |
 | 1b | done | **The restore bug.** Switching back from a GPU-scaled custom resolution failed with `BadMode` because the request inherited the custom mode's scaling value. Resolution + refresh rate are now one verified mode change with retries |
 | 2 | planned | Snapshot display state on app start and restore it on close automatically (no hand-written Closed action) |
-| 3 | planned | Built-in microphone-monitoring (listen-to-this-device) control, manual and per-profile |
+| 3 | done | Built-in microphone-monitoring (listen-to-this-device) control: a card on the Status tab and a tray entry for manual use, a **Microphone monitoring** profile action for per-game use, device/line pickers in Settings. State a Started action changes is put back on Closed automatically |
 | 4 | planned | UI refresh and a real dark mode |
 | 5 | planned | Rebrand and detach from the upstream auto-updater |
 
 Everything upstream does (see its README for the feature list and screenshots) still works the
 same way; settings files are compatible.
+
+## Microphone monitoring
+
+Ported from a small companion app so only one tray app has to run. Windows' "Listen to this device"
+is a mute and a volume on the *Microphone* line of a playback device (Speakers Properties → Levels);
+this fork controls exactly those through the Core Audio topology.
+
+- **Settings → Microphone monitoring**: pick the playback device (or leave *Default playback
+  device*) and the input line. Lines are the device's physical inputs that actually have a mute or
+  volume control, so it works on hardware whose line isn't called "Microphone"; left empty, the
+  line the driver tags as a microphone is used.
+- **Status tab**: toggle and 0–100 slider, always showing the live hardware state. The same toggle is
+  in the tray menu.
+- **Profiles**: add a *Microphone monitoring* action to turn it on/off and/or set the level per
+  application event. If a profile's Started actions touch it, the previous state is restored on
+  Closed unless a Closed action sets it explicitly.
+
+On hardware with no controllable line everything degrades to a log line and disabled controls.
 
 ## Diagnostics
 
