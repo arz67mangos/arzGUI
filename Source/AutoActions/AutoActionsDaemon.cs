@@ -223,11 +223,11 @@ namespace AutoActions
         {
             lock (_accessLock)
             {
-                ApplicationProfileAssignment assignment = Settings.ApplicationProfileAssignments.First(a => a.Application.ApplicationFilePath.Equals(application.ApplicationFilePath));
+                ApplicationProfileAssignment assignment = Settings.ApplicationProfileAssignments.FirstOrDefault(a => a.Application.ApplicationFilePath.Equals(application.ApplicationFilePath));
 
                 if (assignment == null)
                 {
-                    Globals.Logs.Add($"No assignmet for {application.ApplicationFilePath}.", false);
+                    Globals.Logs.Add($"[{application.ApplicationName}] {changedType}: no profile assignment for {application.ApplicationFilePath}.", false);
                     CurrentProfile = null;
                     return;
                 }
@@ -235,8 +235,11 @@ namespace AutoActions
 
 
                 if (profile == null)
+                {
+                    Globals.Logs.Add($"[{application.ApplicationName}] {changedType}: assignment has no profile.", false);
                     return;
-                bool profileChanged = Equals(profile, CurrentProfile);
+                }
+                bool profileChanged = !Equals(profile, CurrentProfile);
 
                 CurrentProfile = profile;
                 if (profileChanged)
@@ -257,6 +260,7 @@ namespace AutoActions
                         actions = profile.ApplicationLostFocus.ToList();
                         break;
                 }
+                Globals.Logs.Add($"[{application.ApplicationName}] {changedType}: profile '{profile.Name}', {actions.Count} action(s) to run.", false);
                 if (actions.Count > 0)
                     App.Current.Dispatcher.Invoke(() => LastActions.Clear());
                 foreach (var action in actions)
@@ -296,6 +300,7 @@ namespace AutoActions
             DisplayManagerHandler.Instance.LoadKnownDisplays(Settings.Displays.ToList());
             DisplayManagerHandler.Instance.HDRIsActiveChanged += MonitorManager_HDRIsActiveChanged;
             DisplayManagerHandler.Instance.ExceptionThrown += (o, ex) => Globals.Logs.AddException(ex);
+            DisplayManagerHandler.Instance.NewLog += (o, message) => Globals.Logs.Add(message, false);
             DisplayManagerHandler.Instance.SelectedHDR = !Settings.GlobalAutoActions;
             HDRIsActive = DisplayManagerHandler.Instance.GlobalHDRIsActive;
         }

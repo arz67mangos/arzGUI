@@ -98,14 +98,14 @@ namespace AutoActions.Displays
             HDRState= HDRController.GetHDRState(UID);
         }
 
-        public void SetResolution(Size resolution)
+        public DISP_CHANGE SetResolution(Size resolution)
         {
-            DisplayManagerHandler.Instance.SetResolution(this, resolution);
+            return DisplayManagerHandler.Instance.SetResolution(this, resolution);
         }
 
-        public void SetRefreshRate(int refreshRate)
+        public DISP_CHANGE SetRefreshRate(int refreshRate)
         {
-            DisplayManagerHandler.Instance.SetRefreshRate(this, refreshRate);
+            return DisplayManagerHandler.Instance.SetRefreshRate(this, refreshRate);
         }
 
         public void SetColorDepth(ColorDepth colorDepth)

@@ -125,7 +125,7 @@ namespace AutoActions.Displays
         long y;
     }
 
-    enum DISP_CHANGE : int
+    public enum DISP_CHANGE : int
     {
         Successful = 0,
         Restart = 1,

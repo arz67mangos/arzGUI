@@ -1,4 +1,4 @@
-﻿using AutoActions.Threading;
+using AutoActions.Threading;
 using AutoActions.UWP;
 using System;
 using System.Collections.Generic;
@@ -43,6 +43,11 @@ namespace AutoActions
         //public event EventHandler FocusedProcessChanged;
         public event EventHandler<ApplicationChangedEventArgs> ApplicationChanged;
 
+        // An identical error is logged at most once per interval, so a persistent fault
+        // (e.g. a UWP handler failing on every tick) cannot flood the log at two ticks per second.
+        static readonly TimeSpan ErrorLogThrottle = TimeSpan.FromSeconds(60);
+        readonly Dictionary<string, DateTime> _lastErrorLog = new Dictionary<string, DateTime>();
+
 
         public ProcessWatcher()
 
@@ -54,7 +59,21 @@ namespace AutoActions
         {
             NewLog?.Invoke(this, logMessage);
         }
-  
+
+        private void LogError(string context, Exception ex)
+        {
+            string key = $"{context}|{ex.GetType().FullName}|{ex.Message}";
+            DateTime now = DateTime.UtcNow;
+            lock (_lastErrorLog)
+            {
+                DateTime last;
+                if (_lastErrorLog.TryGetValue(key, out last) && now - last < ErrorLogThrottle)
+                    return;
+                _lastErrorLog[key] = now;
+            }
+            CallNewLog($"{context}: {ex}");
+        }
+
         public void AddProcess(ApplicationItem application)
         {
             lock (_applicationsLock)
@@ -92,6 +111,7 @@ namespace AutoActions
                 _isRunning = true;
                 _watchProcessThread = new Thread(WatchProcessLoop);
                 _watchProcessThread.IsBackground = true;
+                _watchProcessThread.Name = "ProcessWatcher";
                 _watchProcessThread.Start();
                 CallNewLog($"Process watcher started");
             }
@@ -117,8 +137,17 @@ namespace AutoActions
         {
             while (!_stopRequested)
             {
-                lock (_applicationsLock)
-                    UpdateApplications();
+                try
+                {
+                    lock (_applicationsLock)
+                        UpdateApplications();
+                }
+                catch (Exception ex)
+                {
+                    // Nothing may escape this loop: an unhandled exception on this thread
+                    // terminates the whole process, silently, with no Closed action ever firing.
+                    LogError("Process watcher tick failed (watcher keeps running)", ex);
+                }
                 Thread.Sleep(Globals.GlobalRefreshInterval);
             }
         }
@@ -133,82 +162,126 @@ namespace AutoActions
 
             lock (_applicationsLock)
             {
-
-
-                List<ApplicationItem> applications = _applications.Select(a => a.Key).ToList();
-
-                Process[] processes = Process.GetProcesses();
-
-                foreach (ApplicationItem application in applications)
+                Process[] processes = null;
+                try
                 {
-                    bool callNewRunning = false;
-                    bool callGotFocus = false;
-                    bool callLostFocus = false;
-                    bool callClosed = false;
-                    ApplicationState state = ApplicationState.None;
-                    ApplicationState oldState = _applications[application];
-                    foreach (var process in processes)
+                    List<ApplicationItem> applications = _applications.Select(a => a.Key).ToList();
+
+                    processes = Process.GetProcesses();
+
+                    foreach (ApplicationItem application in applications)
                     {
-                        string processName;
-                        if (process.ProcessName == "WWAHost")
+                        bool callNewRunning = false;
+                        bool callGotFocus = false;
+                        bool callLostFocus = false;
+                        bool callClosed = false;
+                        ApplicationState state = ApplicationState.None;
+                        ApplicationState oldState = _applications[application];
+                        foreach (var process in processes)
                         {
-                            processName = UWP.WWAHostHandler.GetProcessName(process.Id);
-                        }
-                        else
-                            processName = process.ProcessName;
-                        if (application.ApplicationName.ToUpperInvariant().Equals(processName.ToUpperInvariant())
-                            || (application.IsUWP && !string.IsNullOrEmpty(application.UWPIdentity) && processName.Contains(application.UWPIdentity)))
-                        {
-
-                            state = ApplicationState.Running;
-
-                            if (oldState == ApplicationState.None)
-                                callNewRunning = true;
-                            if (IsFocusedApplication(process))
+                            string processName;
+                            if (process.ProcessName == "WWAHost")
                             {
-                                state = ApplicationState.Focused;
-                                if (oldState != ApplicationState.Focused)
-                                    callGotFocus = true;
+                                processName = UWP.WWAHostHandler.GetProcessName(process.Id);
                             }
                             else
+                                processName = process.ProcessName;
+                            if (application.ApplicationName.ToUpperInvariant().Equals(processName.ToUpperInvariant())
+                                || (application.IsUWP && !string.IsNullOrEmpty(application.UWPIdentity) && processName.Contains(application.UWPIdentity)))
                             {
-                                if (oldState == ApplicationState.Focused)
-                                    callLostFocus = true;
 
+                                state = ApplicationState.Running;
+
+                                if (oldState == ApplicationState.None)
+                                    callNewRunning = true;
+                                if (IsFocusedApplication(process))
+                                {
+                                    state = ApplicationState.Focused;
+                                    if (oldState != ApplicationState.Focused)
+                                        callGotFocus = true;
+                                }
+                                else
+                                {
+                                    if (oldState == ApplicationState.Focused)
+                                        callLostFocus = true;
+
+                                }
                             }
                         }
-                    }
-                    if (state == ApplicationState.None && oldState != ApplicationState.None)
-                        callClosed = true;
+                        if (state == ApplicationState.None && oldState != ApplicationState.None)
+                            callClosed = true;
 
-                    _applications[application] = state;
-                    if (callNewRunning)
-                        CallApplicationChanged(application, ApplicationChangedType.Started);
-                    if (callGotFocus)
-                        CallApplicationChanged(application, ApplicationChangedType.GotFocus);
-                    if (callLostFocus)
-                        CallApplicationChanged(application, ApplicationChangedType.LostFocus);
-                    if (callClosed)
-                        CallApplicationChanged(application, ApplicationChangedType.Closed);
+                        _applications[application] = state;
+                        if (callNewRunning)
+                            CallApplicationChanged(application, ApplicationChangedType.Started);
+                        if (callGotFocus)
+                            CallApplicationChanged(application, ApplicationChangedType.GotFocus);
+                        if (callLostFocus)
+                            CallApplicationChanged(application, ApplicationChangedType.LostFocus);
+                        if (callClosed)
+                            CallApplicationChanged(application, ApplicationChangedType.Closed);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    LogError("Updating application states failed", ex);
+                }
+                finally
+                {
+                    // Each Process holds a handle. At two enumerations per second these must be
+                    // released explicitly instead of waiting for the finalizer.
+                    if (processes != null)
+                        foreach (Process process in processes)
+                            process.Dispose();
                 }
             }
         }
 
         private bool IsFocusedApplication(Process process)
         {
-            Process currentProcess = GetForegroundProcess();
-            if (currentProcess == null)
-                return false;
-            return process.Id.Equals(currentProcess.Id);
+            using (Process currentProcess = GetForegroundProcess())
+            {
+                if (currentProcess == null)
+                    return false;
+                return process.Id.Equals(currentProcess.Id);
+            }
         }
 
 
+        /// <summary>
+        /// Returns the process owning the foreground window, or null when there is none
+        /// (lock screen, UAC prompt, exclusive-fullscreen transitions) or it can no longer
+        /// be opened. The caller owns the returned Process and must dispose it.
+        /// </summary>
         private Process GetForegroundProcess()
         {
-            var foregroundProcess = Process.GetProcessById(WinAPIFunctions.GetWindowProcessId(WinAPIFunctions.GetforegroundWindow()));
+            IntPtr foregroundWindow = WinAPIFunctions.GetforegroundWindow();
+            if (foregroundWindow == IntPtr.Zero)
+                return null;
+            int pid = WinAPIFunctions.GetWindowProcessId(foregroundWindow);
+            if (pid <= 0)
+                return null;
+
+            Process foregroundProcess;
+            try
+            {
+                foregroundProcess = Process.GetProcessById(pid);
+            }
+            catch (ArgumentException)
+            {
+                // Process exited between GetWindowThreadProcessId and GetProcessById.
+                return null;
+            }
+            catch (InvalidOperationException)
+            {
+                return null;
+            }
+
             if (foregroundProcess.ProcessName == "ApplicationFrameHost")
             {
-                foregroundProcess = GetRealProcess(foregroundProcess);
+                Process realProcess = GetRealProcess(foregroundProcess);
+                foregroundProcess.Dispose();
+                return realProcess;
             }
             return foregroundProcess;
         }
@@ -219,14 +292,40 @@ namespace AutoActions
 
             WinAPIFunctions.WindowEnumProc callback = (hwnd, lparam) =>
             {
-                var process = Process.GetProcessById(WinAPIFunctions.GetWindowProcessId(hwnd));
-                if (process.ProcessName != "ApplicationFrameHost")
+                // This runs inside native EnumChildWindows; an exception crossing that
+                // boundary is fatal, so everything here is contained.
+                try
                 {
-                    realActiveProcess = process;
+                    int pid = WinAPIFunctions.GetWindowProcessId(hwnd);
+                    if (pid <= 0)
+                        return true;
+                    Process process = Process.GetProcessById(pid);
+                    if (process.ProcessName != "ApplicationFrameHost")
+                    {
+                        if (realActiveProcess != null)
+                            realActiveProcess.Dispose();
+                        realActiveProcess = process;
+                    }
+                    else
+                        process.Dispose();
+                }
+                catch (Exception)
+                {
                 }
                 return true;
             };
-            WinAPIFunctions.EnumChildWindows(foregroundProcess.MainWindowHandle, callback, IntPtr.Zero);
+
+            IntPtr mainWindowHandle = IntPtr.Zero;
+            try
+            {
+                mainWindowHandle = foregroundProcess.MainWindowHandle;
+            }
+            catch (Exception)
+            {
+            }
+            // With a null parent EnumChildWindows would walk every top-level window instead.
+            if (mainWindowHandle != IntPtr.Zero)
+                WinAPIFunctions.EnumChildWindows(mainWindowHandle, callback, IntPtr.Zero);
             return realActiveProcess;
         }
     }

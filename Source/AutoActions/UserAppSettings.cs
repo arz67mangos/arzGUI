@@ -19,7 +19,7 @@ namespace AutoActions
         public static readonly object _settingsLock = new object();
 
         private bool _globalAutoActions = true;
-        private bool _createLogFile = false;
+        private bool _createLogFile = true;
         private bool _autoStart = false;
         private bool _autoUpdate = true;
         private bool _startMinimizedToTray;

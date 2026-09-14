@@ -54,6 +54,13 @@ namespace AutoActions.Displays
 
         public event EventHandler HDRIsActiveChanged;
 
+        public event EventHandler<string> NewLog;
+
+        protected void CallNewLog(string message)
+        {
+            try { NewLog?.Invoke(this, message); } catch { }
+        }
+
         private DispatchingObservableCollection<Display> _monitors = new DispatchingObservableCollection<Display>();
         public DispatchingObservableCollection<Display> Displays { get => _monitors; set { _monitors = value; OnPropertyChanged(); } }
 
@@ -265,7 +272,7 @@ namespace AutoActions.Displays
             }
         }
 
-        public void SetRefreshRate(Display display, int refreshRate)
+        public DISP_CHANGE SetRefreshRate(Display display, int refreshRate)
         {
             Func<DEVMODE, DEVMODE> func = (dm) =>
             {
@@ -273,10 +280,10 @@ namespace AutoActions.Displays
 
                 return dm;
             };
-            ChangeDisplaySetting(display.ID, func);
+            return ChangeDisplaySetting(display, func);
         }
 
-        public void SetResolution(Display display, Size resolution)
+        public DISP_CHANGE SetResolution(Display display, Size resolution)
         {
             Func<DEVMODE, DEVMODE> func = (dm) =>
             {
@@ -284,31 +291,47 @@ namespace AutoActions.Displays
                 dm.dmPelsWidth = Convert.ToInt32(resolution.Width);
                 return dm;
             };
-            ChangeDisplaySetting(display.ID, func);
+            return ChangeDisplaySetting(display, func);
         }
 
 
         public abstract void SetColorDepth(Display display, ColorDepth colorDepth);
 
-        private void ChangeDisplaySetting(uint deviceID, Func<DEVMODE, DEVMODE> func)
+        /// <summary>
+        /// Reads the display's current mode, lets <paramref name="func"/> modify it and applies it.
+        /// Returns DISP_CHANGE.Failed (after logging) when the current mode cannot be read at all.
+        /// </summary>
+        private DISP_CHANGE ChangeDisplaySetting(Display display, Func<DEVMODE, DEVMODE> func)
         {
             DISPLAY_DEVICE d = new DISPLAY_DEVICE();
             DEVMODE dm = new DEVMODE();
             d.cb = Marshal.SizeOf(d);
 
+            if (!NativeMethods.EnumDisplayDevices(null, display.ID, ref d, 0))
+            {
+                CallNewLog($"EnumDisplayDevices failed for display '{display.Name}' (ID {display.ID}, UID {display.UID}); nothing changed.");
+                return DISP_CHANGE.Failed;
+            }
 
-            NativeMethods.EnumDisplayDevices(null, deviceID, ref d, 0);
-
-            if (0 != NativeMethods.EnumDisplaySettings(
+            if (0 == NativeMethods.EnumDisplaySettings(
                 d.DeviceName, NativeMethods.ENUM_CURRENT_SETTINGS, ref dm))
             {
-
-                dm = func.Invoke(dm);
-
-                DISP_CHANGE iRet = NativeMethods.ChangeDisplaySettingsEx(
-                    d.DeviceName, ref dm, IntPtr.Zero,
-                    DisplaySettingsFlags.CDS_UPDATEREGISTRY, IntPtr.Zero);
+                CallNewLog($"EnumDisplaySettings(ENUM_CURRENT_SETTINGS) failed for {d.DeviceName} '{display.Name}'; nothing changed.");
+                return DISP_CHANGE.Failed;
             }
+
+            dm = func.Invoke(dm);
+            string requestedMode = $"{dm.dmPelsWidth}x{dm.dmPelsHeight} @ {dm.dmDisplayFrequency}Hz, {dm.dmBitsPerPel}bpp";
+
+            DISP_CHANGE result = NativeMethods.ChangeDisplaySettingsEx(
+                d.DeviceName, ref dm, IntPtr.Zero,
+                DisplaySettingsFlags.CDS_UPDATEREGISTRY, IntPtr.Zero);
+
+            if (result == DISP_CHANGE.Successful)
+                CallNewLog($"ChangeDisplaySettingsEx {d.DeviceName} '{display.Name}' -> {requestedMode}: {result}");
+            else
+                CallNewLog($"ChangeDisplaySettingsEx FAILED for {d.DeviceName} '{display.Name}', requested {requestedMode}: {result} ({(int)result})");
+            return result;
         }
 
     }

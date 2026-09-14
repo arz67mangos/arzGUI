@@ -14,6 +14,7 @@ namespace AutoActions.Displays
 
         event EventHandler HDRIsActiveChanged;
         event EventHandler<Exception> ExceptionThrown;
+        event EventHandler<string> NewLog;
 
 
         void ActivateHDR();
@@ -26,7 +27,7 @@ namespace AutoActions.Displays
         uint GetUID(uint displayUD);
         void LoadKnownDisplays(List<Display> knownMonitors);
         void SetColorDepth(Display display, ColorDepth colorDepth);
-        void SetRefreshRate(Display display, int refreshRate);
-        void SetResolution(Display display, Size resolution);
+        DISP_CHANGE SetRefreshRate(Display display, int refreshRate);
+        DISP_CHANGE SetResolution(Display display, Size resolution);
     }
 }

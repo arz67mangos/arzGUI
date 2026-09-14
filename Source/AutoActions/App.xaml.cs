@@ -1,12 +1,16 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Reflection;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Threading;
 using AutoActions.ProjectResources;
 using AutoActions.Theming;
 
@@ -22,14 +26,18 @@ namespace AutoActions
 
         static Mutex mutex;
 
+        static readonly string CrashFilePath = $"{AppDomain.CurrentDomain.BaseDirectory}AutoActions.crash.log";
+
         [STAThread]
         public static void Main()
          {
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
          bool createNew = false;
             mutex = new Mutex(true, "{2846416C-610B-4A6B-A31C-A4AA6826E9BE}", out createNew);
             if (mutex.WaitOne(TimeSpan.Zero, true))
             {
                 var application = new App();
+                application.DispatcherUnhandledException += Application_DispatcherUnhandledException;
                 application.InitializeComponent();
                 Globals.Instance.LoadSettings();
                 application.Run();
@@ -53,6 +61,51 @@ namespace AutoActions
             if (mutex.WaitOne(TimeSpan.Zero, true))
                 mutex.ReleaseMutex();
 
+        }
+
+        private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            Exception ex = e.ExceptionObject as Exception;
+            string description = ex != null ? ex.ToString() : Convert.ToString(e.ExceptionObject);
+            WriteCrashReport(e.IsTerminating ? "AppDomain.UnhandledException (terminating)" : "AppDomain.UnhandledException", description);
+        }
+
+        private static void Application_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
+        {
+            // Deliberately not marked Handled: WPF still shuts the application down as before,
+            // but the log and the crash file now record why.
+            WriteCrashReport("Dispatcher.UnhandledException", e.Exception.ToString());
+        }
+
+        /// <summary>
+        /// Records a fatal exception in the normal log and in AutoActions.crash.log next to the exe.
+        /// The crash file is written unconditionally, because the normal log file is optional and
+        /// the process is about to die.
+        /// </summary>
+        private static void WriteCrashReport(string source, string description)
+        {
+            try
+            {
+                Globals.Logs.Add($"FATAL [{source}]: {description}", false);
+            }
+            catch (Exception)
+            {
+            }
+            try
+            {
+                string version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+                Thread thread = Thread.CurrentThread;
+                StringBuilder report = new StringBuilder();
+                report.AppendLine("==================================================");
+                report.AppendLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}  AutoActions {version}  {source}");
+                report.AppendLine($"Thread {thread.ManagedThreadId} \"{thread.Name}\"");
+                report.AppendLine(description);
+                report.AppendLine();
+                File.AppendAllText(CrashFilePath, report.ToString());
+            }
+            catch (Exception)
+            {
+            }
         }
     }
 }
