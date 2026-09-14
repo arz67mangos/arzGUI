@@ -29,5 +29,6 @@ namespace AutoActions.Displays
         void SetColorDepth(Display display, ColorDepth colorDepth);
         DISP_CHANGE SetRefreshRate(Display display, int refreshRate);
         DISP_CHANGE SetResolution(Display display, Size resolution);
+        DISP_CHANGE SetDisplayMode(Display display, Size? resolution, int? refreshRate);
     }
 }

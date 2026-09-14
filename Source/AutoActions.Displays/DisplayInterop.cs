@@ -99,6 +99,33 @@ namespace AutoActions.Displays
         public Int32 dmNup;
         [System.Runtime.InteropServices.FieldOffset(120)]
         public Int32 dmDisplayFrequency;
+        [System.Runtime.InteropServices.FieldOffset(124)]
+        public Int32 dmICMMethod;
+        [System.Runtime.InteropServices.FieldOffset(128)]
+        public Int32 dmICMIntent;
+        [System.Runtime.InteropServices.FieldOffset(132)]
+        public Int32 dmMediaType;
+        [System.Runtime.InteropServices.FieldOffset(136)]
+        public Int32 dmDitherType;
+        [System.Runtime.InteropServices.FieldOffset(140)]
+        public Int32 dmReserved1;
+        [System.Runtime.InteropServices.FieldOffset(144)]
+        public Int32 dmReserved2;
+        [System.Runtime.InteropServices.FieldOffset(148)]
+        public Int32 dmPanningWidth;
+        [System.Runtime.InteropServices.FieldOffset(152)]
+        public Int32 dmPanningHeight;
+
+        /// <summary>
+        /// A zeroed DEVMODE with dmSize set, as EnumDisplaySettings/ChangeDisplaySettingsEx require.
+        /// The struct is the full 156-byte DEVMODEA so Windows never writes past the buffer.
+        /// </summary>
+        public static DEVMODE Initialized()
+        {
+            DEVMODE dm = new DEVMODE();
+            dm.dmSize = (Int16)Marshal.SizeOf(typeof(DEVMODE));
+            return dm;
+        }
     }
 
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]

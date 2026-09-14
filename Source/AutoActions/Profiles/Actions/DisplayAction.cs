@@ -171,33 +171,27 @@ namespace AutoActions.Profiles.Actions
                         HDRController.SetHDRState(Display.UID, EnableHDR);
                     }
                 System.Threading.Thread.Sleep(100);
-                if (ChangeResolution)
+                // Resolution and refresh rate go in ONE mode change. Two consecutive changes each
+                // re-read the current mode, so a failed first change made the second one re-apply
+                // the mode we were trying to leave.
+                if (ChangeResolution || ChangeRefreshRate)
+                {
+                    Size? resolution = ChangeResolution ? Resolution : (Size?)null;
+                    int? refreshRate = ChangeRefreshRate ? RefreshRate : (int?)null;
+                    string mode = (ChangeResolution ? $"{Resolution.Width}x{Resolution.Height}" : "") + (ChangeRefreshRate ? $" @ {RefreshRate}Hz" : "");
                     if (Display.IsAllDisplay())
                     {
-                        CallNewLog(new CodectoryCore.Logging.LogEntry($"Setting resolution {Resolution} for all displays."));
+                        CallNewLog(new CodectoryCore.Logging.LogEntry($"Setting display mode{mode} for all displays."));
                         foreach (Display display in DisplayManagerHandler.Instance.GetActiveMonitors())
-                            display.SetResolution(Resolution);
+                            display.SetDisplayMode(resolution, refreshRate);
                     }
                     else
                     {
-                        CallNewLog(new CodectoryCore.Logging.LogEntry($"Setting resolution {Resolution} for display {Display.Name}"));
-                        Display.SetResolution(Resolution);
+                        CallNewLog(new CodectoryCore.Logging.LogEntry($"Setting display mode{mode} for display {Display.Name}"));
+                        Display.SetDisplayMode(resolution, refreshRate);
                     }
-                System.Threading.Thread.Sleep(100);
-                if (ChangeRefreshRate)
-                    if (Display.IsAllDisplay())
-                    {
-                        CallNewLog(new CodectoryCore.Logging.LogEntry($"Setting refresh rate {RefreshRate} for all displays."));
-
-                        foreach (Display display in DisplayManagerHandler.Instance.GetActiveMonitors())
-                            display.SetRefreshRate(RefreshRate);
-                    }
-                    else
-                    {
-                        CallNewLog(new CodectoryCore.Logging.LogEntry($"Setting refresh rate {RefreshRate} for display {Display.Name}"));
-                        Display.SetRefreshRate(RefreshRate);
-                    }
-                System.Threading.Thread.Sleep(100);
+                    System.Threading.Thread.Sleep(100);
+                }
                 if (ChangeColorDepth)
                     if (Display.IsAllDisplay())
                     {

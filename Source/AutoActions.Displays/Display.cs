@@ -108,6 +108,12 @@ namespace AutoActions.Displays
             return DisplayManagerHandler.Instance.SetRefreshRate(this, refreshRate);
         }
 
+        /// <summary>Applies resolution and/or refresh rate in one mode change; null keeps the current value.</summary>
+        public DISP_CHANGE SetDisplayMode(Size? resolution, int? refreshRate)
+        {
+            return DisplayManagerHandler.Instance.SetDisplayMode(this, resolution, refreshRate);
+        }
+
         public void SetColorDepth(ColorDepth colorDepth)
         {
             DisplayManagerHandler.Instance.SetColorDepth(this, colorDepth);
