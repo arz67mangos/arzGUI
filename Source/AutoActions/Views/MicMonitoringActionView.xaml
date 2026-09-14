@@ -1,0 +1,36 @@
+<UserControl x:Class="AutoActions.Views.MicMonitoringActionView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:AutoActions.Views"
+             xmlns:pres="clr-namespace:AutoActions.ProjectResources;assembly=AutoActions.ProjectResources"
+             xmlns:prflActns="clr-namespace:AutoActions.Profiles.Actions"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance Type=prflActns:MicMonitoringAction, IsDesignTimeCreatable=False}">
+
+    <Grid VerticalAlignment="Top">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Style="{StaticResource DefaultTextBlock}" Grid.Row="0" Grid.Column="0" Margin="5" Text="{x:Static pres:ProjectLocales.MicMonitoringEnable}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+        <CheckBox x:Name="StateCheckBox" Grid.Row="0" Grid.Column="1" Margin="5" IsChecked="{Binding ChangeState, Mode=TwoWay}" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+        <CheckBox Grid.Row="0" Grid.Column="2" Margin="5" IsChecked="{Binding EnableMonitoring, Mode=TwoWay}" Content="{x:Static pres:ProjectLocales.On}" IsEnabled="{Binding ElementName=StateCheckBox, Path=IsChecked}" Visibility="{Binding ChangeState, Converter={StaticResource VisibilityBooleanConverter}}" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+
+        <TextBlock Style="{StaticResource DefaultTextBlock}" Grid.Row="1" Grid.Column="0" Margin="5" Text="{x:Static pres:ProjectLocales.MicMonitoringVolume}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+        <CheckBox x:Name="VolumeCheckBox" Grid.Row="1" Grid.Column="1" Margin="5" IsChecked="{Binding ChangeVolume, Mode=TwoWay}" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+        <Slider Grid.Row="1" Grid.Column="2" Margin="5" MinWidth="200" Minimum="0" Maximum="100" TickFrequency="1" IsSnapToTickEnabled="True" Value="{Binding Volume, Mode=TwoWay}" IsEnabled="{Binding ElementName=VolumeCheckBox, Path=IsChecked}" Visibility="{Binding ChangeVolume, Converter={StaticResource VisibilityBooleanConverter}}" VerticalAlignment="Center"/>
+        <TextBlock Style="{StaticResource DefaultTextBlock}" Grid.Row="1" Grid.Column="3" Margin="5" MinWidth="40" TextAlignment="Right" Text="{Binding Volume, StringFormat={}{0:0}%}" Visibility="{Binding ChangeVolume, Converter={StaticResource VisibilityBooleanConverter}}" VerticalAlignment="Center"/>
+
+        <TextBlock Style="{StaticResource DefaultTextBlock}" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="4" Margin="5,10,5,5" Foreground="Gray" TextWrapping="Wrap" Text="{x:Static pres:ProjectLocales.MicMonitoringSettingsHint}"/>
+    </Grid>
+</UserControl>

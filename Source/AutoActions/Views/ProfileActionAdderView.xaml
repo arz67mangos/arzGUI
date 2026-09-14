@@ -27,6 +27,9 @@
         <DataTemplate DataType="{x:Type prflActns:ReferenceProfileAction}">
             <local:ReferenceProfileActionView/>
         </DataTemplate>
+        <DataTemplate DataType="{x:Type prflActns:MicMonitoringAction}">
+            <local:MicMonitoringActionView/>
+        </DataTemplate>
         <DataTemplate x:Key="ActionTypeTemplate" DataType="ActionTypeDescription">
             <TextBlock Style="{StaticResource DefaultTextBlock}"  Text="{Binding TypeDescription }"/>
         </DataTemplate>

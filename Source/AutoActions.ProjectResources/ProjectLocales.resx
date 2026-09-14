@@ -1157,4 +1157,40 @@ Public License instead of this License.  But first, please read
   <data name="Yes" xml:space="preserve">
     <value>Yes</value>
   </data>
+  <data name="MicMonitoring" xml:space="preserve">
+    <value>Microphone monitoring</value>
+  </data>
+  <data name="MicMonitoringDevice" xml:space="preserve">
+    <value>Playback device</value>
+  </data>
+  <data name="MicMonitoringLine" xml:space="preserve">
+    <value>Input line</value>
+  </data>
+  <data name="MicMonitoringDefaultDevice" xml:space="preserve">
+    <value>Default playback device</value>
+  </data>
+  <data name="MicMonitoringEnable" xml:space="preserve">
+    <value>Monitoring</value>
+  </data>
+  <data name="MicMonitoringVolume" xml:space="preserve">
+    <value>Monitoring volume</value>
+  </data>
+  <data name="MicMonitoringUnavailable" xml:space="preserve">
+    <value>No controllable input line on the selected playback device</value>
+  </data>
+  <data name="MicMonitoringSettingsHint" xml:space="preserve">
+    <value>The playback device and input line are chosen in Settings.</value>
+  </data>
+  <data name="MessageMissingMicMonitoringSetting" xml:space="preserve">
+    <value>Select at least one of: monitoring, monitoring volume</value>
+  </data>
+  <data name="On" xml:space="preserve">
+    <value>On</value>
+  </data>
+  <data name="Off" xml:space="preserve">
+    <value>Off</value>
+  </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>Refresh</value>
+  </data>
 </root>

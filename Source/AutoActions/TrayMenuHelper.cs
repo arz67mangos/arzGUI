@@ -77,6 +77,33 @@ namespace AutoActions
 
         readonly object _lockActions = new object();
 
+        private MenuItem _micMonitoring;
+
+        /// <summary>
+        /// Adds a checkable "Microphone monitoring" entry above Shutdown. Its check state is read from
+        /// the hardware every time the menu opens, so it never shows a stale value.
+        /// </summary>
+        public void AddMicMonitoringItem(MicMonitoringStatus status)
+        {
+            if (!Initialized || status == null || _trayMenu?.ContextMenu == null)
+                return;
+            ContextMenu contextMenu = _trayMenu.ContextMenu;
+            _micMonitoring = new MenuItem()
+            {
+                Header = ProjectLocales.MicMonitoring,
+                IsCheckable = true
+            };
+            _micMonitoring.Click += (o, e) => status.IsEnabled = _micMonitoring.IsChecked;
+            contextMenu.Opened += (o, e) =>
+            {
+                status.Refresh();
+                _micMonitoring.IsChecked = status.IsEnabled;
+                _micMonitoring.IsEnabled = status.IsAvailable;
+            };
+            int index = contextMenu.Items.IndexOf(_closeButton);
+            contextMenu.Items.Insert(index < 0 ? contextMenu.Items.Count : index, _micMonitoring);
+        }
+
         private void InitializeActionsMenuItem(ContextMenu contextMenu)
         {
             _actions = new MenuItem()

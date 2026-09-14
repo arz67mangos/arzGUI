@@ -29,6 +29,9 @@ namespace AutoActions
     {
 
         readonly object _accessLock = new object();
+        // Mic monitoring state captured before a profile's Started actions changed it, keyed by application,
+        // so Closed can put it back without the user having to configure a Closed action.
+        readonly Dictionary<ApplicationItem, MicMonitoringSnapshot> _micMonitoringSnapshots = new Dictionary<ApplicationItem, MicMonitoringSnapshot>();
         private bool _showView = false;
         private ApplicationItem _currentApplication = null;
         private Profile _currentProfile = null;
@@ -86,6 +89,9 @@ namespace AutoActions
         public ApplicationItem CurrentApplication { get => _currentApplication; set { _currentApplication = value; OnPropertyChanged(); } }
 
         public bool HDRIsActive { get => _hdrIsActive; set { _hdrIsActive = value; OnPropertyChanged(); } }
+
+        /// <summary>Live mic monitoring state for the status card and the tray menu.</summary>
+        public MicMonitoringStatus MicMonitoringStatus { get; private set; }
         public Version Version
         {
             get
@@ -261,6 +267,16 @@ namespace AutoActions
                         break;
                 }
                 Globals.Logs.Add($"[{application.ApplicationName}] {changedType}: profile '{profile.Name}', {actions.Count} action(s) to run.", false);
+
+                bool touchesMicMonitoring = actions.OfType<MicMonitoringAction>().Any();
+                if (changedType == ApplicationChangedType.Started && touchesMicMonitoring && MicMonitoringStatus != null)
+                {
+                    MicMonitoringSnapshot snapshot = MicMonitoringStatus.Capture();
+                    lock (_micMonitoringSnapshots)
+                        _micMonitoringSnapshots[application] = snapshot;
+                    Globals.Logs.Add($"[{application.ApplicationName}] mic monitoring before Started actions: {snapshot}", false);
+                }
+
                 if (actions.Count > 0)
                     App.Current.Dispatcher.Invoke(() => LastActions.Clear());
                 foreach (var action in actions)
@@ -271,6 +287,28 @@ namespace AutoActions
                     action.NewLog -= ActionLog;
                     System.Threading.Thread.Sleep(100);
                 }
+
+                if (changedType == ApplicationChangedType.Closed && MicMonitoringStatus != null)
+                {
+                    MicMonitoringSnapshot snapshot;
+                    bool captured;
+                    lock (_micMonitoringSnapshots)
+                    {
+                        captured = _micMonitoringSnapshots.TryGetValue(application, out snapshot);
+                        if (captured)
+                            _micMonitoringSnapshots.Remove(application);
+                    }
+                    if (captured && touchesMicMonitoring)
+                        Globals.Logs.Add($"[{application.ApplicationName}] explicit Closed mic monitoring action ran; captured state ({snapshot}) discarded.", false);
+                    else if (captured)
+                    {
+                        Globals.Logs.Add($"[{application.ApplicationName}] restoring mic monitoring to {snapshot}.", false);
+                        MicMonitoringStatus.Restore(snapshot);
+                    }
+                }
+                if (touchesMicMonitoring && MicMonitoringStatus != null)
+                    MicMonitoringStatus.Refresh();
+
                 if (profile.RestartApplication && changedType == ApplicationChangedType.Started)
                     assignment.Application.Restart();
                 if (changedType == ApplicationChangedType.Closed)
@@ -289,6 +327,7 @@ namespace AutoActions
             Globals.Logs.Add("Initializing TrayMenu...", false);
             TrayMenuHelper = new TrayMenuHelper();
             TrayMenuHelper.Initialize();
+            TrayMenuHelper.AddMicMonitoringItem(MicMonitoringStatus);
             TrayMenuHelper.OpenViewRequested += TrayMenuHelper_OpenViewRequested;
             TrayMenuHelper.CloseApplicationRequested += TrayMenuHelper_CloseApplicationRequested;
             //TrayMenuHelper.SwitchTrayIcon(Settings.StartMinimizedToTray);
@@ -310,6 +349,10 @@ namespace AutoActions
         {
             Globals.Logs.Add("Initializing AudioManager...", false);
             AudioController.Instance.UpdateDevices();
+            AutoActions.Audio.MicMonitoring.Instance.NewLog += (o, message) => Globals.Logs.Add(message, false);
+            MicMonitoringStatus = new MicMonitoringStatus();
+            MicMonitoringStatus.Refresh();
+            Globals.Logs.Add($"Mic monitoring target: {MicMonitoringStatus.TargetDescription}", false);
         }
 
         private void CreateRelayCommands()
@@ -566,6 +609,11 @@ namespace AutoActions
                             AutoStart.Activate(ProjectLocales.AutoActions, System.Reflection.Assembly.GetEntryAssembly().Location);
                         else
                             AutoStart.Deactivate(ProjectLocales.AutoActions, System.Reflection.Assembly.GetEntryAssembly().Location);
+                    }
+                    else if (e.PropertyName.Equals(nameof(Settings.MicMonitoringDeviceId)) || e.PropertyName.Equals(nameof(Settings.MicMonitoringLineId)))
+                    {
+                        if (MicMonitoringStatus != null)
+                            MicMonitoringStatus.Refresh();
                     }
                     else if (Settings.GlobalAutoActions)
                         DisplayManagerHandler.Instance.SelectedHDR = !Settings.GlobalAutoActions;

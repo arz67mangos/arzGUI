@@ -1174,5 +1174,115 @@ namespace AutoActions.ProjectResources {
                 return ResourceManager.GetString("Yes", resourceCulture);
             }
         }
+
+        // ---- Microphone monitoring (added by hand: MSBuild does not run PublicResXFileCodeGenerator) ----
+
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Microphone monitoring ähnelt.
+        /// </summary>
+        public static string MicMonitoring {
+            get {
+                return ResourceManager.GetString("MicMonitoring", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Playback device ähnelt.
+        /// </summary>
+        public static string MicMonitoringDevice {
+            get {
+                return ResourceManager.GetString("MicMonitoringDevice", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Input line ähnelt.
+        /// </summary>
+        public static string MicMonitoringLine {
+            get {
+                return ResourceManager.GetString("MicMonitoringLine", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Default playback device ähnelt.
+        /// </summary>
+        public static string MicMonitoringDefaultDevice {
+            get {
+                return ResourceManager.GetString("MicMonitoringDefaultDevice", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Monitoring ähnelt.
+        /// </summary>
+        public static string MicMonitoringEnable {
+            get {
+                return ResourceManager.GetString("MicMonitoringEnable", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Monitoring volume ähnelt.
+        /// </summary>
+        public static string MicMonitoringVolume {
+            get {
+                return ResourceManager.GetString("MicMonitoringVolume", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die No controllable input line on the selected playback device ähnelt.
+        /// </summary>
+        public static string MicMonitoringUnavailable {
+            get {
+                return ResourceManager.GetString("MicMonitoringUnavailable", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die The playback device and input line are chosen in Settings. ähnelt.
+        /// </summary>
+        public static string MicMonitoringSettingsHint {
+            get {
+                return ResourceManager.GetString("MicMonitoringSettingsHint", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Select at least one of: monitoring, monitoring volume ähnelt.
+        /// </summary>
+        public static string MessageMissingMicMonitoringSetting {
+            get {
+                return ResourceManager.GetString("MessageMissingMicMonitoringSetting", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die On ähnelt.
+        /// </summary>
+        public static string On {
+            get {
+                return ResourceManager.GetString("On", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Off ähnelt.
+        /// </summary>
+        public static string Off {
+            get {
+                return ResourceManager.GetString("Off", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Refresh ähnelt.
+        /// </summary>
+        public static string Refresh {
+            get {
+                return ResourceManager.GetString("Refresh", resourceCulture);
+            }
+        }
     }
 }

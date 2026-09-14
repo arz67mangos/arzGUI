@@ -1,10 +1,13 @@
 ﻿using AutoActions.Displays;
+using AutoActions.Audio;
 using AutoActions.Profiles;
 using AutoActions.Profiles.Actions;
 using CodectoryCore;
 using CodectoryCore.UI.Wpf;
 using Newtonsoft.Json;
 using System;
+using AutoActions.ProjectResources;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
@@ -74,6 +77,75 @@ namespace AutoActions
 
         [JsonProperty]
         public bool CheckForNewVersion { get => _checkForNewVersion; set { _checkForNewVersion = value; OnPropertyChanged(); } }
+
+        private string _micMonitoringDeviceId = string.Empty;
+        private string _micMonitoringLineId = string.Empty;
+
+        /// <summary>Core Audio endpoint ID of the playback device carrying the monitored input line; empty = default playback device.</summary>
+        [JsonProperty]
+        public string MicMonitoringDeviceId
+        {
+            get => _micMonitoringDeviceId;
+            set
+            {
+                _micMonitoringDeviceId = value ?? string.Empty;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(MicMonitoringEndpoint));
+                OnPropertyChanged(nameof(MicMonitoringLines));
+                OnPropertyChanged(nameof(MicMonitoringLine));
+            }
+        }
+
+        /// <summary>Connector ID of the input line on that device; empty = pick the microphone line automatically.</summary>
+        [JsonProperty]
+        public string MicMonitoringLineId
+        {
+            get => _micMonitoringLineId;
+            set
+            {
+                _micMonitoringLineId = value ?? string.Empty;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(MicMonitoringLine));
+            }
+        }
+
+        // The four members below are the picker-facing view of the two IDs above (same pattern as DefaultProfile / DefaultProfileGuid).
+        public IReadOnlyList<MonitoringEndpoint> MicMonitoringEndpoints
+        {
+            get
+            {
+                List<MonitoringEndpoint> endpoints = new List<MonitoringEndpoint>();
+                endpoints.Add(new MonitoringEndpoint(string.Empty, ProjectLocales.MicMonitoringDefaultDevice));
+                endpoints.AddRange(MicMonitoring.Instance.GetRenderEndpoints());
+                return endpoints;
+            }
+        }
+
+        public MonitoringEndpoint MicMonitoringEndpoint
+        {
+            get => MicMonitoringEndpoints.FirstOrDefault(e => string.Equals(e.Id, MicMonitoringDeviceId, StringComparison.OrdinalIgnoreCase));
+            set
+            {
+                // WPF pushes null when the list is rebuilt without the current item (device unplugged); keep the setting then.
+                if (value == null || string.Equals(value.Id, MicMonitoringDeviceId, StringComparison.OrdinalIgnoreCase))
+                    return;
+                MicMonitoringLineId = string.Empty;
+                MicMonitoringDeviceId = value.Id;
+            }
+        }
+
+        public IReadOnlyList<MonitoringLine> MicMonitoringLines => MicMonitoring.Instance.GetControllableLines(MicMonitoringDeviceId);
+
+        public MonitoringLine MicMonitoringLine
+        {
+            get => MicMonitoringLines.FirstOrDefault(l => l.LineId == MicMonitoringLineId);
+            set
+            {
+                if (value == null || value.LineId == MicMonitoringLineId)
+                    return;
+                MicMonitoringLineId = value.LineId;
+            }
+        }
 
 
         [JsonProperty(Order = 2)]

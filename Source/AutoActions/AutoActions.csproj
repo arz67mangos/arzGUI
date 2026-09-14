@@ -297,6 +297,7 @@
     <Compile Include="CheckUpdateResult.cs" />
     <Compile Include="Globals.cs" />
     <Compile Include="LoopManager.cs" />
+    <Compile Include="MicMonitoringStatus.cs" />
     <Compile Include="ProfileActionShortcut.cs" />
     <Compile Include="Profiles\Actions\CloseProgramAction.cs" />
     <Compile Include="Profiles\Actions\ReferenceProfileAction.cs" />
@@ -329,6 +330,7 @@
     <Compile Include="Profiles\Actions\ActionEndResult.cs" />
     <Compile Include="Profiles\Actions\ActionTypeDescription.cs" />
     <Compile Include="Profiles\Actions\AudioDeviceAction.cs" />
+    <Compile Include="Profiles\Actions\MicMonitoringAction.cs" />
     <Compile Include="Profiles\Actions\RunProgramAction.cs" />
     <Compile Include="Profiles\Actions\ApplicationAction.cs" />
     <Compile Include="Profiles\Actions\DisplayAction.cs" />
@@ -344,6 +346,9 @@
     <Compile Include="Profiles\ProfileMode.cs" />
     <Compile Include="Views\AudioActionView.xaml.cs">
       <DependentUpon>AudioActionView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\MicMonitoringActionView.xaml.cs">
+      <DependentUpon>MicMonitoringActionView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\AutoActionsLicenseView.xaml.cs">
       <DependentUpon>AutoActionsLicenseView.xaml</DependentUpon>
@@ -407,6 +412,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\AudioActionView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\MicMonitoringActionView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

@@ -42,6 +42,9 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
 
                 </Grid.RowDefinitions>
@@ -71,6 +74,12 @@
                 <CheckBox  IsChecked="{Binding HideSplashScreenOnAutoUpdate}" IsEnabled="{Binding AutoUpdate}" Grid.Column="1" Grid.Row="7" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5"/>
                 <CheckBox IsChecked="{Binding GlobalAutoActions}" Grid.Column="1" Grid.Row="8" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5"/>
                 <ComboBox Grid.Column="1" Grid.Row="9" MaxWidth="250"  HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5" SelectedValuePath="Name" DisplayMemberPath="Name" SelectedValue="{Binding DefaultProfile, Mode=TwoWay}" SelectedItem="{Binding DefaultProfile, Mode=TwoWay}" ItemsSource="{Binding ApplicationProfiles}" Background="Black"  />
+
+                <TextBlock Style="{StaticResource SubTitleTextBlock}" Text="{x:Static pres:ProjectLocales.MicMonitoring}" Grid.Column="0" Grid.Row="10" Grid.ColumnSpan="3" Margin="5,15,3,3" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                <TextBlock Style="{StaticResource DefaultTextBlock}" Text="{x:Static pres:ProjectLocales.MicMonitoringDevice}" Grid.Column="0" Grid.Row="11" Margin="10,3,3,3" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                <ComboBox Grid.Column="1" Grid.Row="11" Grid.ColumnSpan="2" MinWidth="250" MaxWidth="400" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5" DisplayMemberPath="Name" ItemsSource="{Binding MicMonitoringEndpoints}" SelectedItem="{Binding MicMonitoringEndpoint, Mode=TwoWay}" Background="Black"/>
+                <TextBlock Style="{StaticResource DefaultTextBlock}" Text="{x:Static pres:ProjectLocales.MicMonitoringLine}" Grid.Column="0" Grid.Row="12" Margin="10,3,3,3" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                <ComboBox Grid.Column="1" Grid.Row="12" Grid.ColumnSpan="2" MinWidth="250" MaxWidth="400" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5" DisplayMemberPath="Description" ItemsSource="{Binding MicMonitoringLines}" SelectedItem="{Binding MicMonitoringLine, Mode=TwoWay}" Background="Black"/>
 
             </Grid>
         </ScrollViewer>

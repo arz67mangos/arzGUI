@@ -441,4 +441,40 @@
   <data name="Yes" xml:space="preserve">
     <value>Ja</value>
   </data>
+  <data name="MicMonitoring" xml:space="preserve">
+    <value>Mikrofon-Mithören</value>
+  </data>
+  <data name="MicMonitoringDevice" xml:space="preserve">
+    <value>Wiedergabegerät</value>
+  </data>
+  <data name="MicMonitoringLine" xml:space="preserve">
+    <value>Eingang</value>
+  </data>
+  <data name="MicMonitoringDefaultDevice" xml:space="preserve">
+    <value>Standard-Wiedergabegerät</value>
+  </data>
+  <data name="MicMonitoringEnable" xml:space="preserve">
+    <value>Mithören</value>
+  </data>
+  <data name="MicMonitoringVolume" xml:space="preserve">
+    <value>Mithörlautstärke</value>
+  </data>
+  <data name="MicMonitoringUnavailable" xml:space="preserve">
+    <value>Kein steuerbarer Eingang am gewählten Wiedergabegerät</value>
+  </data>
+  <data name="MicMonitoringSettingsHint" xml:space="preserve">
+    <value>Wiedergabegerät und Eingang werden in den Einstellungen gewählt.</value>
+  </data>
+  <data name="MessageMissingMicMonitoringSetting" xml:space="preserve">
+    <value>Mindestens eines auswählen: Mithören, Mithörlautstärke</value>
+  </data>
+  <data name="On" xml:space="preserve">
+    <value>An</value>
+  </data>
+  <data name="Off" xml:space="preserve">
+    <value>Aus</value>
+  </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>Aktualisieren</value>
+  </data>
 </root>
