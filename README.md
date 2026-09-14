@@ -20,7 +20,7 @@ works through that plan in phases:
 | 1b | done | **The restore bug.** Switching back from a GPU-scaled custom resolution failed with `BadMode` because the request inherited the custom mode's scaling value. Resolution + refresh rate are now one verified mode change with retries |
 | 2 | planned | Snapshot display state on app start and restore it on close automatically (no hand-written Closed action) |
 | 3 | done | Built-in microphone-monitoring (listen-to-this-device) control: a card on the Status tab and a tray entry for manual use, a **Microphone monitoring** profile action for per-game use, device/line pickers in Settings. State a Started action changes is put back on Closed automatically |
-| 4 | planned | UI refresh and a real dark mode |
+| 4 | done | Redesigned UI: design tokens, light and dark themes (follows Windows by default, switchable in Settings), left sidebar navigation, card-based Status page |
 | 5 | planned | Rebrand and detach from the upstream auto-updater |
 
 Everything upstream does (see its README for the feature list and screenshots) still works the
