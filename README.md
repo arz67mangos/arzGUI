@@ -16,7 +16,7 @@ works through that plan in phases:
 
 | Phase | Status | What |
 |---|---|---|
-| 1 | done | Process watcher can no longer crash the app; unhandled-exception handlers write `AutoActions.crash.log`; logging on by default; `ChangeDisplaySettingsEx` results logged instead of discarded |
+| 1 | done | Process watcher can no longer crash the app; unhandled-exception handlers write `AutoActions.crash.log`; logging on by default; `ChangeDisplaySettingsEx` results logged instead of discarded; native `HDRController.dll` rebuilt from source (upstream's prebuilt one was a stub); upstream auto-update off by default |
 | 2 | planned | Snapshot display state on app start and restore it on close, with verify-and-retry |
 | 3 | planned | Built-in microphone-monitoring (listen-to-this-device) control, manual and per-profile |
 | 4 | planned | UI refresh and a real dark mode |
@@ -54,9 +54,9 @@ msbuild Source\AutoActions.sln -t:Build -m -p:Configuration=Debug -p:Platform=x6
 Output goes to `Source\Debug_x64\`. `RunBuild.bat` builds both Release platforms and zips them into
 `Releases\`. Notes:
 
-- `Source\Externals\x64\HDRController.dll` is the prebuilt native helper the pre-build step copies
-  into the output. There is deliberately no `x86` copy — the checked-in DLL is x64 only, so an x86
-  build needs `Source\HDRController\HDRController.sln` built for Win32 first.
+- `Source\Externals\x64\` and `x86\` hold `HDRController.dll`, the native HDR helper, built from
+  `Source\HDRController\HDRController.sln` (Release, x64 and x86). The pre-build step copies the
+  matching one into the output. Rebuild and re-copy both if you change the C++ code.
 - `Source\AutoActions\Controls\AppResources.xaml` is generated on every build from the numbered
   dictionaries next to it. Don't edit it directly.
 - There are no automated tests; verification is running the app and reading `AutoActions.log`.
