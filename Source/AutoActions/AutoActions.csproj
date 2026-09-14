@@ -578,7 +578,7 @@ del "$(TargetName).exe.config"
   <PropertyGroup>
     <PreBuildEvent>$(SolutionDir)\BuildTools\XamlDictionaryMergeTool\XamlDictionaryMergeTool.exe "$(ProjectDir)Controls" "$(ProjectDir)Controls\AppResources.xaml"
 if $(ConfigurationName) == Release (
-rd "$(TargetDir)" /s /q
+if exist "$(TargetDir)" rd "$(TargetDir)" /s /q
 )
 copy  /Y "$(SolutionDir)Externals\$(PlatformName)\HDRController.dll" "$(OutDir)HDRController.dll"
 

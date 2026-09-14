@@ -402,3 +402,6 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+# Native HDRController.dll per platform; the generic x64/ x86/ rules above would otherwise swallow these
+!Source/Externals/x64/
+!Source/Externals/x86/
