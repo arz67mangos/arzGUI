@@ -18,7 +18,7 @@
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
             <TextBlock Style="{StaticResource DefaultTextBlock}" Grid.Column="0"  Text="{Binding Name}"/>
-                <TextBlock Style="{StaticResource DefaultTextBlock}" Foreground="LightGray" Grid.Column="1"    Text="{Binding ID}"/>
+                <TextBlock Style="{StaticResource DefaultTextBlock}" Foreground="{DynamicResource TextSecondaryBrush}" Grid.Column="1"    Text="{Binding ID}"/>
             </Grid>
 
         </DataTemplate>

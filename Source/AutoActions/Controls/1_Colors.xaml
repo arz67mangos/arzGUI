@@ -28,12 +28,13 @@
     <Color x:Key="AccentHoverColor">#F27373</Color>
     <Color x:Key="AccentPressedColor">#D74848</Color>
     <Color x:Key="AccentSoftColor">#FCE4E4</Color>
-    <Color x:Key="AccentForegroundColor">#FFFFFF</Color>
+    <Color x:Key="AccentForegroundColor">#1B1F24</Color>
 
     <!-- Semantic -->
     <Color x:Key="SuccessColor">#22B577</Color>
+    <Color x:Key="SuccessTextColor">#087F5B</Color>
     <Color x:Key="WarningColor">#E9A23B</Color>
-    <Color x:Key="DangerColor">#D64545</Color>
+    <Color x:Key="DangerColor">#C73535</Color>
 
     <!-- Controls -->
     <Color x:Key="ControlColor">#FFFFFF</Color>
@@ -60,6 +61,7 @@
     <SolidColorBrush x:Key="AccentSoftBrush" Color="{StaticResource AccentSoftColor}"/>
     <SolidColorBrush x:Key="AccentForegroundBrush" Color="{StaticResource AccentForegroundColor}"/>
     <SolidColorBrush x:Key="SuccessBrush" Color="{StaticResource SuccessColor}"/>
+    <SolidColorBrush x:Key="SuccessTextBrush" Color="{StaticResource SuccessTextColor}"/>
     <SolidColorBrush x:Key="WarningBrush" Color="{StaticResource WarningColor}"/>
     <SolidColorBrush x:Key="DangerBrush" Color="{StaticResource DangerColor}"/>
     <SolidColorBrush x:Key="ControlBrush" Color="{StaticResource ControlColor}"/>

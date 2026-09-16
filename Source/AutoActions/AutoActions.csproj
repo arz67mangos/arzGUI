@@ -264,7 +264,7 @@
     </Reference>
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Text.RegularExpressions, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Text.RegularExpressions.4.3.0\lib\net463\System.Text.RegularExpressions.dll</HintPath>
+      <HintPath>..\packages\System.Text.RegularExpressions.4.3.1\lib\net463\System.Text.RegularExpressions.dll</HintPath>
       <Private>True</Private>
       <Private>True</Private>
     </Reference>
@@ -586,7 +586,7 @@ del "$(TargetName).exe.config"
 )</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PreBuildEvent>$(SolutionDir)\BuildTools\XamlDictionaryMergeTool\XamlDictionaryMergeTool.exe "$(ProjectDir)Controls" "$(ProjectDir)Controls\AppResources.xaml"
+    <PreBuildEvent>&quot;$(SolutionDir)BuildTools\XamlDictionaryMergeTool\XamlDictionaryMergeTool.exe&quot; "$(ProjectDir)Controls" "$(ProjectDir)Controls\AppResources.xaml"
 if $(ConfigurationName) == Release (
 if exist "$(TargetDir)" rd "$(TargetDir)" /s /q
 )

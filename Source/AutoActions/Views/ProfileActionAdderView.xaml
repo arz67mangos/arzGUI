@@ -60,6 +60,6 @@
             </Grid.ColumnDefinitions>
             <Button Grid.Column="2" Content="{x:Static pres:ProjectLocales.OK}" IsEnabled="{Binding CanCreate}"  Command="{Binding OKClickCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"  VerticalAlignment="Top" HorizontalAlignment="Right" Width="Auto" Height="Auto"  Margin="5"/>
         </Grid>
-        <TextBlock Style="{StaticResource DefaultTextBlock}"   Grid.Row="2" Foreground="OrangeRed" Text="{Binding ContentControlViewModel.CannotSaveMessage}" Visibility="{Binding CanCreate, Converter={StaticResource InvertVisibilityBooleanConverter}}"/>
+        <TextBlock Style="{StaticResource DefaultTextBlock}"   Grid.Row="2" Foreground="{DynamicResource DangerBrush}" Text="{Binding ContentControlViewModel.CannotSaveMessage}" Visibility="{Binding CanCreate, Converter={StaticResource InvertVisibilityBooleanConverter}}"/>
     </Grid>
 </UserControl>

@@ -58,7 +58,7 @@
             <Style.Triggers>
                 <DataTrigger Binding="{Binding HDRIsActive}" Value="True">
                     <Setter Property="Text" Value="{x:Static pres:ProjectLocales.On}"/>
-                    <Setter Property="Foreground" Value="{DynamicResource SuccessBrush}"/>
+                    <Setter Property="Foreground" Value="{DynamicResource SuccessTextBrush}"/>
                     <Setter Property="FontWeight" Value="SemiBold"/>
                 </DataTrigger>
             </Style.Triggers>
