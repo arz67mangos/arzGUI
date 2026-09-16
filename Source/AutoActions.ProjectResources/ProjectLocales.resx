@@ -1242,7 +1242,7 @@ Public License instead of this License.  But first, please read
     <value>Exclusive-fullscreen games overwrite the gamma ramp when they launch, so put this action on Got focus rather than Started for those. The previous colour settings are restored when the application closes.</value>
   </data>
   <data name="DisplayColorGammaRangeWarning" xml:space="preserve">
-    <value>Windows is limiting how far a gamma ramp may deviate from linear, so large brightness, contrast and gamma changes will appear to do nothing. Unlocking sets one value in the registry (GdiIcmGammaRange under HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ICM) to 256. It needs administrator rights and takes effect after a restart.</value>
+    <value>Windows checks every gamma ramp and refuses one that strays too far from linear. Moderate settings apply normally; extreme brightness, contrast or gamma values can be refused, and then nothing on screen changes at all - AutoActions.log says so when it happens. Unlocking allows the full range by setting one registry value (GdiIcmGammaRange under HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ICM) to 256. It needs administrator rights and takes effect after a restart.</value>
   </data>
   <data name="DisplayColorUnlockGammaRange" xml:space="preserve">
     <value>Unlock the full gamma range...</value>

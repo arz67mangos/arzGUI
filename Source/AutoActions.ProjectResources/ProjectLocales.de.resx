@@ -526,7 +526,7 @@
     <value>Spiele im exklusiven Vollbild überschreiben beim Start die Gammakurve. Verwenden Sie für diese Anwendungen deshalb Fokus erhalten statt Gestartet. Die vorherigen Farbeinstellungen werden beim Beenden der Anwendung wiederhergestellt.</value>
   </data>
   <data name="DisplayColorGammaRangeWarning" xml:space="preserve">
-    <value>Windows begrenzt, wie stark eine Gammakurve von linear abweichen darf. Größere Änderungen an Helligkeit, Kontrast und Gamma bleiben dadurch wirkungslos. Beim Freischalten wird ein Registrierungswert (GdiIcmGammaRange unter HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ICM) auf 256 gesetzt. Das erfordert Administratorrechte und wirkt nach einem Neustart.</value>
+    <value>Windows prüft jede Gammakurve und lehnt sie ab, wenn sie zu stark von linear abweicht. Moderate Einstellungen werden normal übernommen; extreme Werte für Helligkeit, Kontrast oder Gamma können abgelehnt werden, dann ändert sich auf dem Bildschirm gar nichts - AutoActions.log hält das fest. Beim Freischalten wird der gesamte Bereich erlaubt, indem ein Registrierungswert (GdiIcmGammaRange unter HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ICM) auf 256 gesetzt wird. Das erfordert Administratorrechte und wirkt nach einem Neustart.</value>
   </data>
   <data name="DisplayColorUnlockGammaRange" xml:space="preserve">
     <value>Vollen Gammabereich freischalten...</value>

@@ -1430,7 +1430,7 @@ namespace AutoActions.ProjectResources {
         }
 
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Windows is limiting how far a gamma ramp may deviate from linear, s... ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die Windows checks every gamma ramp and refuses one that strays too f... ähnelt.
         /// </summary>
         public static string DisplayColorGammaRangeWarning {
             get {
