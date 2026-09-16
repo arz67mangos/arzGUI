@@ -1,0 +1,86 @@
+<UserControl x:Class="AutoActions.Views.DisplayColorActionView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:AutoActions.Views"
+             xmlns:dsp="clr-namespace:AutoActions.Displays;assembly=AutoActions.Displays"
+             xmlns:pres="clr-namespace:AutoActions.ProjectResources;assembly=AutoActions.ProjectResources"
+             xmlns:prflActns="clr-namespace:AutoActions.Profiles.Actions"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance Type=prflActns:DisplayColorAction, IsDesignTimeCreatable=False}">
+    <UserControl.Resources>
+        <DataTemplate x:Key="DisplayColorItemTemplate" DataType="dsp:Display">
+            <TextBlock Style="{StaticResource DefaultTextBlock}" Text="{Binding Name}"/>
+        </DataTemplate>
+    </UserControl.Resources>
+
+    <Grid VerticalAlignment="Top">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Style="{StaticResource DefaultTextBlock}" Grid.Row="0" Grid.Column="0" Margin="5" Text="{x:Static pres:ProjectLocales.Display}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+        <ComboBox Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3" Margin="5" MinWidth="200" ItemsSource="{Binding AllDisplays}" SelectedItem="{Binding Display, UpdateSourceTrigger=PropertyChanged}" ItemTemplate="{StaticResource DisplayColorItemTemplate}" SelectedIndex="0"/>
+
+        <TextBlock Style="{StaticResource DefaultTextBlock}" Grid.Row="1" Grid.Column="0" Margin="5" Text="{x:Static pres:ProjectLocales.DisplayColorVibrance}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+        <CheckBox x:Name="VibranceCheckBox" Grid.Row="1" Grid.Column="1" Margin="5" IsChecked="{Binding ChangeVibrance, Mode=TwoWay}" IsEnabled="{Binding VibranceAndHueSupported}" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+        <Slider Grid.Row="1" Grid.Column="2" Margin="5" MinWidth="200" Minimum="0" Maximum="100" TickFrequency="1" IsSnapToTickEnabled="True" Value="{Binding Vibrance, Mode=TwoWay}" IsEnabled="{Binding ElementName=VibranceCheckBox, Path=IsChecked}" Visibility="{Binding ChangeVibrance, Converter={StaticResource VisibilityBooleanConverter}}" VerticalAlignment="Center"/>
+        <TextBlock Style="{StaticResource DefaultTextBlock}" Grid.Row="1" Grid.Column="3" Margin="5" MinWidth="45" TextAlignment="Right" Text="{Binding Vibrance, StringFormat={}{0:0}%}" Visibility="{Binding ChangeVibrance, Converter={StaticResource VisibilityBooleanConverter}}" VerticalAlignment="Center"/>
+
+        <TextBlock Style="{StaticResource DefaultTextBlock}" Grid.Row="2" Grid.Column="0" Margin="5" Text="{x:Static pres:ProjectLocales.DisplayColorHue}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+        <CheckBox x:Name="HueCheckBox" Grid.Row="2" Grid.Column="1" Margin="5" IsChecked="{Binding ChangeHue, Mode=TwoWay}" IsEnabled="{Binding VibranceAndHueSupported}" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+        <Slider Grid.Row="2" Grid.Column="2" Margin="5" MinWidth="200" Minimum="0" Maximum="359" TickFrequency="1" IsSnapToTickEnabled="True" Value="{Binding Hue, Mode=TwoWay}" IsEnabled="{Binding ElementName=HueCheckBox, Path=IsChecked}" Visibility="{Binding ChangeHue, Converter={StaticResource VisibilityBooleanConverter}}" VerticalAlignment="Center"/>
+        <TextBlock Style="{StaticResource DefaultTextBlock}" Grid.Row="2" Grid.Column="3" Margin="5" MinWidth="45" TextAlignment="Right" Text="{Binding Hue, StringFormat={}{0:0}°}" Visibility="{Binding ChangeHue, Converter={StaticResource VisibilityBooleanConverter}}" VerticalAlignment="Center"/>
+
+        <TextBlock Style="{StaticResource DefaultTextBlock}" Grid.Row="3" Grid.Column="0" Margin="5" Text="{x:Static pres:ProjectLocales.DisplayColorBrightness}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+        <CheckBox x:Name="BrightnessCheckBox" Grid.Row="3" Grid.Column="1" Margin="5" IsChecked="{Binding ChangeBrightness, Mode=TwoWay}" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+        <Slider Grid.Row="3" Grid.Column="2" Margin="5" MinWidth="200" Minimum="0" Maximum="100" TickFrequency="1" IsSnapToTickEnabled="True" Value="{Binding Brightness, Mode=TwoWay}" IsEnabled="{Binding ElementName=BrightnessCheckBox, Path=IsChecked}" Visibility="{Binding ChangeBrightness, Converter={StaticResource VisibilityBooleanConverter}}" VerticalAlignment="Center"/>
+        <TextBlock Style="{StaticResource DefaultTextBlock}" Grid.Row="3" Grid.Column="3" Margin="5" MinWidth="45" TextAlignment="Right" Text="{Binding Brightness, StringFormat={}{0:0}%}" Visibility="{Binding ChangeBrightness, Converter={StaticResource VisibilityBooleanConverter}}" VerticalAlignment="Center"/>
+
+        <TextBlock Style="{StaticResource DefaultTextBlock}" Grid.Row="4" Grid.Column="0" Margin="5" Text="{x:Static pres:ProjectLocales.DisplayColorContrast}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+        <CheckBox x:Name="ContrastCheckBox" Grid.Row="4" Grid.Column="1" Margin="5" IsChecked="{Binding ChangeContrast, Mode=TwoWay}" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+        <Slider Grid.Row="4" Grid.Column="2" Margin="5" MinWidth="200" Minimum="0" Maximum="100" TickFrequency="1" IsSnapToTickEnabled="True" Value="{Binding Contrast, Mode=TwoWay}" IsEnabled="{Binding ElementName=ContrastCheckBox, Path=IsChecked}" Visibility="{Binding ChangeContrast, Converter={StaticResource VisibilityBooleanConverter}}" VerticalAlignment="Center"/>
+        <TextBlock Style="{StaticResource DefaultTextBlock}" Grid.Row="4" Grid.Column="3" Margin="5" MinWidth="45" TextAlignment="Right" Text="{Binding Contrast, StringFormat={}{0:0}%}" Visibility="{Binding ChangeContrast, Converter={StaticResource VisibilityBooleanConverter}}" VerticalAlignment="Center"/>
+
+        <TextBlock Style="{StaticResource DefaultTextBlock}" Grid.Row="5" Grid.Column="0" Margin="5" Text="{x:Static pres:ProjectLocales.DisplayColorGamma}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+        <CheckBox x:Name="GammaCheckBox" Grid.Row="5" Grid.Column="1" Margin="5" IsChecked="{Binding ChangeGamma, Mode=TwoWay}" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+        <Slider Grid.Row="5" Grid.Column="2" Margin="5" MinWidth="200" Minimum="{Binding MinimumGamma, Mode=OneTime}" Maximum="{Binding MaximumGamma, Mode=OneTime}" TickFrequency="0.05" IsSnapToTickEnabled="True" Value="{Binding Gamma, Mode=TwoWay}" IsEnabled="{Binding ElementName=GammaCheckBox, Path=IsChecked}" Visibility="{Binding ChangeGamma, Converter={StaticResource VisibilityBooleanConverter}}" VerticalAlignment="Center"/>
+        <TextBlock Style="{StaticResource DefaultTextBlock}" Grid.Row="5" Grid.Column="3" Margin="5" MinWidth="45" TextAlignment="Right" Text="{Binding Gamma, StringFormat={}{0:0.00}}" Visibility="{Binding ChangeGamma, Converter={StaticResource VisibilityBooleanConverter}}" VerticalAlignment="Center"/>
+
+        <TextBlock Style="{StaticResource DefaultTextBlock}" Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="4" Margin="5,10,5,0"
+                   Foreground="{DynamicResource TextSecondaryBrush}" TextWrapping="Wrap"
+                   Text="{x:Static pres:ProjectLocales.DisplayColorNvidiaOnlyHint}"
+                   Visibility="{Binding VibranceAndHueSupported, Converter={StaticResource InvertVisibilityBooleanConverter}}"/>
+
+        <Border Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="4" Margin="5,10,5,0" Padding="10" CornerRadius="6"
+                BorderThickness="1" BorderBrush="{DynamicResource WarningBrush}" Background="{DynamicResource SurfaceRaisedBrush}"
+                Visibility="{Binding GammaRangeWarningIsVisible, Converter={StaticResource VisibilityBooleanConverter}}">
+            <StackPanel>
+                <TextBlock Style="{StaticResource DefaultTextBlock}" TextWrapping="Wrap" Foreground="{DynamicResource WarningBrush}"
+                           Text="{x:Static pres:ProjectLocales.DisplayColorGammaRangeWarning}"/>
+                <Button Style="{StaticResource SecondaryButton}" Margin="0,8,0,0" HorizontalAlignment="Left"
+                        Command="{Binding UnlockGammaRangeCommand}"
+                        Content="{x:Static pres:ProjectLocales.DisplayColorUnlockGammaRange}"/>
+            </StackPanel>
+        </Border>
+
+        <TextBlock Style="{StaticResource DefaultTextBlock}" Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="4" Margin="5,10,5,5"
+                   Foreground="{DynamicResource TextSecondaryBrush}" TextWrapping="Wrap"
+                   Text="{x:Static pres:ProjectLocales.DisplayColorFullscreenHint}"/>
+    </Grid>
+</UserControl>

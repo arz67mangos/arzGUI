@@ -1356,5 +1356,113 @@ namespace AutoActions.ProjectResources {
                 return ResourceManager.GetString("ForkRepository", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Display colour ähnelt.
+        /// </summary>
+        public static string DisplayColorAction {
+            get {
+                return ResourceManager.GetString("DisplayColorAction", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Digital vibrance ähnelt.
+        /// </summary>
+        public static string DisplayColorVibrance {
+            get {
+                return ResourceManager.GetString("DisplayColorVibrance", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Hue ähnelt.
+        /// </summary>
+        public static string DisplayColorHue {
+            get {
+                return ResourceManager.GetString("DisplayColorHue", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Brightness ähnelt.
+        /// </summary>
+        public static string DisplayColorBrightness {
+            get {
+                return ResourceManager.GetString("DisplayColorBrightness", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Contrast ähnelt.
+        /// </summary>
+        public static string DisplayColorContrast {
+            get {
+                return ResourceManager.GetString("DisplayColorContrast", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Gamma ähnelt.
+        /// </summary>
+        public static string DisplayColorGamma {
+            get {
+                return ResourceManager.GetString("DisplayColorGamma", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Digital vibrance and hue need an NVIDIA GPU. Brightness, contrast a... ähnelt.
+        /// </summary>
+        public static string DisplayColorNvidiaOnlyHint {
+            get {
+                return ResourceManager.GetString("DisplayColorNvidiaOnlyHint", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Exclusive-fullscreen games overwrite the gamma ramp when they launc... ähnelt.
+        /// </summary>
+        public static string DisplayColorFullscreenHint {
+            get {
+                return ResourceManager.GetString("DisplayColorFullscreenHint", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Windows is limiting how far a gamma ramp may deviate from linear, s... ähnelt.
+        /// </summary>
+        public static string DisplayColorGammaRangeWarning {
+            get {
+                return ResourceManager.GetString("DisplayColorGammaRangeWarning", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Unlock the full gamma range... ähnelt.
+        /// </summary>
+        public static string DisplayColorUnlockGammaRange {
+            get {
+                return ResourceManager.GetString("DisplayColorUnlockGammaRange", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Some colour settings could not be applied. ähnelt.
+        /// </summary>
+        public static string DisplayColorPartlyUnavailable {
+            get {
+                return ResourceManager.GetString("DisplayColorPartlyUnavailable", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Choose at least one colour setting to change. ähnelt.
+        /// </summary>
+        public static string MessageMissingDisplayColorSetting {
+            get {
+                return ResourceManager.GetString("MessageMissingDisplayColorSetting", resourceCulture);
+            }
+        }
     }
 }

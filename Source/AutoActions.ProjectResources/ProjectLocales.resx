@@ -142,7 +142,7 @@
     <value>All displays</value>
   </data>
   <data name="AlreadyRunning" xml:space="preserve">
-    <value>ArzActions is already running.</value>
+    <value>ArzFlow is already running.</value>
   </data>
   <data name="AppClosedActions" xml:space="preserve">
     <value>Application closed actions</value>
@@ -175,7 +175,7 @@
     <value>Audio</value>
   </data>
   <data name="AutoActions" xml:space="preserve">
-    <value>ArzActions</value>
+    <value>ArzFlow</value>
   </data>
   <data name="AutoActionsToolTip" xml:space="preserve">
     <value>Enable HDR on this monitor, based on the applications</value>
@@ -1143,7 +1143,7 @@ Public License instead of this License.  But first, please read
     <value>Status</value>
   </data>
   <data name="Updating" xml:space="preserve">
-    <value>Updating ArzActions...</value>
+    <value>Updating ArzFlow...</value>
   </data>
   <data name="Version" xml:space="preserve">
     <value>Version</value>
@@ -1216,5 +1216,41 @@ Public License instead of this License.  But first, please read
   </data>
   <data name="ForkRepository" xml:space="preserve">
     <value>This fork</value>
+  </data>
+  <data name="DisplayColorAction" xml:space="preserve">
+    <value>Display colour</value>
+  </data>
+  <data name="DisplayColorVibrance" xml:space="preserve">
+    <value>Digital vibrance</value>
+  </data>
+  <data name="DisplayColorHue" xml:space="preserve">
+    <value>Hue</value>
+  </data>
+  <data name="DisplayColorBrightness" xml:space="preserve">
+    <value>Brightness</value>
+  </data>
+  <data name="DisplayColorContrast" xml:space="preserve">
+    <value>Contrast</value>
+  </data>
+  <data name="DisplayColorGamma" xml:space="preserve">
+    <value>Gamma</value>
+  </data>
+  <data name="DisplayColorNvidiaOnlyHint" xml:space="preserve">
+    <value>Digital vibrance and hue need an NVIDIA GPU. Brightness, contrast and gamma work on any GPU.</value>
+  </data>
+  <data name="DisplayColorFullscreenHint" xml:space="preserve">
+    <value>Exclusive-fullscreen games overwrite the gamma ramp when they launch, so put this action on Got focus rather than Started for those. The previous colour settings are restored when the application closes.</value>
+  </data>
+  <data name="DisplayColorGammaRangeWarning" xml:space="preserve">
+    <value>Windows is limiting how far a gamma ramp may deviate from linear, so large brightness, contrast and gamma changes will appear to do nothing. Unlocking sets one value in the registry (GdiIcmGammaRange under HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ICM) to 256. It needs administrator rights and takes effect after a restart.</value>
+  </data>
+  <data name="DisplayColorUnlockGammaRange" xml:space="preserve">
+    <value>Unlock the full gamma range...</value>
+  </data>
+  <data name="DisplayColorPartlyUnavailable" xml:space="preserve">
+    <value>Some colour settings could not be applied.</value>
+  </data>
+  <data name="MessageMissingDisplayColorSetting" xml:space="preserve">
+    <value>Choose at least one colour setting to change.</value>
   </data>
 </root>

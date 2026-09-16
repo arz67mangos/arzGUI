@@ -31,6 +31,10 @@ namespace AutoActions
         // Mic monitoring state captured before a profile's Started actions changed it, keyed by application,
         // so Closed can put it back without the user having to configure a Closed action.
         readonly Dictionary<ApplicationItem, MicMonitoringSnapshot> _micMonitoringSnapshots = new Dictionary<ApplicationItem, MicMonitoringSnapshot>();
+        // Same idea for display colour. Captured on Started *or* GotFocus, whichever runs the first
+        // DisplayColorAction: an exclusive-fullscreen game overwrites the gamma ramp when it launches,
+        // so for those the action has to sit on GotFocus and there is no Started to capture at.
+        readonly Dictionary<ApplicationItem, DisplayColorSnapshot> _displayColorSnapshots = new Dictionary<ApplicationItem, DisplayColorSnapshot>();
         private bool _showView = false;
         private ApplicationItem _currentApplication = null;
         private Profile _currentProfile = null;
@@ -251,6 +255,21 @@ namespace AutoActions
                     Globals.Logs.Add($"[{application.ApplicationName}] mic monitoring before Started actions: {snapshot}", false);
                 }
 
+                bool touchesDisplayColor = actions.OfType<DisplayColorAction>().Any();
+                if (touchesDisplayColor && (changedType == ApplicationChangedType.Started || changedType == ApplicationChangedType.GotFocus))
+                {
+                    bool alreadyCaptured;
+                    lock (_displayColorSnapshots)
+                        alreadyCaptured = _displayColorSnapshots.ContainsKey(application);
+                    if (!alreadyCaptured)
+                    {
+                        DisplayColorSnapshot snapshot = DisplayColorControl.Capture(DisplayManagerHandler.Instance.GetActiveMonitors());
+                        lock (_displayColorSnapshots)
+                            _displayColorSnapshots[application] = snapshot;
+                        Globals.Logs.Add($"[{application.ApplicationName}] display colour before {changedType} actions: {snapshot}", false);
+                    }
+                }
+
                 if (actions.Count > 0)
                     App.Current.Dispatcher.Invoke(() => LastActions.Clear());
                 foreach (var action in actions)
@@ -283,11 +302,35 @@ namespace AutoActions
                 if (touchesMicMonitoring && MicMonitoringStatus != null)
                     MicMonitoringStatus.Refresh();
 
+                if (changedType == ApplicationChangedType.Closed)
+                {
+                    DisplayColorSnapshot colorSnapshot;
+                    bool capturedColor;
+                    lock (_displayColorSnapshots)
+                    {
+                        capturedColor = _displayColorSnapshots.TryGetValue(application, out colorSnapshot);
+                        if (capturedColor)
+                            _displayColorSnapshots.Remove(application);
+                    }
+                    if (capturedColor && touchesDisplayColor)
+                        Globals.Logs.Add($"[{application.ApplicationName}] explicit Closed display colour action ran; captured state ({colorSnapshot}) discarded.", false);
+                    else if (capturedColor)
+                    {
+                        Globals.Logs.Add($"[{application.ApplicationName}] restoring display colour to {colorSnapshot}.", false);
+                        DisplayColorControl.Restore(colorSnapshot);
+                    }
+                }
+
                 if (profile.RestartApplication && changedType == ApplicationChangedType.Started)
                     assignment.Application.Restart();
                 if (changedType == ApplicationChangedType.Closed)
                     CurrentProfile = null;
             }
+        }
+
+        private void DisplayColorControl_NewLog(object sender, string message)
+        {
+            Globals.Logs.Add(message, false);
         }
 
         private void ActionLog(object sender, LogEntry entry)
@@ -314,6 +357,9 @@ namespace AutoActions
             DisplayManagerHandler.Instance.HDRIsActiveChanged += MonitorManager_HDRIsActiveChanged;
             DisplayManagerHandler.Instance.ExceptionThrown += (o, ex) => Globals.Logs.AddException(ex);
             DisplayManagerHandler.Instance.NewLog += (o, message) => Globals.Logs.Add(message, false);
+            // Static event, so drop any earlier subscription before adding one.
+            DisplayColorControl.NewLog -= DisplayColorControl_NewLog;
+            DisplayColorControl.NewLog += DisplayColorControl_NewLog;
             DisplayManagerHandler.Instance.SelectedHDR = !Settings.GlobalAutoActions;
             HDRIsActive = DisplayManagerHandler.Instance.GlobalHDRIsActive;
         }

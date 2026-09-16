@@ -136,7 +136,7 @@
     <value>Alle Displays</value>
   </data>
   <data name="AlreadyRunning" xml:space="preserve">
-    <value>ArzActions wurde bereits gestartet.</value>
+    <value>ArzFlow wurde bereits gestartet.</value>
   </data>
   <data name="AppClosedActions" xml:space="preserve">
     <value>"Anwendung beendet"-Aktionen</value>
@@ -169,7 +169,7 @@
     <value>Audio</value>
   </data>
   <data name="AutoActions" xml:space="preserve">
-    <value>ArzActions</value>
+    <value>ArzFlow</value>
   </data>
   <data name="AutoActionsToolTip" xml:space="preserve">
     <value>Aktivere HDR für diesen Monitor, basierend auf der Anwendung.</value>
@@ -427,7 +427,7 @@
     <value>Status</value>
   </data>
   <data name="Updating" xml:space="preserve">
-    <value>Aktualisiere ArzActions...</value>
+    <value>Aktualisiere ArzFlow...</value>
   </data>
   <data name="Version" xml:space="preserve">
     <value>Version</value>
@@ -500,5 +500,41 @@
   </data>
   <data name="ForkRepository" xml:space="preserve">
     <value>Dieser Fork</value>
+  </data>
+  <data name="DisplayColorAction" xml:space="preserve">
+    <value>Bildschirmfarbe</value>
+  </data>
+  <data name="DisplayColorVibrance" xml:space="preserve">
+    <value>Digitale Vibranz</value>
+  </data>
+  <data name="DisplayColorHue" xml:space="preserve">
+    <value>Farbton</value>
+  </data>
+  <data name="DisplayColorBrightness" xml:space="preserve">
+    <value>Helligkeit</value>
+  </data>
+  <data name="DisplayColorContrast" xml:space="preserve">
+    <value>Kontrast</value>
+  </data>
+  <data name="DisplayColorGamma" xml:space="preserve">
+    <value>Gamma</value>
+  </data>
+  <data name="DisplayColorNvidiaOnlyHint" xml:space="preserve">
+    <value>Digitale Vibranz und Farbton benötigen eine NVIDIA-GPU. Helligkeit, Kontrast und Gamma funktionieren mit jeder GPU.</value>
+  </data>
+  <data name="DisplayColorFullscreenHint" xml:space="preserve">
+    <value>Spiele im exklusiven Vollbild überschreiben beim Start die Gammakurve. Verwenden Sie für diese Anwendungen deshalb Fokus erhalten statt Gestartet. Die vorherigen Farbeinstellungen werden beim Beenden der Anwendung wiederhergestellt.</value>
+  </data>
+  <data name="DisplayColorGammaRangeWarning" xml:space="preserve">
+    <value>Windows begrenzt, wie stark eine Gammakurve von linear abweichen darf. Größere Änderungen an Helligkeit, Kontrast und Gamma bleiben dadurch wirkungslos. Beim Freischalten wird ein Registrierungswert (GdiIcmGammaRange unter HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ICM) auf 256 gesetzt. Das erfordert Administratorrechte und wirkt nach einem Neustart.</value>
+  </data>
+  <data name="DisplayColorUnlockGammaRange" xml:space="preserve">
+    <value>Vollen Gammabereich freischalten...</value>
+  </data>
+  <data name="DisplayColorPartlyUnavailable" xml:space="preserve">
+    <value>Einige Farbeinstellungen konnten nicht angewendet werden.</value>
+  </data>
+  <data name="MessageMissingDisplayColorSetting" xml:space="preserve">
+    <value>Wählen Sie mindestens eine Farbeinstellung aus.</value>
   </data>
 </root>
