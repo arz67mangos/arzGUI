@@ -13,8 +13,16 @@
         xmlns:local="clr-namespace:AutoActions.Views"
         xmlns:root="clr-namespace:AutoActions"
         mc:Ignorable="d"
-        Title="{x:Static pres:ProjectLocales.AutoActions}" Name="MainWindow" MinHeight="480" MinWidth="720" Background="{DynamicResource SurfaceBrush}" Closing="Window_Closing"  Visibility="{Binding ShowView, Mode=TwoWay, Converter={StaticResource VisibilityBooleanConverter}}"
+        Title="{x:Static pres:ProjectLocales.AutoActions}" Name="MainWindow" MinHeight="540" MinWidth="840" Background="{DynamicResource WindowBackdropBrush}" Closing="Window_Closing"  Visibility="{Binding ShowView, Mode=TwoWay, Converter={StaticResource VisibilityBooleanConverter}}"
          Loaded="MainWindow_Loaded" TextOptions.TextFormattingMode="Display" UseLayoutRounding="True">
+    <!--
+        THESIS: ArzFlow makes application-state automation readable as a calm sequence, not a dense settings table.
+        OWN-WORLD: midnight-to-graphite ground, translucent layered surfaces, coral intent, mint status, soft 10–14px corners.
+        STORY: choose a profile, understand each lifecycle lane, then add, edit, or remove an action without ambiguity.
+        FIRST VIEWPORT: compact glass sidebar at left; profile list and four action lanes occupy the working canvas; actions stay close to their cards.
+        FORM: desktop control surface, chosen profile-columns composition, seed f2d56dc1.
+        FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance.
+    -->
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Closing">
             <i:InvokeCommandAction Command="{Binding ClosingCommand}"/>
@@ -65,7 +73,10 @@
         </Style>
 
     </Window.Resources>
-    <Grid x:Name="MainGrid">
+    <Grid x:Name="MainGrid" Background="Transparent">
+        <Grid.RenderTransform>
+            <TranslateTransform x:Name="MainGridTranslate"/>
+        </Grid.RenderTransform>
         <!-- Navigation: a TabControl styled as a left sidebar (SidebarTabControl). The header and
              footer blocks are attached content; every tab's page is unchanged. -->
         <TabControl Style="{StaticResource SidebarTabControl}" Padding="8">
@@ -77,13 +88,13 @@
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <Image Grid.Column="0" Source="/Logo.ico" Width="28" Height="28" RenderOptions.BitmapScalingMode="HighQuality" VerticalAlignment="Center"/>
+                        <Image Grid.Column="0" Source="/AutoActions.ProjectResources;component/Resources/Logo.png" Width="32" Height="32" RenderOptions.BitmapScalingMode="HighQuality" VerticalAlignment="Center"/>
                         <StackPanel Grid.Column="1" Margin="10,0,0,0" VerticalAlignment="Center">
                             <TextBlock Style="{StaticResource DefaultTextBlock}" Text="{x:Static pres:ProjectLocales.AutoActions}" FontSize="17" FontWeight="SemiBold" Margin="0"/>
                             <TextBlock Style="{StaticResource CaptionTextBlock}" Text="{Binding Path=Version, Mode=OneWay, StringFormat=V\{0\}}" Margin="0,1,0,0"/>
                         </StackPanel>
                     </Grid>
-                    <Border Margin="0,16,0,0" Padding="10,6" CornerRadius="{StaticResource DefaultCornerRadius}" Background="{DynamicResource SurfaceRaisedBrush}" BorderBrush="{DynamicResource StrokeBrush}" BorderThickness="1">
+                    <Border Margin="0,16,0,0" Padding="10,7" CornerRadius="{StaticResource DefaultCornerRadius}" Background="{DynamicResource GlassRaisedBrush}" BorderBrush="{DynamicResource GlassStrokeBrush}" BorderThickness="1">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto"/>

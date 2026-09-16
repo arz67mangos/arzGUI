@@ -13,6 +13,11 @@
     <Color x:Key="SurfaceColor">#F4F5F7</Color>
     <Color x:Key="SurfaceRaisedColor">#FFFFFF</Color>
     <Color x:Key="SurfaceSunkenColor">#E9EBEF</Color>
+    <Color x:Key="BackdropStartColor">#F5F8FC</Color>
+    <Color x:Key="BackdropEndColor">#E6EDF7</Color>
+    <Color x:Key="GlassSurfaceColor">#B8FFFFFF</Color>
+    <Color x:Key="GlassRaisedColor">#DEFFFFFF</Color>
+    <Color x:Key="GlassStrokeColor">#5215263A</Color>
 
     <!-- Borders -->
     <Color x:Key="StrokeColor">#DFE3E8</Color>
@@ -50,6 +55,13 @@
     <SolidColorBrush x:Key="SurfaceBrush" Color="{StaticResource SurfaceColor}"/>
     <SolidColorBrush x:Key="SurfaceRaisedBrush" Color="{StaticResource SurfaceRaisedColor}"/>
     <SolidColorBrush x:Key="SurfaceSunkenBrush" Color="{StaticResource SurfaceSunkenColor}"/>
+    <LinearGradientBrush x:Key="WindowBackdropBrush" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="{StaticResource BackdropStartColor}" Offset="0"/>
+        <GradientStop Color="{StaticResource BackdropEndColor}" Offset="1"/>
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="GlassSurfaceBrush" Color="{StaticResource GlassSurfaceColor}"/>
+    <SolidColorBrush x:Key="GlassRaisedBrush" Color="{StaticResource GlassRaisedColor}"/>
+    <SolidColorBrush x:Key="GlassStrokeBrush" Color="{StaticResource GlassStrokeColor}"/>
     <SolidColorBrush x:Key="StrokeBrush" Color="{StaticResource StrokeColor}"/>
     <SolidColorBrush x:Key="StrokeStrongBrush" Color="{StaticResource StrokeStrongColor}"/>
     <SolidColorBrush x:Key="TextPrimaryBrush" Color="{StaticResource TextPrimaryColor}"/>

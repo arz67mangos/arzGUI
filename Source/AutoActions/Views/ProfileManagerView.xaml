@@ -20,30 +20,23 @@
     </corewpf:UserControlBase.DialogService>
     <UserControl.Resources>
         <DataTemplate x:Key="ProfileActionItemTemplate" DataType="IProfileAction">
-            <Grid>
-                <Border Style="{StaticResource DefaultBorder}" Margin="5,5"/>
-                <Grid  MinWidth="100" Width="300" Height="80" Margin="10,5">
+            <Grid Width="310" Height="70" Margin="6,4">
+                <Border Style="{StaticResource DefaultBorder}"/>
+                <Grid Margin="12,8">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="Auto"/>
-
+                        <ColumnDefinition Width="38"/>
+                        <ColumnDefinition Width="38"/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
-                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
-                    <Button Grid.Column="2" Grid.Row="0" Grid.RowSpan="1" Content="..."   VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,0,5,0" Width="25"  FontSize="20" Command="{Binding  ElementName=ProfileList, Path=SelectedItem.EditProfileActionCommand}" CommandParameter="{Binding}" />
-                    <Button Grid.Column="3" Grid.Row="0" Grid.RowSpan="1"   Content="-"  VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,0,5,0" Width="25" FontSize="20" Command="{Binding  ElementName=ProfileList, Path=SelectedItem.RemoveProfileActionCommand}" CommandParameter="{Binding}" />
-                    <TextBlock Style="{StaticResource DefaultTextBlock}" Grid.Column="0" Grid.Row="0" Text="{x:Static pres:ProjectLocales.ActionType}"  Margin="5,1" VerticalAlignment="Top" HorizontalAlignment="Left" FontWeight="DemiBold" />
-                    <TextBlock Style="{StaticResource DefaultTextBlock}" Grid.Column="0" Grid.ColumnSpan="3"  Grid.Row="1" Text="{Binding ActionTypeName}"  Margin="5,1" VerticalAlignment="Top" HorizontalAlignment="Left" />
-                    <TextBlock Style="{StaticResource DefaultTextBlock}" Grid.Column="0" Grid.Row="3" Text="{x:Static pres:ProjectLocales.Actions}"  Margin="5,1" VerticalAlignment="Top" HorizontalAlignment="Left" FontWeight="DemiBold" />
-                    <TextBlock Style="{StaticResource DefaultTextBlock}" Grid.Column="1" Grid.ColumnSpan="3"  Grid.Row="3" Text="{Binding ActionDescription}" TextTrimming="CharacterEllipsis" ToolTip="{Binding ActionDescription}"  Margin="5,1" VerticalAlignment="Top" HorizontalAlignment="Left" />
+                    <TextBlock Style="{StaticResource DefaultTextBlock}" Grid.Column="0" Grid.Row="0" Text="{Binding ActionTypeName}" Margin="0" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"/>
+                    <TextBlock Style="{StaticResource CaptionTextBlock}" Grid.Column="0" Grid.Row="1" Text="{Binding ActionDescription}" TextTrimming="CharacterEllipsis" ToolTip="{Binding ActionDescription}" Margin="0,3,8,0" VerticalAlignment="Top"/>
+                    <Button Style="{StaticResource ActionIconButton}" Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" Content="&#xE712;" ToolTip="Edit action" AutomationProperties.Name="Edit action" Command="{Binding ElementName=ProfileList, Path=SelectedItem.EditProfileActionCommand}" CommandParameter="{Binding}"/>
+                    <Button Style="{StaticResource ActionDeleteButton}" Grid.Column="2" Grid.Row="0" Grid.RowSpan="2" Content="&#xE711;" ToolTip="Remove action" AutomationProperties.Name="Remove action" Command="{Binding ElementName=ProfileList, Path=SelectedItem.RemoveProfileActionCommand}" CommandParameter="{Binding}"/>
                 </Grid>
-
             </Grid>
         </DataTemplate>
 
@@ -60,7 +53,7 @@
 
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="250"/>
+            <ColumnDefinition Width="230"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
@@ -168,8 +161,8 @@
                 <ColumnDefinition/>
 
             </Grid.ColumnDefinitions>
-            <Button Grid.Column="1"  Style="{StaticResource IconButton}" Command="{Binding AddProfileCommand}" Content="+" Margin="10,5,5,10" Height="Auto"  />
-            <Button Grid.Column="2" Style="{StaticResource IconButton}" Command="{Binding RemoveProfileCommand}" CommandParameter="{Binding ElementName=ProfileList, Path=SelectedItem}"  Height="Auto" Content="-" IsEnabled="{Binding ElementName=ProfileList, Path=SelectedItem, Converter={StaticResource IsNotNullConverter}}"   Margin="5,5,5,10" />
+            <Button Grid.Column="1" Style="{StaticResource ActionIconButton}" FontFamily="{StaticResource IconFont}" Command="{Binding AddProfileCommand}" Content="&#xE710;" ToolTip="Add profile" AutomationProperties.Name="Add profile" Margin="10,5,5,10"/>
+            <Button Grid.Column="2" Style="{StaticResource ActionDeleteButton}" FontFamily="{StaticResource IconFont}" Command="{Binding RemoveProfileCommand}" CommandParameter="{Binding ElementName=ProfileList, Path=SelectedItem}" Content="&#xE74D;" ToolTip="Remove profile" AutomationProperties.Name="Remove profile" IsEnabled="{Binding ElementName=ProfileList, Path=SelectedItem, Converter={StaticResource IsNotNullConverter}}" Margin="5,5,5,10"/>
         </Grid>
 
     </Grid>

@@ -4,14 +4,14 @@
                     xmlns:thm="clr-namespace:AutoActions.Theming"
                     xmlns:corewpf="clr-namespace:CodectoryCore.UI.Wpf;assembly=CodectoryCore.UI.Wpf">
 
-    <!-- Scale: 8px spacing, 6px radii, 14px body text. Brushes are DynamicResource so the theme can swap live. -->
+    <!-- Scale: 8px spacing, 10px radii, 14px body text. Brushes are DynamicResource so the theme can swap live. -->
     <system:Double x:Key="CaptionFontSize">12</system:Double>
     <system:Double x:Key="DefaultFontSize">14</system:Double>
     <system:Double x:Key="SubTitleFontSize">18</system:Double>
     <system:Double x:Key="TitleFontSize">24</system:Double>
-    <system:Double x:Key="DefaultRadius">6</system:Double>
-    <CornerRadius x:Key="DefaultCornerRadius">6</CornerRadius>
-    <CornerRadius x:Key="SmallCornerRadius">4</CornerRadius>
+    <system:Double x:Key="DefaultRadius">10</system:Double>
+    <CornerRadius x:Key="DefaultCornerRadius">10</CornerRadius>
+    <CornerRadius x:Key="SmallCornerRadius">7</CornerRadius>
     <Thickness x:Key="CardPadding">16</Thickness>
     <Thickness x:Key="CardMargin">8</Thickness>
     <FontFamily x:Key="IconFont">Segoe MDL2 Assets</FontFamily>
@@ -21,9 +21,9 @@
     <!-- A card: raised surface with a hairline border. Used everywhere the old accent-outlined box was. -->
     <Style x:Key="DefaultBorder" TargetType="Border">
         <Setter Property="CornerRadius" Value="{StaticResource DefaultCornerRadius}"/>
-        <Setter Property="BorderBrush" Value="{DynamicResource StrokeBrush}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource GlassStrokeBrush}"/>
         <Setter Property="BorderThickness" Value="1"/>
-        <Setter Property="Background" Value="{DynamicResource SurfaceRaisedBrush}"/>
+        <Setter Property="Background" Value="{DynamicResource GlassRaisedBrush}"/>
         <Setter Property="SnapsToDevicePixels" Value="True"/>
         <Style.Triggers>
             <Trigger Property="IsEnabled" Value="False">
@@ -42,7 +42,7 @@
     </Style>
 
     <Style x:Key="DefaultUserControl" TargetType="UserControl">
-        <Setter Property="Background" Value="{DynamicResource SurfaceBrush}"/>
+        <Setter Property="Background" Value="Transparent"/>
         <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
         <Setter Property="FontSize" Value="{StaticResource DefaultFontSize}"/>
         <Setter Property="TextOptions.TextFormattingMode" Value="Display"/>
@@ -52,7 +52,7 @@
     <!-- DialogService creates this Window type in the external UI assembly. Styling the shared
          host keeps every modal on the same live light/dark tokens as its UserControl content. -->
     <Style TargetType="{x:Type corewpf:DialogView}">
-        <Setter Property="Background" Value="{DynamicResource SurfaceBrush}"/>
+        <Setter Property="Background" Value="{DynamicResource WindowBackdropBrush}"/>
         <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
         <Setter Property="FontFamily" Value="Segoe UI"/>
         <Setter Property="FontSize" Value="{StaticResource DefaultFontSize}"/>
@@ -232,7 +232,10 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="TextBoxBase">
-                    <Border x:Name="Bd" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="{StaticResource DefaultCornerRadius}">
+                    <Border x:Name="Bd" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="{StaticResource DefaultCornerRadius}" RenderTransformOrigin="0.5,0.5">
+                        <Border.RenderTransform>
+                            <ScaleTransform ScaleX="1" ScaleY="1"/>
+                        </Border.RenderTransform>
                         <ScrollViewer x:Name="PART_ContentHost" Margin="{TemplateBinding Padding}" Focusable="False" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
                     </Border>
                     <ControlTemplate.Triggers>
@@ -282,6 +285,11 @@
                         </Trigger>
                         <Trigger Property="IsPressed" Value="True">
                             <Setter TargetName="Bd" Property="Background" Value="{DynamicResource AccentPressedBrush}"/>
+                            <Setter TargetName="Bd" Property="RenderTransform">
+                                <Setter.Value>
+                                    <ScaleTransform ScaleX="0.97" ScaleY="0.97"/>
+                                </Setter.Value>
+                            </Setter>
                         </Trigger>
                         <Trigger Property="IsKeyboardFocused" Value="True">
                             <Setter TargetName="Bd" Property="BorderBrush" Value="{DynamicResource TextPrimaryBrush}"/>
@@ -309,7 +317,10 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
-                    <Border x:Name="Bd" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="{StaticResource DefaultCornerRadius}">
+                    <Border x:Name="Bd" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="{StaticResource DefaultCornerRadius}" RenderTransformOrigin="0.5,0.5">
+                        <Border.RenderTransform>
+                            <ScaleTransform ScaleX="1" ScaleY="1"/>
+                        </Border.RenderTransform>
                         <ContentPresenter Margin="{TemplateBinding Padding}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" RecognizesAccessKey="True" TextElement.Foreground="{TemplateBinding Foreground}"/>
                     </Border>
                     <ControlTemplate.Triggers>
@@ -319,6 +330,11 @@
                         </Trigger>
                         <Trigger Property="IsPressed" Value="True">
                             <Setter TargetName="Bd" Property="Background" Value="{DynamicResource ControlPressedBrush}"/>
+                            <Setter TargetName="Bd" Property="RenderTransform">
+                                <Setter.Value>
+                                    <ScaleTransform ScaleX="0.97" ScaleY="0.97"/>
+                                </Setter.Value>
+                            </Setter>
                         </Trigger>
                         <Trigger Property="IsKeyboardFocused" Value="True">
                             <Setter TargetName="Bd" Property="BorderBrush" Value="{DynamicResource AccentBrush}"/>
@@ -356,6 +372,22 @@
         <Setter Property="Height" Value="32"/>
         <Setter Property="MinHeight" Value="32"/>
         <Setter Property="FontSize" Value="16"/>
+    </Style>
+
+    <Style x:Key="ActionIconButton" TargetType="Button" BasedOn="{StaticResource IconButton}">
+        <Setter Property="Width" Value="34"/>
+        <Setter Property="Height" Value="34"/>
+        <Setter Property="MinHeight" Value="34"/>
+        <Setter Property="FontFamily" Value="{StaticResource IconFont}"/>
+        <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+        <Setter Property="Background" Value="{DynamicResource GlassSurfaceBrush}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource GlassStrokeBrush}"/>
+    </Style>
+
+    <Style x:Key="ActionDeleteButton" TargetType="Button" BasedOn="{StaticResource ActionIconButton}">
+        <Setter Property="Foreground" Value="{DynamicResource DangerBrush}"/>
+        <Setter Property="Background" Value="{DynamicResource AccentSoftBrush}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource AccentBrush}"/>
     </Style>
 
     <Style x:Key="DefaultCheckBox" TargetType="{x:Type CheckBox}">
@@ -574,7 +606,7 @@
     </Style>
 
     <Style x:Key="SidebarTabControl" TargetType="TabControl">
-        <Setter Property="Background" Value="{DynamicResource SurfaceBrush}"/>
+        <Setter Property="Background" Value="Transparent"/>
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="Padding" Value="0"/>
         <Setter Property="TabStripPlacement" Value="Left"/>
@@ -582,19 +614,19 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="TabControl">
-                    <Grid Background="{TemplateBinding Background}" KeyboardNavigation.TabNavigation="Local" SnapsToDevicePixels="True">
+                    <Grid Background="{DynamicResource WindowBackdropBrush}" KeyboardNavigation.TabNavigation="Local" SnapsToDevicePixels="True">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="220"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <Border Grid.Column="0" Background="{DynamicResource SurfaceSunkenBrush}" BorderBrush="{DynamicResource StrokeBrush}" BorderThickness="0,0,1,0">
+                        <Border Grid.Column="0" Margin="10" Background="{DynamicResource GlassSurfaceBrush}" BorderBrush="{DynamicResource GlassStrokeBrush}" BorderThickness="1" CornerRadius="14">
                             <DockPanel LastChildFill="True">
                                 <ContentPresenter DockPanel.Dock="Top" Content="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(thm:Sidebar.Header)}" Margin="16,20,16,12"/>
                                 <ContentPresenter DockPanel.Dock="Bottom" Content="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(thm:Sidebar.Footer)}" Margin="8,8,8,12"/>
                                 <TabPanel x:Name="HeaderPanel" IsItemsHost="True" KeyboardNavigation.TabIndex="1" Margin="0,4" VerticalAlignment="Top"/>
                             </DockPanel>
                         </Border>
-                        <Border Grid.Column="1" x:Name="ContentPanel" Background="{TemplateBinding Background}" KeyboardNavigation.TabNavigation="Local" KeyboardNavigation.DirectionalNavigation="Contained" KeyboardNavigation.TabIndex="2">
+                        <Border Grid.Column="1" x:Name="ContentPanel" Background="Transparent" KeyboardNavigation.TabNavigation="Local" KeyboardNavigation.DirectionalNavigation="Contained" KeyboardNavigation.TabIndex="2">
                             <ContentPresenter x:Name="PART_SelectedContentHost" ContentSource="SelectedContent" Margin="{TemplateBinding Padding}"/>
                         </Border>
                     </Grid>

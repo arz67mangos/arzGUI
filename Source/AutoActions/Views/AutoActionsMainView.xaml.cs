@@ -5,6 +5,7 @@ using System.Configuration;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media.Animation;
 
 namespace AutoActions.Views
 {
@@ -14,6 +15,7 @@ namespace AutoActions.Views
     public partial class AutoActionsMainView : MainWindowBase
     {
         readonly object _listResizeLock = new object();
+        bool _hasAnimatedIn;
         public AutoActionsMainView()
         {
             InitializeComponent();
@@ -42,6 +44,19 @@ namespace AutoActions.Views
                 }
             }
             catch  { }       
+
+            if (!_hasAnimatedIn && SystemParameters.ClientAreaAnimation)
+            {
+                _hasAnimatedIn = true;
+                MainGrid.BeginAnimation(OpacityProperty, new DoubleAnimation(0.55, 1, TimeSpan.FromMilliseconds(220))
+                {
+                    EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseOut }
+                });
+                MainGridTranslate.BeginAnimation(System.Windows.Media.TranslateTransform.YProperty, new DoubleAnimation(8, 0, TimeSpan.FromMilliseconds(220))
+                {
+                    EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseOut }
+                });
+            }
         }
 
         private void Instance_SettingsLoaded(object sender, EventArgs e)
