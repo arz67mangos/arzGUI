@@ -1527,5 +1527,140 @@ namespace AutoActions.ProjectResources {
                 return ResourceManager.GetString("RecordDevice", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Presets ähnelt.
+        /// </summary>
+        public static string QuickSettingsPresets {
+            get {
+                return ResourceManager.GetString("QuickSettingsPresets", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Save as preset ähnelt.
+        /// </summary>
+        public static string QuickSettingsSavePreset {
+            get {
+                return ResourceManager.GetString("QuickSettingsSavePreset", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Preset name ähnelt.
+        /// </summary>
+        public static string QuickSettingsPresetName {
+            get {
+                return ResourceManager.GetString("QuickSettingsPresetName", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die A preset is an action shortcut, so it also appears on the Status pa... ähnelt.
+        /// </summary>
+        public static string QuickSettingsPresetsHint {
+            get {
+                return ResourceManager.GetString("QuickSettingsPresetsHint", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Apply ähnelt.
+        /// </summary>
+        public static string Apply {
+            get {
+                return ResourceManager.GetString("Apply", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Remove ähnelt.
+        /// </summary>
+        public static string Remove {
+            get {
+                return ResourceManager.GetString("Remove", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Hotkey ähnelt.
+        /// </summary>
+        public static string Hotkey {
+            get {
+                return ResourceManager.GetString("Hotkey", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Click and press a combination with Ctrl, Alt, Shift or Win. Backspa... ähnelt.
+        /// </summary>
+        public static string HotkeyHint {
+            get {
+                return ResourceManager.GetString("HotkeyHint", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Windows refused this combination, probably because another program ... ähnelt.
+        /// </summary>
+        public static string HotkeyUnavailable {
+            get {
+                return ResourceManager.GetString("HotkeyUnavailable", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die None ähnelt.
+        /// </summary>
+        public static string HotkeyNone {
+            get {
+                return ResourceManager.GetString("HotkeyNone", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Focus delay (seconds) ähnelt.
+        /// </summary>
+        public static string FocusDebounce {
+            get {
+                return ResourceManager.GetString("FocusDebounce", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die How long a window has to keep or lose focus before Got focus and Lo... ähnelt.
+        /// </summary>
+        public static string FocusDebounceHint {
+            get {
+                return ResourceManager.GetString("FocusDebounceHint", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Re-apply colour settings automatically ähnelt.
+        /// </summary>
+        public static string ReapplyDisplayColor {
+            get {
+                return ResourceManager.GetString("ReapplyDisplayColor", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Windows clears the gamma ramp on a display mode change, on resume f... ähnelt.
+        /// </summary>
+        public static string ReapplyDisplayColorHint {
+            get {
+                return ResourceManager.GetString("ReapplyDisplayColorHint", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Behaviour ähnelt.
+        /// </summary>
+        public static string Behaviour {
+            get {
+                return ResourceManager.GetString("Behaviour", resourceCulture);
+            }
+        }
     }
 }

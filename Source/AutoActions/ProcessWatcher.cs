@@ -169,14 +169,23 @@ namespace AutoActions
 
                     processes = Process.GetProcesses();
 
+                    // At most once per tick, and only if some application actually matches: the
+                    // lookup costs a GetProcessById (and sometimes an EnumChildWindows), and the
+                    // common case - nothing the user registered is running - must not pay for it.
+                    int? foregroundProcessId = null;
+                    Func<int> foregroundProcess = () =>
+                    {
+                        if (!foregroundProcessId.HasValue)
+                            foregroundProcessId = GetForegroundProcessId();
+                        return foregroundProcessId.Value;
+                    };
+                    DateTime now = DateTime.UtcNow;
+                    TimeSpan debounce = FocusDebounce;
+
                     foreach (ApplicationItem application in applications)
                     {
-                        bool callNewRunning = false;
-                        bool callGotFocus = false;
-                        bool callLostFocus = false;
-                        bool callClosed = false;
-                        ApplicationState state = ApplicationState.None;
                         ApplicationState oldState = _applications[application];
+                        ApplicationState rawState = ApplicationState.None;
                         foreach (var process in processes)
                         {
                             string processName;
@@ -189,36 +198,32 @@ namespace AutoActions
                             if (application.ApplicationName.ToUpperInvariant().Equals(processName.ToUpperInvariant())
                                 || (application.IsUWP && !string.IsNullOrEmpty(application.UWPIdentity) && processName.Contains(application.UWPIdentity)))
                             {
-
-                                state = ApplicationState.Running;
-
-                                if (oldState == ApplicationState.None)
-                                    callNewRunning = true;
-                                if (IsFocusedApplication(process))
+                                // Any instance in the foreground counts as focused. Testing every
+                                // match and keeping the strongest answer matters when an application
+                                // runs as several processes - otherwise a background sibling seen
+                                // after the focused one would report the application as unfocused.
+                                int foreground = foregroundProcess();
+                                if (foreground != 0 && process.Id == foreground)
                                 {
-                                    state = ApplicationState.Focused;
-                                    if (oldState != ApplicationState.Focused)
-                                        callGotFocus = true;
+                                    rawState = ApplicationState.Focused;
+                                    break;
                                 }
-                                else
-                                {
-                                    if (oldState == ApplicationState.Focused)
-                                        callLostFocus = true;
-
-                                }
+                                rawState = ApplicationState.Running;
                             }
                         }
-                        if (state == ApplicationState.None && oldState != ApplicationState.None)
-                            callClosed = true;
 
+                        ApplicationState state = ApplyFocusDebounce(application, oldState, rawState, now, debounce);
                         _applications[application] = state;
-                        if (callNewRunning)
+
+                        // Kept in the original order, and deliberately not symmetrical: an
+                        // application that disappears reports Closed only, never Lost focus first.
+                        if (oldState == ApplicationState.None && state != ApplicationState.None)
                             CallApplicationChanged(application, ApplicationChangedType.Started);
-                        if (callGotFocus)
+                        if (state == ApplicationState.Focused && oldState != ApplicationState.Focused)
                             CallApplicationChanged(application, ApplicationChangedType.GotFocus);
-                        if (callLostFocus)
+                        if (state == ApplicationState.Running && oldState == ApplicationState.Focused)
                             CallApplicationChanged(application, ApplicationChangedType.LostFocus);
-                        if (callClosed)
+                        if (state == ApplicationState.None && oldState != ApplicationState.None)
                             CallApplicationChanged(application, ApplicationChangedType.Closed);
                     }
                 }
@@ -237,14 +242,66 @@ namespace AutoActions
             }
         }
 
-        private bool IsFocusedApplication(Process process)
+        #region Focus debounce
+
+        /// <summary>A focus change that has not held long enough to act on yet.</summary>
+        private class PendingFocusChange
         {
-            using (Process currentProcess = GetForegroundProcess())
+            public ApplicationState State;
+            public DateTime Since;
+        }
+
+        private readonly Dictionary<ApplicationItem, PendingFocusChange> _pendingFocusChanges = new Dictionary<ApplicationItem, PendingFocusChange>();
+
+        private static TimeSpan FocusDebounce
+        {
+            get
             {
-                if (currentProcess == null)
-                    return false;
-                return process.Id.Equals(currentProcess.Id);
+                UserAppSettings settings = Globals.Instance != null ? Globals.Instance.Settings : null;
+                return TimeSpan.FromSeconds(settings != null ? settings.FocusDebounceSeconds : 0);
             }
+        }
+
+        /// <summary>
+        /// Holds a Running/Focused flip until it has been stable for the configured time, so glancing
+        /// at another window mid-game does not run the Lost focus list and then the Got focus list a
+        /// moment later. Started and Closed are never delayed: a process appearing or disappearing is
+        /// not ambiguous, and delaying Closed would leave the display in the application's state.
+        /// </summary>
+        private ApplicationState ApplyFocusDebounce(ApplicationItem application, ApplicationState oldState, ApplicationState rawState, DateTime now, TimeSpan debounce)
+        {
+            bool isFocusFlip = rawState != oldState
+                && rawState != ApplicationState.None
+                && oldState != ApplicationState.None;
+
+            if (!isFocusFlip || debounce <= TimeSpan.Zero)
+            {
+                _pendingFocusChanges.Remove(application);
+                return rawState;
+            }
+
+            PendingFocusChange pending;
+            if (!_pendingFocusChanges.TryGetValue(application, out pending) || pending.State != rawState)
+            {
+                _pendingFocusChanges[application] = new PendingFocusChange { State = rawState, Since = now };
+                return oldState;
+            }
+            if (now - pending.Since < debounce)
+                return oldState;
+
+            _pendingFocusChanges.Remove(application);
+            return rawState;
+        }
+
+        #endregion
+
+        /// <summary>
+        /// Process id of the foreground window's owner, or 0 when there is none. Called once per tick.
+        /// </summary>
+        private int GetForegroundProcessId()
+        {
+            using (Process foregroundProcess = GetForegroundProcess())
+                return foregroundProcess == null ? 0 : foregroundProcess.Id;
         }
 
 

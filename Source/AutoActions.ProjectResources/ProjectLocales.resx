@@ -1274,4 +1274,49 @@ Public License instead of this License.  But first, please read
   <data name="RecordDevice" xml:space="preserve">
     <value>Recording device</value>
   </data>
+  <data name="QuickSettingsPresets" xml:space="preserve">
+    <value>Presets</value>
+  </data>
+  <data name="QuickSettingsSavePreset" xml:space="preserve">
+    <value>Save as preset</value>
+  </data>
+  <data name="QuickSettingsPresetName" xml:space="preserve">
+    <value>Preset name</value>
+  </data>
+  <data name="QuickSettingsPresetsHint" xml:space="preserve">
+    <value>A preset is an action shortcut, so it also appears on the Status page and in the tray menu, and can be given a hotkey there.</value>
+  </data>
+  <data name="Apply" xml:space="preserve">
+    <value>Apply</value>
+  </data>
+  <data name="Remove" xml:space="preserve">
+    <value>Remove</value>
+  </data>
+  <data name="Hotkey" xml:space="preserve">
+    <value>Hotkey</value>
+  </data>
+  <data name="HotkeyHint" xml:space="preserve">
+    <value>Click and press a combination with Ctrl, Alt, Shift or Win. Backspace clears it.</value>
+  </data>
+  <data name="HotkeyUnavailable" xml:space="preserve">
+    <value>Windows refused this combination, probably because another program already uses it.</value>
+  </data>
+  <data name="HotkeyNone" xml:space="preserve">
+    <value>None</value>
+  </data>
+  <data name="FocusDebounce" xml:space="preserve">
+    <value>Focus delay (seconds)</value>
+  </data>
+  <data name="FocusDebounceHint" xml:space="preserve">
+    <value>How long a window has to keep or lose focus before Got focus and Lost focus actions run. Stops a quick glance at another window running both lists. 0 runs them immediately.</value>
+  </data>
+  <data name="ReapplyDisplayColor" xml:space="preserve">
+    <value>Re-apply colour settings automatically</value>
+  </data>
+  <data name="ReapplyDisplayColorHint" xml:space="preserve">
+    <value>Windows clears the gamma ramp on a display mode change, on resume from sleep and on session unlock. With this on, the colour settings an action applied are written again afterwards.</value>
+  </data>
+  <data name="Behaviour" xml:space="preserve">
+    <value>Behaviour</value>
+  </data>
 </root>

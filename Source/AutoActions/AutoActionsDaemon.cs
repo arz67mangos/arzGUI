@@ -9,6 +9,7 @@ using CodectoryCore;
 using CodectoryCore.Logging;
 using CodectoryCore.UI.Wpf;
 using CodectoryCore.Windows;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -97,6 +98,8 @@ namespace AutoActions
 
         /// <summary>Live, by-hand access to everything the profile actions can change.</summary>
         public QuickSettings QuickSettings { get; private set; }
+
+        readonly HotkeyManager _hotkeyManager = new HotkeyManager();
         public Version Version
         {
             get
@@ -163,6 +166,8 @@ namespace AutoActions
                     // After the display and audio managers: it reads both.
                     QuickSettings = new QuickSettings(this);
                     OnPropertyChanged(nameof(QuickSettings));
+                    InitializeHotkeys();
+                    InitializeDisplayColorWatchdog();
                     Globals.Instance.SaveSettings();
                     CreateRelayCommands();
                     ShowView = !Settings.StartMinimizedToTray;
@@ -338,6 +343,110 @@ namespace AutoActions
         {
             Globals.Logs.Add(message, false);
         }
+
+        #region Hotkeys
+
+        /// <summary>
+        /// Binds every action shortcut that has a hotkey. Re-run whenever the shortcut list or a
+        /// hotkey changes, because RegisterHotKey has no way to change a binding in place.
+        /// </summary>
+        private void InitializeHotkeys()
+        {
+            App.Current.Dispatcher.Invoke(() =>
+            {
+                _hotkeyManager.NewLog -= HotkeyManager_NewLog;
+                _hotkeyManager.NewLog += HotkeyManager_NewLog;
+                _hotkeyManager.Initialize();
+                _hotkeysReady = true;
+                RegisterHotkeys();
+            });
+        }
+
+        private void HotkeyManager_NewLog(object sender, string message)
+        {
+            Globals.Logs.Add(message, false);
+        }
+
+        /// <summary>Called from the existing ActionShortcuts_CollectionChanged, which owns the subscriptions.</summary>
+        private void ActionShortcut_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(ProfileActionShortcut.Hotkey))
+                App.Current.Dispatcher.Invoke(RegisterHotkeys);
+        }
+
+        private bool _hotkeysReady;
+
+        private void RegisterHotkeys()
+        {
+            // The shortcut collection is wired up before the hotkey window exists; ignore until then.
+            if (!_hotkeysReady)
+                return;
+            _hotkeyManager.UnregisterAll();
+            foreach (ProfileActionShortcut shortcut in Settings.ActionShortcuts.ToList())
+            {
+                if (string.IsNullOrEmpty(shortcut.Hotkey))
+                {
+                    shortcut.HotkeyIsRegistered = true;
+                    continue;
+                }
+                ProfileActionShortcut target = shortcut;
+                bool registered = _hotkeyManager.Register(shortcut.Hotkey, () =>
+                {
+                    Globals.Logs.Add($"Hotkey {target.Hotkey}: running '{target.ShortcutName}'", false);
+                    target.RunAction();
+                });
+                shortcut.HotkeyIsRegistered = registered;
+                if (registered)
+                    Globals.Logs.Add($"Hotkey {shortcut.Hotkey} bound to '{shortcut.ShortcutName}'", false);
+            }
+        }
+
+        #endregion
+
+        #region Display colour watchdog
+
+        /// <summary>
+        /// Windows drops the gamma ramp on a display mode change, on resume and on session unlock,
+        /// and says nothing - the colour settings an action applied simply stop being in effect.
+        /// These three events put them back.
+        /// </summary>
+        private void InitializeDisplayColorWatchdog()
+        {
+            SystemEvents.DisplaySettingsChanged += (o, e) => ReapplyDisplayColor("display settings changed");
+            SystemEvents.PowerModeChanged += (o, e) =>
+            {
+                if (e.Mode == PowerModes.Resume)
+                    ReapplyDisplayColor("resume from sleep");
+            };
+            SystemEvents.SessionSwitch += (o, e) =>
+            {
+                if (e.Reason == SessionSwitchReason.SessionUnlock || e.Reason == SessionSwitchReason.SessionLogon)
+                    ReapplyDisplayColor("session unlock");
+            };
+        }
+
+        private void ReapplyDisplayColor(string reason)
+        {
+            if (Settings == null || !Settings.ReapplyDisplayColor || !DisplayColorControl.HasAppliedColor)
+                return;
+            // Off the event thread, and after a moment: the driver has not finished settling when
+            // DisplaySettingsChanged arrives, and a ramp written too early is discarded again.
+            Task.Run(async () =>
+            {
+                try
+                {
+                    await Task.Delay(1500).ConfigureAwait(false);
+                    if (DisplayColorControl.ReapplyLast())
+                        Globals.Logs.Add($"Colour settings re-applied after {reason}.", false);
+                }
+                catch (Exception ex)
+                {
+                    Globals.Logs.AddException(ex);
+                }
+            });
+        }
+
+        #endregion
 
         private void ActionLog(object sender, LogEntry entry)
         {
@@ -736,6 +845,7 @@ namespace AutoActions
                     {
                         Globals.Logs.Add($"Action shortcut added: {shortcut.ShortcutName}", false);
                         shortcut.PropertyChanged += SaveSettingsOnPropertyChanged;
+                        shortcut.PropertyChanged += ActionShortcut_PropertyChanged;
                         ((BaseViewModel)shortcut.Action).PropertyChanged += SaveSettingsOnPropertyChanged;
                     }
                     break;
@@ -744,11 +854,14 @@ namespace AutoActions
                     {
                         Globals.Logs.Add($"Action shortcut removefd: {shortcut.ShortcutName}", false);
                         shortcut.PropertyChanged -= SaveSettingsOnPropertyChanged;
+                        shortcut.PropertyChanged -= ActionShortcut_PropertyChanged;
                         ((BaseViewModel)shortcut.Action).PropertyChanged -= SaveSettingsOnPropertyChanged;
                     }
                     break;
             }
             Globals.Instance.SaveSettings();
+            // A shortcut appearing or disappearing changes which combinations must be bound.
+            App.Current.Dispatcher.Invoke(RegisterHotkeys);
         }
 
 

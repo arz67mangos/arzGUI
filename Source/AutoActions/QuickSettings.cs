@@ -1,5 +1,7 @@
 using AutoActions.Audio;
 using AutoActions.Displays;
+using AutoActions.Profiles.Actions;
+using CodectoryCore;
 using CodectoryCore.UI.Wpf;
 using System;
 using System.Collections.Generic;
@@ -41,11 +43,140 @@ namespace AutoActions
             _daemon = daemon;
             RefreshCommand = new RelayCommand(Refresh);
             ResetColorCommand = new RelayCommand(ResetColor);
+            SavePresetCommand = new RelayCommand(SavePreset);
+            ApplyPresetCommand = new RelayCommand<ProfileActionShortcut>(ApplyPreset);
+            RemovePresetCommand = new RelayCommand<ProfileActionShortcut>(RemovePreset);
+            if (Shortcuts != null)
+                Shortcuts.CollectionChanged += (o, e) => OnPropertyChanged(nameof(ColorPresets));
             Refresh();
         }
 
         public RelayCommand RefreshCommand { get; private set; }
         public RelayCommand ResetColorCommand { get; private set; }
+        public RelayCommand SavePresetCommand { get; private set; }
+        public RelayCommand<ProfileActionShortcut> ApplyPresetCommand { get; private set; }
+        public RelayCommand<ProfileActionShortcut> RemovePresetCommand { get; private set; }
+
+        #region Presets
+
+        /// <summary>
+        /// A preset is an ordinary action shortcut wrapping a DisplayColorAction, so it shows up on
+        /// the Status page and in the tray, and can be given a hotkey, without a second mechanism.
+        /// </summary>
+        private static DispatchingObservableCollection<ProfileActionShortcut> Shortcuts
+        {
+            get { return Globals.Instance.Settings != null ? Globals.Instance.Settings.ActionShortcuts : null; }
+        }
+
+        public IEnumerable<ProfileActionShortcut> ColorPresets
+        {
+            get
+            {
+                DispatchingObservableCollection<ProfileActionShortcut> shortcuts = Shortcuts;
+                if (shortcuts == null)
+                    return new List<ProfileActionShortcut>();
+                return shortcuts.Where(s => s.Action is DisplayColorAction).ToList();
+            }
+        }
+
+        private string _newPresetName = string.Empty;
+
+        public string NewPresetName
+        {
+            get => _newPresetName;
+            set { _newPresetName = value; OnPropertyChanged(); OnPropertyChanged(nameof(CanSavePreset)); }
+        }
+
+        public bool CanSavePreset => !string.IsNullOrWhiteSpace(NewPresetName) && SelectedDisplay != null;
+
+        /// <summary>
+        /// Captures the sliders as a shortcut. Only settings that differ from neutral are ticked, so
+        /// the preset's description reads as what it actually changes; a preset made entirely of
+        /// neutral values becomes a "back to normal" one.
+        /// </summary>
+        private void SavePreset()
+        {
+            if (!CanSavePreset)
+                return;
+            DisplayColorAction action = new DisplayColorAction();
+            action.DisplayUID = SelectedDisplay.UID;
+            if (VibranceAndHueSupported && Math.Abs(Vibrance - 50d) >= 0.5)
+            {
+                action.ChangeVibrance = true;
+                action.Vibrance = Vibrance;
+            }
+            if (VibranceAndHueSupported && Hue != 0)
+            {
+                action.ChangeHue = true;
+                action.Hue = Hue;
+            }
+            if (Math.Abs(Brightness - 50d) >= 0.5)
+            {
+                action.ChangeBrightness = true;
+                action.Brightness = Brightness;
+            }
+            if (Math.Abs(Contrast - 50d) >= 0.5)
+            {
+                action.ChangeContrast = true;
+                action.Contrast = Contrast;
+            }
+            if (Math.Abs(Gamma - 1.0d) >= 0.005 || !action.CanSave)
+            {
+                action.ChangeGamma = true;
+                action.Gamma = Gamma;
+            }
+
+            Shortcuts.Add(new ProfileActionShortcut(action, NewPresetName.Trim()));
+            Globals.Logs.Add($"Quick settings: saved preset '{NewPresetName.Trim()}' ({action.ActionDescription})", false);
+            NewPresetName = string.Empty;
+            OnPropertyChanged(nameof(ColorPresets));
+        }
+
+        private void ApplyPreset(ProfileActionShortcut preset)
+        {
+            if (preset == null)
+                return;
+            CaptureBaseline();
+            preset.RunAction();
+            DisplayColorAction action = preset.Action as DisplayColorAction;
+            if (action != null)
+                ShowValuesOf(action);
+        }
+
+        private void RemovePreset(ProfileActionShortcut preset)
+        {
+            if (preset == null)
+                return;
+            Shortcuts.Remove(preset);
+            OnPropertyChanged(nameof(ColorPresets));
+        }
+
+        /// <summary>Moves the sliders to match an action that has just run, without re-applying it.</summary>
+        private void ShowValuesOf(DisplayColorAction action)
+        {
+            _loading = true;
+            try
+            {
+                if (action.ChangeVibrance)
+                    _vibrance = action.Vibrance;
+                if (action.ChangeHue)
+                    _hue = action.Hue;
+                _brightness = action.ChangeBrightness ? action.Brightness : 50;
+                _contrast = action.ChangeContrast ? action.Contrast : 50;
+                _gamma = action.ChangeGamma ? action.Gamma : 1.0;
+                OnPropertyChanged(nameof(Vibrance));
+                OnPropertyChanged(nameof(Hue));
+                OnPropertyChanged(nameof(Brightness));
+                OnPropertyChanged(nameof(Contrast));
+                OnPropertyChanged(nameof(Gamma));
+            }
+            finally
+            {
+                _loading = false;
+            }
+        }
+
+        #endregion
 
         #region Display colour
 
@@ -61,6 +192,7 @@ namespace AutoActions
             {
                 _selectedDisplay = value;
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(CanSavePreset));
                 LoadColorFromHardware();
             }
         }

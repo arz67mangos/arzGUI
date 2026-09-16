@@ -14,6 +14,35 @@
         <DataTemplate x:Key="QuickDisplayTemplate" DataType="dsp:Display">
             <TextBlock Style="{StaticResource DefaultTextBlock}" Text="{Binding Name}"/>
         </DataTemplate>
+        <DataTemplate x:Key="QuickPresetTemplate" DataType="root:ProfileActionShortcut">
+            <Border Style="{StaticResource WellBorder}" Margin="0,0,8,8" Padding="10,6">
+                <StackPanel Orientation="Horizontal">
+                    <StackPanel VerticalAlignment="Center" Margin="0,0,10,0" MaxWidth="240">
+                        <TextBlock Style="{StaticResource DefaultTextBlock}" Text="{Binding ShortcutName}" TextTrimming="CharacterEllipsis" Margin="0"/>
+                        <TextBlock Style="{StaticResource CaptionTextBlock}" Text="{Binding Action.ActionDescription}" TextTrimming="CharacterEllipsis" ToolTip="{Binding Action.ActionDescription}" Margin="0,1,0,0"/>
+                        <TextBlock Text="{Binding Hotkey}" Margin="0,1,0,0">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock" BasedOn="{StaticResource CaptionTextBlock}">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Hotkey}" Value="">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                    </StackPanel>
+                    <Button Style="{StaticResource SecondaryButton}" VerticalAlignment="Center" Margin="0,0,4,0"
+                            Content="{x:Static pres:ProjectLocales.Apply}"
+                            Command="{Binding DataContext.ApplyPresetCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                            CommandParameter="{Binding}"/>
+                    <Button Style="{StaticResource GhostButton}" VerticalAlignment="Center"
+                            Content="{x:Static pres:ProjectLocales.Remove}"
+                            Command="{Binding DataContext.RemovePresetCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                            CommandParameter="{Binding}"/>
+                </StackPanel>
+            </Border>
+        </DataTemplate>
         <DataTemplate x:Key="QuickAudioDeviceTemplate" DataType="audio:AudioDevice">
             <TextBlock Style="{StaticResource DefaultTextBlock}" Text="{Binding Name}" TextTrimming="CharacterEllipsis"/>
         </DataTemplate>
@@ -89,6 +118,34 @@
                             <TextBlock Style="{StaticResource CaptionTextBlock}" TextWrapping="Wrap" Margin="0,6,0,0" Text="{x:Static pres:ProjectLocales.QuickSettingsColorHint}"/>
                         </StackPanel>
                     </Grid>
+                </Border>
+
+                <!-- Presets -->
+                <Border Style="{StaticResource CardBorder}" Padding="{StaticResource CardPadding}" Margin="0,0,0,12">
+                    <StackPanel>
+                        <TextBlock Style="{StaticResource CardHeaderTextBlock}" Text="{x:Static pres:ProjectLocales.QuickSettingsPresets}" Margin="0,0,0,8"/>
+                        <ItemsControl ItemsSource="{Binding ColorPresets}" ItemTemplate="{StaticResource QuickPresetTemplate}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                        </ItemsControl>
+                        <Grid Margin="0,4,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBox Style="{StaticResource DefaultTextBox}" Grid.Column="0" VerticalAlignment="Center" Margin="0,0,8,0"
+                                     Text="{Binding NewPresetName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     ToolTip="{x:Static pres:ProjectLocales.QuickSettingsPresetName}"/>
+                            <Button Grid.Column="1" Style="{StaticResource SecondaryButton}" VerticalAlignment="Center"
+                                    Content="{x:Static pres:ProjectLocales.QuickSettingsSavePreset}"
+                                    IsEnabled="{Binding CanSavePreset}"
+                                    Command="{Binding SavePresetCommand}"/>
+                        </Grid>
+                        <TextBlock Style="{StaticResource CaptionTextBlock}" TextWrapping="Wrap" Margin="0,6,0,0" Text="{x:Static pres:ProjectLocales.QuickSettingsPresetsHint}"/>
+                    </StackPanel>
                 </Border>
 
                 <!-- Audio -->

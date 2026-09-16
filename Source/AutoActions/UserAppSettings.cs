@@ -80,6 +80,30 @@ namespace AutoActions
         [JsonProperty]
         public bool CheckForNewVersion { get => _checkForNewVersion; set { _checkForNewVersion = value; OnPropertyChanged(); } }
 
+        private int _focusDebounceSeconds = 2;
+
+        /// <summary>
+        /// How long a focus change has to hold before Got focus / Lost focus actions run. Without it,
+        /// glancing at another window mid-game runs the whole Lost focus list and then the Got focus
+        /// list again a second later. 0 disables the delay. Missing in old settings files -> 2.
+        /// </summary>
+        [JsonProperty]
+        public int FocusDebounceSeconds
+        {
+            get => _focusDebounceSeconds;
+            set { _focusDebounceSeconds = Math.Max(0, Math.Min(60, value)); OnPropertyChanged(); }
+        }
+
+        private bool _reapplyDisplayColor = true;
+
+        /// <summary>
+        /// Re-apply the colour settings an action last wrote after Windows drops them - a display
+        /// mode change, a resume or a session unlock all clear the gamma ramp silently.
+        /// Missing in old settings files -> on.
+        /// </summary>
+        [JsonProperty]
+        public bool ReapplyDisplayColor { get => _reapplyDisplayColor; set { _reapplyDisplayColor = value; OnPropertyChanged(); } }
+
         private ThemeSetting _theme = ThemeSetting.System;
 
         /// <summary>System follows Windows' app mode; applied live by ThemeManager. Missing in old settings files -> System.</summary>

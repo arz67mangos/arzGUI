@@ -31,6 +31,30 @@ namespace AutoActions
             set { _shortcutName = value;  OnPropertyChanged(); }
         }
 
+        private string _hotkey = string.Empty;
+
+        /// <summary>
+        /// System-wide key combination that runs this shortcut, e.g. "Ctrl+Alt+G"; empty for none.
+        /// Stored as text so the settings file stays readable, and parsed by <see cref="HotkeyManager"/>.
+        /// </summary>
+        [JsonProperty]
+        public string Hotkey
+        {
+            get => _hotkey;
+            set { _hotkey = value ?? string.Empty; OnPropertyChanged(); }
+        }
+
+        private bool _hotkeyIsRegistered = true;
+
+        /// <summary>False once Windows has refused the combination, usually because it is already taken.</summary>
+        public bool HotkeyIsRegistered
+        {
+            get => _hotkeyIsRegistered;
+            set { _hotkeyIsRegistered = value; OnPropertyChanged(); OnPropertyChanged(nameof(HotkeyFailed)); }
+        }
+
+        public bool HotkeyFailed => !string.IsNullOrEmpty(Hotkey) && !HotkeyIsRegistered;
+
         public RelayCommand RunActionCommand { get; private set; }
 
         private ProfileActionShortcut()

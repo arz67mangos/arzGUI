@@ -298,6 +298,7 @@
     <Compile Include="LoopManager.cs" />
     <Compile Include="MicMonitoringStatus.cs" />
     <Compile Include="QuickSettings.cs" />
+    <Compile Include="HotkeyManager.cs" />
     <Compile Include="ProfileActionShortcut.cs" />
     <Compile Include="Profiles\Actions\CloseProgramAction.cs" />
     <Compile Include="Profiles\Actions\ReferenceProfileAction.cs" />
@@ -342,7 +343,6 @@
     <Compile Include="Profiles\Actions\ProfileActionAdder.cs" />
     <Compile Include="Profiles\Actions\ProfileActionBase.cs" />
     <Compile Include="Profiles\Profile.cs" />
-    <Compile Include="Profiles\ProfileMode.cs" />
     <Compile Include="Views\AudioActionView.xaml.cs">
       <DependentUpon>AudioActionView.xaml</DependentUpon>
     </Compile>

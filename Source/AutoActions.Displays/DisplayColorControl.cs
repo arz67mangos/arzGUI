@@ -33,6 +33,97 @@ namespace AutoActions.Displays
             try { NewLog?.Invoke(null, message); } catch { }
         }
 
+        /// <summary>
+        /// What this class last wrote to each display, keyed by display UID. Windows throws the gamma
+        /// ramp away on a mode change, on resume and when an exclusive-fullscreen application takes
+        /// over, and it never says so - <see cref="ReapplyLast"/> puts it back.
+        /// </summary>
+        private static readonly Dictionary<uint, AppliedColor> _lastApplied = new Dictionary<uint, AppliedColor>();
+        private static readonly object _lastAppliedLock = new object();
+
+        private class AppliedColor
+        {
+            public double? Vibrance;
+            public int? Hue;
+            public double? Brightness;
+            public double? Contrast;
+            public double? Gamma;
+
+            public override string ToString()
+            {
+                List<string> parts = new List<string>();
+                if (Vibrance.HasValue)
+                    parts.Add($"vibrance {Vibrance.Value:0.00}");
+                if (Hue.HasValue)
+                    parts.Add($"hue {Hue.Value}");
+                if (Gamma.HasValue)
+                    parts.Add($"b/c/g {Brightness.Value:0.00}/{Contrast.Value:0.00}/{Gamma.Value:0.00}");
+                return string.Join(", ", parts);
+            }
+        }
+
+        private static void Remember(Display display, Action<AppliedColor> update)
+        {
+            if (display == null)
+                return;
+            lock (_lastAppliedLock)
+            {
+                AppliedColor applied;
+                if (!_lastApplied.TryGetValue(display.UID, out applied))
+                {
+                    applied = new AppliedColor();
+                    _lastApplied[display.UID] = applied;
+                }
+                update(applied);
+            }
+        }
+
+        /// <summary>Anything worth putting back after Windows has cleared it.</summary>
+        public static bool HasAppliedColor
+        {
+            get { lock (_lastAppliedLock) return _lastApplied.Count > 0; }
+        }
+
+        /// <summary>
+        /// Writes the last applied settings again. Used after a display mode change, a resume or a
+        /// session unlock, any of which silently drop the gamma ramp.
+        /// </summary>
+        public static bool ReapplyLast()
+        {
+            Dictionary<uint, AppliedColor> snapshot;
+            lock (_lastAppliedLock)
+            {
+                if (_lastApplied.Count == 0)
+                    return false;
+                snapshot = _lastApplied.ToDictionary(e => e.Key, e => e.Value);
+            }
+            List<Display> current = DisplayManagerHandler.Instance.GetActiveMonitors();
+            bool reapplied = false;
+            foreach (KeyValuePair<uint, AppliedColor> entry in snapshot)
+            {
+                Display display = current.FirstOrDefault(d => d.UID.Equals(entry.Key));
+                if (display == null)
+                    continue;
+                AppliedColor applied = entry.Value;
+                if (applied.Vibrance.HasValue)
+                    reapplied |= SetVibrance(display, applied.Vibrance.Value);
+                if (applied.Hue.HasValue)
+                    reapplied |= SetHue(display, applied.Hue.Value);
+                if (applied.Gamma.HasValue)
+                    reapplied |= SetGammaRamp(display, applied.Brightness.Value, applied.Contrast.Value, applied.Gamma.Value);
+                if (reapplied)
+                    Log($"Re-applied colour settings to {display.Name}: {applied}");
+            }
+            return reapplied;
+        }
+
+        /// <summary>Stops the watchdog putting anything back; called when a snapshot is restored.</summary>
+        public static void ForgetApplied()
+        {
+            lock (_lastAppliedLock)
+                _lastApplied.Clear();
+        }
+
         #region NVIDIA - digital vibrance and hue
 
         public static bool VibranceAndHueSupported
@@ -65,7 +156,9 @@ namespace AutoActions.Displays
                 return false;
             try
             {
-                nvDisplay.DigitalVibranceControl.NormalizedLevel = Clamp(normalizedLevel, -1d, 1d);
+                double level = Clamp(normalizedLevel, -1d, 1d);
+                nvDisplay.DigitalVibranceControl.NormalizedLevel = level;
+                Remember(display, a => a.Vibrance = level);
                 return true;
             }
             catch (Exception ex)
@@ -100,7 +193,9 @@ namespace AutoActions.Displays
                 return false;
             try
             {
-                nvDisplay.HUEControl.CurrentAngle = (int)Clamp(angle, 0, 359);
+                int clamped = (int)Clamp(angle, 0, 359);
+                nvDisplay.HUEControl.CurrentAngle = clamped;
+                Remember(display, a => a.Hue = clamped);
                 return true;
             }
             catch (Exception ex)
@@ -220,7 +315,15 @@ namespace AutoActions.Displays
         /// </summary>
         public static bool SetGammaRamp(Display display, double brightness, double contrast, double gamma)
         {
-            return ApplyRamp(display, BuildRamp(brightness, contrast, gamma), "gamma ramp");
+            if (!ApplyRamp(display, BuildRamp(brightness, contrast, gamma), "gamma ramp"))
+                return false;
+            Remember(display, a =>
+            {
+                a.Brightness = brightness;
+                a.Contrast = contrast;
+                a.Gamma = gamma;
+            });
+            return true;
         }
 
         /// <summary>
@@ -325,6 +428,8 @@ namespace AutoActions.Displays
         {
             if (snapshot == null || snapshot.IsEmpty)
                 return;
+            // Whatever was applied is being undone, so the watchdog must not put it back.
+            ForgetApplied();
             List<Display> current = DisplayManagerHandler.Instance.GetActiveMonitors();
             foreach (DisplayColorState state in snapshot.Displays)
             {

@@ -143,6 +143,8 @@ namespace AutoActions
                 {
                     MenuItem item = new MenuItem();
                     item.Header = action.ShortcutName;
+                    // Shown right-aligned, the way Windows lists a shortcut's key combination.
+                    item.InputGestureText = action.Hotkey;
                     item.Click += (o, e) => action.RunAction();
                     _actions.Items.Add(item);
                 }

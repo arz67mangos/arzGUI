@@ -45,6 +45,9 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
 
                 </Grid.RowDefinitions>
@@ -84,6 +87,12 @@
                     <ComboBoxItem Content="{x:Static pres:ProjectLocales.ThemeLight}" Tag="{x:Static thm:ThemeSetting.Light}"/>
                     <ComboBoxItem Content="{x:Static pres:ProjectLocales.ThemeDark}" Tag="{x:Static thm:ThemeSetting.Dark}"/>
                 </ComboBox>
+
+                <TextBlock Style="{StaticResource SubTitleTextBlock}" Text="{x:Static pres:ProjectLocales.Behaviour}" Grid.Column="0" Grid.Row="12" Grid.ColumnSpan="3" Margin="5,15,3,3" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                <TextBlock Style="{StaticResource DefaultTextBlock}" Text="{x:Static pres:ProjectLocales.FocusDebounce}" ToolTip="{x:Static pres:ProjectLocales.FocusDebounceHint}" Grid.Column="0" Grid.Row="13" Margin="10,3,3,3" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                <TextBox Style="{StaticResource DefaultTextBox}" Grid.Column="1" Grid.Row="13" MinWidth="60" MaxWidth="80" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5" ToolTip="{x:Static pres:ProjectLocales.FocusDebounceHint}" Text="{Binding FocusDebounceSeconds, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"/>
+                <TextBlock Style="{StaticResource DefaultTextBlock}" Text="{x:Static pres:ProjectLocales.ReapplyDisplayColor}" ToolTip="{x:Static pres:ProjectLocales.ReapplyDisplayColorHint}" Grid.Column="0" Grid.Row="14" Margin="10,3,3,3" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                <CheckBox IsChecked="{Binding ReapplyDisplayColor}" Grid.Column="1" Grid.Row="14" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5" ToolTip="{x:Static pres:ProjectLocales.ReapplyDisplayColorHint}"/>
 
             </Grid>
         </ScrollViewer>

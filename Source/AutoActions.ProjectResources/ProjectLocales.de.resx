@@ -558,4 +558,49 @@
   <data name="RecordDevice" xml:space="preserve">
     <value>Aufnahmegerät</value>
   </data>
+  <data name="QuickSettingsPresets" xml:space="preserve">
+    <value>Voreinstellungen</value>
+  </data>
+  <data name="QuickSettingsSavePreset" xml:space="preserve">
+    <value>Als Voreinstellung speichern</value>
+  </data>
+  <data name="QuickSettingsPresetName" xml:space="preserve">
+    <value>Name der Voreinstellung</value>
+  </data>
+  <data name="QuickSettingsPresetsHint" xml:space="preserve">
+    <value>Eine Voreinstellung ist eine Aktionsverknüpfung und erscheint deshalb auch auf der Statusseite und im Infobereichsmenü; dort lässt sich ihr ein Tastenkürzel zuweisen.</value>
+  </data>
+  <data name="Apply" xml:space="preserve">
+    <value>Anwenden</value>
+  </data>
+  <data name="Remove" xml:space="preserve">
+    <value>Entfernen</value>
+  </data>
+  <data name="Hotkey" xml:space="preserve">
+    <value>Tastenkürzel</value>
+  </data>
+  <data name="HotkeyHint" xml:space="preserve">
+    <value>Anklicken und eine Kombination mit Strg, Alt, Umschalt oder Windows drücken. Rücktaste löscht sie.</value>
+  </data>
+  <data name="HotkeyUnavailable" xml:space="preserve">
+    <value>Windows hat diese Kombination abgelehnt, vermutlich wird sie bereits von einem anderen Programm verwendet.</value>
+  </data>
+  <data name="HotkeyNone" xml:space="preserve">
+    <value>Keins</value>
+  </data>
+  <data name="FocusDebounce" xml:space="preserve">
+    <value>Fokusverzögerung (Sekunden)</value>
+  </data>
+  <data name="FocusDebounceHint" xml:space="preserve">
+    <value>Wie lange ein Fenster den Fokus behalten oder verlieren muss, bevor die Aktionen für Fokus erhalten und Fokus verloren ausgeführt werden. Verhindert, dass ein kurzer Blick auf ein anderes Fenster beide Listen auslöst. 0 führt sie sofort aus.</value>
+  </data>
+  <data name="ReapplyDisplayColor" xml:space="preserve">
+    <value>Farbeinstellungen automatisch erneut anwenden</value>
+  </data>
+  <data name="ReapplyDisplayColorHint" xml:space="preserve">
+    <value>Windows verwirft die Gammakurve bei einem Moduswechsel, beim Aufwachen aus dem Ruhezustand und beim Entsperren der Sitzung. Ist diese Option aktiv, werden die von einer Aktion gesetzten Farbeinstellungen danach erneut geschrieben.</value>
+  </data>
+  <data name="Behaviour" xml:space="preserve">
+    <value>Verhalten</value>
+  </data>
 </root>
