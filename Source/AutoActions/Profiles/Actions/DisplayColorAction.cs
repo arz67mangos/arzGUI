@@ -69,7 +69,7 @@ namespace AutoActions.Profiles.Actions
         }
 
         [JsonProperty]
-        public bool ChangeVibrance { get => _changeVibrance; set { _changeVibrance = value; OnPropertyChanged(); OnPropertyChanged(nameof(GammaRangeWarningIsVisible)); } }
+        public bool ChangeVibrance { get => _changeVibrance; set { _changeVibrance = value; OnPropertyChanged(); } }
 
         /// <summary>0-100, 50 = driver default. Mapped to NVAPI's -1..1 normalized level.</summary>
         [JsonProperty]
@@ -97,7 +97,7 @@ namespace AutoActions.Profiles.Actions
         public double Contrast { get => _contrast; set { _contrast = Clamp(value, 0, 100); OnPropertyChanged(); } }
 
         [JsonProperty]
-        public bool ChangeGamma { get => _changeGamma; set { _changeGamma = value; OnPropertyChanged(); OnPropertyChanged(nameof(GammaRangeWarningIsVisible)); } }
+        public bool ChangeGamma { get => _changeGamma; set { _changeGamma = value; OnPropertyChanged(); } }
 
         /// <summary>
         /// 0.4-2.8, 1.0 = neutral. NVIDIA's own slider starts at 0.3, but the ramp maths below that
@@ -114,8 +114,13 @@ namespace AutoActions.Profiles.Actions
 
         public bool GammaRangeIsUnlocked => DisplayColorControl.GammaRangeIsUnlocked;
 
-        /// <summary>Only worth warning about once the action actually writes a ramp.</summary>
-        public bool GammaRangeWarningIsVisible => TouchesGammaRamp && !GammaRangeIsUnlocked;
+        /// <summary>
+        /// Only brightness and contrast can realistically trip the clamp. Measured with the value
+        /// unset: gamma applies exactly across its whole 0.4-2.8 range, because it cannot move the
+        /// ends of the ramp, while brightness 100% and contrast 100% are both refused. So a
+        /// gamma-only action never sees this warning.
+        /// </summary>
+        public bool GammaRangeWarningIsVisible => (ChangeBrightness || ChangeContrast) && !GammaRangeIsUnlocked;
 
         private bool TouchesGammaRamp => ChangeBrightness || ChangeContrast || ChangeGamma;
 
