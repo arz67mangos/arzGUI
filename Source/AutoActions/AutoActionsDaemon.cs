@@ -94,6 +94,9 @@ namespace AutoActions
 
         /// <summary>Live mic monitoring state for the status card and the tray menu.</summary>
         public MicMonitoringStatus MicMonitoringStatus { get; private set; }
+
+        /// <summary>Live, by-hand access to everything the profile actions can change.</summary>
+        public QuickSettings QuickSettings { get; private set; }
         public Version Version
         {
             get
@@ -157,6 +160,9 @@ namespace AutoActions
                     InitializeDisplayManager();
                     InitializeAudioManager();
                     InitializeTrayMenuHelper();
+                    // After the display and audio managers: it reads both.
+                    QuickSettings = new QuickSettings(this);
+                    OnPropertyChanged(nameof(QuickSettings));
                     Globals.Instance.SaveSettings();
                     CreateRelayCommands();
                     ShowView = !Settings.StartMinimizedToTray;

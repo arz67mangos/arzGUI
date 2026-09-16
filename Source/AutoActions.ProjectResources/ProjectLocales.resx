@@ -1253,4 +1253,25 @@ Public License instead of this License.  But first, please read
   <data name="MessageMissingDisplayColorSetting" xml:space="preserve">
     <value>Choose at least one colour setting to change.</value>
   </data>
+  <data name="QuickSettings" xml:space="preserve">
+    <value>Quick settings</value>
+  </data>
+  <data name="QuickSettingsResetColor" xml:space="preserve">
+    <value>Reset colour</value>
+  </data>
+  <data name="QuickSettingsColorHint" xml:space="preserve">
+    <value>Vibrance and hue are read from the driver. Brightness, contrast and gamma cannot be read back out of the gamma ramp, so they start neutral and show what this page has set. Reset puts every display back to the colour state it had before this page changed anything.</value>
+  </data>
+  <data name="QuickSettingsHint" xml:space="preserve">
+    <value>Changes here apply immediately and are not saved. A profile action that runs afterwards will overwrite them, and so will anything else that touches these settings.</value>
+  </data>
+  <data name="QuickSettingsDisplayModeHint" xml:space="preserve">
+    <value>HDR per display is on the Displays page. Resolution, refresh rate and colour depth can only be changed by a display action for now.</value>
+  </data>
+  <data name="PlaybackDevice" xml:space="preserve">
+    <value>Playback device</value>
+  </data>
+  <data name="RecordDevice" xml:space="preserve">
+    <value>Recording device</value>
+  </data>
 </root>

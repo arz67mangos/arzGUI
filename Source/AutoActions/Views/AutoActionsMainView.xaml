@@ -122,6 +122,9 @@
             <TabItem Header="{x:Static pres:ProjectLocales.Status}" thm:Sidebar.Icon="&#xE9D9;">
                 <local:StatusView DataContext="{Binding}"/>
             </TabItem>
+            <TabItem Header="{x:Static pres:ProjectLocales.QuickSettings}" thm:Sidebar.Icon="&#xE9E9;">
+                <local:QuickSettingsView DataContext="{Binding QuickSettings}"/>
+            </TabItem>
             <TabItem Header="{x:Static pres:ProjectLocales.Profiles}" thm:Sidebar.Icon="&#xE8FD;">
                 <local:ProfileManagerView   DataContext="{Binding ElementName=MainWindow , Path=DataContext}"/>
             </TabItem>

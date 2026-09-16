@@ -537,4 +537,25 @@
   <data name="MessageMissingDisplayColorSetting" xml:space="preserve">
     <value>Wählen Sie mindestens eine Farbeinstellung aus.</value>
   </data>
+  <data name="QuickSettings" xml:space="preserve">
+    <value>Schnelleinstellungen</value>
+  </data>
+  <data name="QuickSettingsResetColor" xml:space="preserve">
+    <value>Farbe zurücksetzen</value>
+  </data>
+  <data name="QuickSettingsColorHint" xml:space="preserve">
+    <value>Vibranz und Farbton werden vom Treiber gelesen. Helligkeit, Kontrast und Gamma lassen sich nicht aus der Gammakurve zurückrechnen und beginnen deshalb neutral; sie zeigen, was auf dieser Seite eingestellt wurde. Zurücksetzen stellt für jeden Bildschirm den Farbzustand wieder her, der vor der ersten Änderung auf dieser Seite galt.</value>
+  </data>
+  <data name="QuickSettingsHint" xml:space="preserve">
+    <value>Änderungen wirken sofort und werden nicht gespeichert. Eine später ausgeführte Profilaktion überschreibt sie, ebenso jedes andere Programm, das diese Einstellungen ändert.</value>
+  </data>
+  <data name="QuickSettingsDisplayModeHint" xml:space="preserve">
+    <value>HDR pro Bildschirm finden Sie auf der Seite Bildschirme. Auflösung, Bildwiederholrate und Farbtiefe lassen sich derzeit nur über eine Anzeigeaktion ändern.</value>
+  </data>
+  <data name="PlaybackDevice" xml:space="preserve">
+    <value>Wiedergabegerät</value>
+  </data>
+  <data name="RecordDevice" xml:space="preserve">
+    <value>Aufnahmegerät</value>
+  </data>
 </root>

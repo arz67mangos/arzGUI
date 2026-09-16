@@ -1464,5 +1464,68 @@ namespace AutoActions.ProjectResources {
                 return ResourceManager.GetString("MessageMissingDisplayColorSetting", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Quick settings ähnelt.
+        /// </summary>
+        public static string QuickSettings {
+            get {
+                return ResourceManager.GetString("QuickSettings", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Reset colour ähnelt.
+        /// </summary>
+        public static string QuickSettingsResetColor {
+            get {
+                return ResourceManager.GetString("QuickSettingsResetColor", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Vibrance and hue are read from the driver. Brightness, contrast and... ähnelt.
+        /// </summary>
+        public static string QuickSettingsColorHint {
+            get {
+                return ResourceManager.GetString("QuickSettingsColorHint", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Changes here apply immediately and are not saved. A profile action ... ähnelt.
+        /// </summary>
+        public static string QuickSettingsHint {
+            get {
+                return ResourceManager.GetString("QuickSettingsHint", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die HDR per display is on the Displays page. Resolution, refresh rate a... ähnelt.
+        /// </summary>
+        public static string QuickSettingsDisplayModeHint {
+            get {
+                return ResourceManager.GetString("QuickSettingsDisplayModeHint", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Playback device ähnelt.
+        /// </summary>
+        public static string PlaybackDevice {
+            get {
+                return ResourceManager.GetString("PlaybackDevice", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Recording device ähnelt.
+        /// </summary>
+        public static string RecordDevice {
+            get {
+                return ResourceManager.GetString("RecordDevice", resourceCulture);
+            }
+        }
     }
 }

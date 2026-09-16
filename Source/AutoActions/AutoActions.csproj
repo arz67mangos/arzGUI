@@ -297,6 +297,7 @@
     <Compile Include="Globals.cs" />
     <Compile Include="LoopManager.cs" />
     <Compile Include="MicMonitoringStatus.cs" />
+    <Compile Include="QuickSettings.cs" />
     <Compile Include="ProfileActionShortcut.cs" />
     <Compile Include="Profiles\Actions\CloseProgramAction.cs" />
     <Compile Include="Profiles\Actions\ReferenceProfileAction.cs" />
@@ -350,6 +351,9 @@
     </Compile>
     <Compile Include="Views\DisplayColorActionView.xaml.cs">
       <DependentUpon>DisplayColorActionView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\QuickSettingsView.xaml.cs">
+      <DependentUpon>QuickSettingsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\AutoActionsLicenseView.xaml.cs">
       <DependentUpon>AutoActionsLicenseView.xaml</DependentUpon>
@@ -425,6 +429,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\DisplayColorActionView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\QuickSettingsView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
