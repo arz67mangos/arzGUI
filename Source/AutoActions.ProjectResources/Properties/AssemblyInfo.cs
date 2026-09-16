@@ -1,15 +1,15 @@
-﻿using System.Reflection;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // Allgemeine Informationen über eine Assembly werden über die folgenden
 // Attribute gesteuert. Ändern Sie diese Attributwerte, um die Informationen zu ändern,
 // die einer Assembly zugeordnet sind.
-[assembly: AssemblyTitle("ArzActions.ProjectResources")]
+[assembly: AssemblyTitle("ArzFlow.ProjectResources")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("arz67mangos")]
-[assembly: AssemblyProduct("ArzActions")]
+[assembly: AssemblyProduct("ArzFlow")]
 [assembly: AssemblyCopyright("Copyright © 2025 arz67mangos. Based on AutoActions by Codectory (GPL-3.0).")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

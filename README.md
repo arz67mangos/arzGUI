@@ -1,4 +1,4 @@
-# ArzActions
+# ArzFlow
 
 A personal fork of [Codectory/AutoActions](https://github.com/Codectory/AutoActions) — a Windows
 tray app that watches for running applications and applies a profile of actions when they start,
@@ -19,7 +19,7 @@ Upstream: <https://github.com/Codectory/AutoActions> (all of the original work i
   loop is caught and logged (throttled), `Process` handles are disposed, and unhandled exceptions are
   written to `AutoActions.crash.log` next to the exe before the process dies.
 - **Microphone monitoring, built in.** Windows' "Listen to this device" is a mute and a volume on the
-  *Microphone* line of a playback device. ArzActions controls exactly those: a card on the Status page
+  *Microphone* line of a playback device. ArzFlow controls exactly those: a card on the Status page
   and a tray entry for manual use, a *Microphone monitoring* profile action for per-game use, device
   and line pickers in Settings. The state a profile changes on start is put back on close.
 - **A redesigned UI with light and dark themes.** Design tokens, a left sidebar, card-based Status
@@ -69,7 +69,7 @@ exception.
 
 ## Licence
 
-ArzActions is a modified version of AutoActions by [Codectory](https://github.com/Codectory) and is
+ArzFlow is a modified version of AutoActions by [Codectory](https://github.com/Codectory) and is
 distributed under the same licence, the GNU General Public License v3 — see [LICENSE](LICENSE). The
 fork is maintained for personal use; if you redistribute builds, the GPL's source and notice
 obligations apply to you as well.

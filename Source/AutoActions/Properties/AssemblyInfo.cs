@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using System.Resources;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -7,11 +7,11 @@ using System.Windows;
 // Allgemeine Informationen über eine Assembly werden über die folgenden
 // Attribute gesteuert. Ändern Sie diese Attributwerte, um die Informationen zu ändern,
 // die einer Assembly zugeordnet sind.
-[assembly: AssemblyTitle("ArzActions")]
+[assembly: AssemblyTitle("ArzFlow")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("arz67mangos")]
-[assembly: AssemblyProduct("ArzActions")]
+[assembly: AssemblyProduct("ArzFlow")]
 [assembly: AssemblyCopyright("Copyright © 2025 arz67mangos. Based on AutoActions by Codectory (GPL-3.0).")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
