@@ -6,11 +6,16 @@
     <Color x:Key="SurfaceColor">#F4F5F7</Color>
     <Color x:Key="SurfaceRaisedColor">#FFFFFF</Color>
     <Color x:Key="SurfaceSunkenColor">#E9EBEF</Color>
-    <Color x:Key="BackdropStartColor">#F5F8FC</Color>
-    <Color x:Key="BackdropEndColor">#E6EDF7</Color>
-    <Color x:Key="GlassSurfaceColor">#B8FFFFFF</Color>
-    <Color x:Key="GlassRaisedColor">#DEFFFFFF</Color>
-    <Color x:Key="GlassStrokeColor">#5215263A</Color>
+    <Color x:Key="BackdropStartColor">#EFF6FF</Color>
+    <Color x:Key="BackdropMidColor">#E7F0FC</Color>
+    <Color x:Key="BackdropEndColor">#DCE8F6</Color>
+    <Color x:Key="GlassSurfaceColor">#A8F7FAFF</Color>
+    <Color x:Key="GlassRaisedColor">#D6FFFFFF</Color>
+    <Color x:Key="GlassStrokeColor">#663C5E82</Color>
+    <Color x:Key="AmbientBlueColor">#704B8EEA</Color>
+    <Color x:Key="AmbientCyanColor">#5A55C7D9</Color>
+    <Color x:Key="AmbientVioletColor">#496F69D9</Color>
+    <Color x:Key="ShadowColor">#280B2038</Color>
     <Color x:Key="StrokeColor">#DFE3E8</Color>
     <Color x:Key="StrokeStrongColor">#C3C9D1</Color>
     <Color x:Key="TextPrimaryColor">#1B1F24</Color>
@@ -38,11 +43,15 @@
     <SolidColorBrush x:Key="SurfaceSunkenBrush" Color="{StaticResource SurfaceSunkenColor}"/>
     <LinearGradientBrush x:Key="WindowBackdropBrush" StartPoint="0,0" EndPoint="1,1">
         <GradientStop Color="{StaticResource BackdropStartColor}" Offset="0"/>
+        <GradientStop Color="{StaticResource BackdropMidColor}" Offset="0.52"/>
         <GradientStop Color="{StaticResource BackdropEndColor}" Offset="1"/>
     </LinearGradientBrush>
     <SolidColorBrush x:Key="GlassSurfaceBrush" Color="{StaticResource GlassSurfaceColor}"/>
     <SolidColorBrush x:Key="GlassRaisedBrush" Color="{StaticResource GlassRaisedColor}"/>
     <SolidColorBrush x:Key="GlassStrokeBrush" Color="{StaticResource GlassStrokeColor}"/>
+    <SolidColorBrush x:Key="AmbientBlueBrush" Color="{StaticResource AmbientBlueColor}"/>
+    <SolidColorBrush x:Key="AmbientCyanBrush" Color="{StaticResource AmbientCyanColor}"/>
+    <SolidColorBrush x:Key="AmbientVioletBrush" Color="{StaticResource AmbientVioletColor}"/>
     <SolidColorBrush x:Key="StrokeBrush" Color="{StaticResource StrokeColor}"/>
     <SolidColorBrush x:Key="StrokeStrongBrush" Color="{StaticResource StrokeStrongColor}"/>
     <SolidColorBrush x:Key="TextPrimaryBrush" Color="{StaticResource TextPrimaryColor}"/>
