@@ -129,6 +129,10 @@ static class MonitorDeviceCheck
             "a settings file without these keys loads with the defaults");
 
         Console.WriteLine(failures == 0 ? "ALL PASS" : failures + " FAILED");
+        // Right-clicking this in Explorer opens a console that would otherwise vanish with the result.
+        Console.WriteLine();
+        Console.WriteLine("Press enter to close.");
+        Console.ReadLine();
         return failures == 0 ? 0 : 1;
     }
 }
