@@ -129,7 +129,7 @@
                 <local:ProfileManagerView   DataContext="{Binding ElementName=MainWindow , Path=DataContext}"/>
             </TabItem>
             <TabItem Header="{x:Static pres:ProjectLocales.Applications}" thm:Sidebar.Icon="&#xE71D;">
-                <Grid x:Name="AssignmentsGrid" >
+                <Grid x:Name="AssignmentsGrid" Margin="18,16,18,18">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition  Width="Auto"/>
                         <ColumnDefinition Width="300"/>
@@ -141,10 +141,13 @@
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="Auto"  />
                     </Grid.RowDefinitions>
-                    <TextBlock Style="{StaticResource SubTitleTextBlock}"  Grid.Column="0" Grid.ColumnSpan="3" Grid.Row ="0"   Text="{x:Static pres:ProjectLocales.Applications}"/>
+                    <StackPanel Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="0" Margin="0,0,0,14">
+                        <TextBlock Style="{StaticResource TitleTextBlock}" Text="{x:Static pres:ProjectLocales.Applications}" Margin="0"/>
+                        <TextBlock Style="{StaticResource SecondaryTextBlock}" Text="Assign profiles to applications and control their priority." Margin="0,4,0,0"/>
+                    </StackPanel>
 
-                    <Border Style="{StaticResource DefaultBorder}" Grid.ColumnSpan="3" Grid.Row ="1"  Margin="5"/>
-                    <Grid Grid.IsSharedSizeScope="True" Grid.ColumnSpan="3" Grid.Row ="1"  Margin="15" >
+                    <Border Style="{StaticResource DefaultBorder}" Grid.ColumnSpan="3" Grid.Row ="1"/>
+                    <Grid Grid.IsSharedSizeScope="True" Grid.ColumnSpan="3" Grid.Row ="1" Margin="14">
                         <ListBox Name="ApplicationList" ItemContainerStyle="{StaticResource ListBoxItemStyle }"  ItemsSource="{Binding Settings.ApplicationProfileAssignments}" HorizontalContentAlignment="Stretch" >
                             <ListBox.Template>
                                 <ControlTemplate>
@@ -156,9 +159,9 @@
                                                 <ColumnDefinition SharedSizeGroup="ApplicationColumn"/>
                                                 <ColumnDefinition />
                                             </Grid.ColumnDefinitions>
-                                            <TextBlock Style="{StaticResource DefaultTextBlock}"  Grid.Column="0" FontWeight="Bold"  FontSize="20" Margin="5,0" Text="{x:Static pres:ProjectLocales.Icon}"/>
-                                            <TextBlock Style="{StaticResource DefaultTextBlock}"  Grid.Column="1" FontWeight="Bold" FontSize="20"   Margin="5,0" Text="{x:Static pres:ProjectLocales.Application}"/>
-                                            <TextBlock Style="{StaticResource DefaultTextBlock}"  Grid.Column="2" FontWeight="Bold" FontSize="20"   Margin="5,0" Text="{x:Static pres:ProjectLocales.Profile}"/>
+                                            <TextBlock Style="{StaticResource CardHeaderTextBlock}" Grid.Column="0" Margin="5,0" Text="{x:Static pres:ProjectLocales.Icon}"/>
+                                            <TextBlock Style="{StaticResource CardHeaderTextBlock}" Grid.Column="1" Margin="5,0" Text="{x:Static pres:ProjectLocales.Application}"/>
+                                            <TextBlock Style="{StaticResource CardHeaderTextBlock}" Grid.Column="2" Margin="5,0" Text="{x:Static pres:ProjectLocales.Profile}"/>
                                         </Grid>
                                         <Grid>
                                             <Grid Margin="0,5">
@@ -176,8 +179,8 @@
                                 <DataTemplate>
                                     <Grid>
                                         <TextBlock/>
-                                        <Border>
-                                        <Grid Margin="0,2"  >
+                                        <Border Margin="0,3" Padding="9" CornerRadius="{StaticResource SmallCornerRadius}" Background="{DynamicResource GlassSurfaceBrush}" BorderBrush="{DynamicResource GlassStrokeBrush}" BorderThickness="1">
+                                        <Grid>
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition SharedSizeGroup="IconColumn" Width="Auto"/>
                                                 <ColumnDefinition SharedSizeGroup="ApplicationColumn" Width="Auto"/>
@@ -200,7 +203,7 @@
                         </ListBox>
                     </Grid>
 
-                    <Grid Grid.Row="2" Grid.ColumnSpan="3" Height="Auto" VerticalAlignment="Bottom" ScrollViewer.HorizontalScrollBarVisibility="Auto">
+                    <Grid Grid.Row="2" Grid.ColumnSpan="3" Height="Auto" Margin="0,10,0,0" VerticalAlignment="Bottom" ScrollViewer.HorizontalScrollBarVisibility="Auto">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="5"/>
                             <ColumnDefinition Width="Auto"/>
@@ -213,13 +216,13 @@
 
                         </Grid.ColumnDefinitions>
                         <Button Grid.Column="6" Width="Auto" IsEnabled="{Binding ElementName=ApplicationList, Path=SelectedItem, Converter={StaticResource IsNotNullConverter}}"  Height="Auto" Content="{x:Static pres:ProjectLocales.LaunchApplication}" Command="{Binding StartApplicationCommand}" CommandParameter="{Binding ElementName=ApplicationList, Path=SelectedItem}"  Margin="5,5,10,10"/>
-                        <Button Grid.Column="1"  Style="{StaticResource IconButton}" Command="{Binding AddAssignmentCommand}" Content="+"    Margin="10,5,5,10" Height="Auto" />
-                        <Button Grid.Column="2" Style="{StaticResource IconButton}" Command="{Binding RemoveAssignmentCommand}" CommandParameter="{Binding ElementName=ApplicationList, Path=SelectedItem}"  Height="Auto" Content="-" IsEnabled="{Binding ElementName=ApplicationList, Path=SelectedItem, Converter={StaticResource IsNotNullConverter}}"   Margin="5,5,5,10"   />
+                        <Button Grid.Column="1" Style="{StaticResource IconButton}" FontFamily="{StaticResource IconFont}" Command="{Binding AddAssignmentCommand}" Content="&#xE710;" ToolTip="Add application" Margin="0,0,5,0"/>
+                        <Button Grid.Column="2" Style="{StaticResource ActionDeleteButton}" FontFamily="{StaticResource IconFont}" Command="{Binding RemoveAssignmentCommand}" CommandParameter="{Binding ElementName=ApplicationList, Path=SelectedItem}" Content="&#xE74D;" ToolTip="Remove application" IsEnabled="{Binding ElementName=ApplicationList, Path=SelectedItem, Converter={StaticResource IsNotNullConverter}}" Margin="5,0"/>
 
-                        <Button Grid.Column="3"  Style="{StaticResource IconButton}" Command="{Binding EditApplicationCommand}" Content="..."  CommandParameter="{Binding ElementName=ApplicationList, Path=SelectedItem}"  IsEnabled="{Binding ElementName=ApplicationList, Path=SelectedItem, Converter={StaticResource IsNotNullConverter}}"   Margin="10,5,5,10" Height="Auto" />
+                        <Button Grid.Column="3" Style="{StaticResource IconButton}" FontFamily="{StaticResource IconFont}" Command="{Binding EditApplicationCommand}" Content="&#xE712;" ToolTip="Edit application" CommandParameter="{Binding ElementName=ApplicationList, Path=SelectedItem}" IsEnabled="{Binding ElementName=ApplicationList, Path=SelectedItem, Converter={StaticResource IsNotNullConverter}}" Margin="5,0"/>
 
-                        <Button Grid.Column="4"  Style="{StaticResource IconButton}" Command="{Binding MoveAssignmentUpCommand}" Content="⏶"  CommandParameter="{Binding ElementName=ApplicationList, Path=SelectedItem}"  Margin="10,5,5,10" IsEnabled="{Binding ElementName=ApplicationList, Path=SelectedItem, Converter={StaticResource IsNotNullConverter}}" Height="Auto"/>
-                        <Button Grid.Column="5" Style="{StaticResource IconButton}" Command="{Binding MoveAssignmentDownCommand}" Content="⏷" CommandParameter="{Binding ElementName=ApplicationList, Path=SelectedItem}"   IsEnabled="{Binding ElementName=ApplicationList, Path=SelectedItem, Converter={StaticResource IsNotNullConverter}}"   Margin="5,5,5,10"  Height="Auto"  />
+                        <Button Grid.Column="4" Style="{StaticResource IconButton}" FontFamily="{StaticResource IconFont}" Command="{Binding MoveAssignmentUpCommand}" Content="&#xE70E;" ToolTip="Move up" CommandParameter="{Binding ElementName=ApplicationList, Path=SelectedItem}" Margin="5,0" IsEnabled="{Binding ElementName=ApplicationList, Path=SelectedItem, Converter={StaticResource IsNotNullConverter}}"/>
+                        <Button Grid.Column="5" Style="{StaticResource IconButton}" FontFamily="{StaticResource IconFont}" Command="{Binding MoveAssignmentDownCommand}" Content="&#xE70D;" ToolTip="Move down" CommandParameter="{Binding ElementName=ApplicationList, Path=SelectedItem}" IsEnabled="{Binding ElementName=ApplicationList, Path=SelectedItem, Converter={StaticResource IsNotNullConverter}}" Margin="5,0"/>
 
 
                     </Grid>
