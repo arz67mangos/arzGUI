@@ -12,9 +12,12 @@ using System.Linq;
 //       /r:"$out\CodectoryCore.dll" /r:"$out\CodectoryCore.UI.Wpf.dll" /r:"$out\NvAPIWrapper.dll" `
 //       /r:"$out\Newtonsoft.Json.dll" /r:System.dll /r:System.Core.dll /r:System.Drawing.dll `
 //       .\Source\Tools\ColorCheck\ColorCheck.cs
-//   Push-Location $out; .\ColorCheck.exe; Pop-Location
+//   Push-Location $out; .\ColorCheck.exe test; Pop-Location
 //
-// It briefly changes the screen's gamma and puts it back.
+// Three modes. No argument or "probe" diagnoses the machine it is run on - why a gamma ramp does or
+// does not reach the screen - which is what gets handed to someone whose gamma looks stuck. "read"
+// only prints the ramp currently in the LUT. "test" is the developer self-check above.
+// probe and test briefly change the screen's gamma and put it back.
 static class ColorCheck
 {
     static int failures = 0;
@@ -26,9 +29,15 @@ static class ColorCheck
             failures++;
     }
 
-    static int Main()
+    static int Main(string[] args)
     {
         DisplayColorControl.NewLog += (o, m) => Console.WriteLine("  [log] " + m);
+        // Default to the probe: this exe is handed to people to diagnose a machine, and it has to do
+        // the useful thing on a double click. The developer self-check is "ColorCheck.exe test".
+        if (args.Length == 0 || args[0] == "probe")
+            return Probe();
+        if (args[0] == "read")
+            return Read();
 
         Console.WriteLine("== ramp maths ==");
         ushort[] neutral = DisplayColorControl.BuildRamp(0.5, 0.5, 1.0);
@@ -87,5 +96,95 @@ static class ColorCheck
 
         Console.WriteLine(failures == 0 ? "ALL PASS" : failures + " FAILED");
         return failures == 0 ? 0 : 1;
+    }
+
+    /// <summary>One line per display: everything that decides whether a gamma ramp is visible.</summary>
+    static void Describe(Display display)
+    {
+        display.UpdateHDRState();
+        Console.WriteLine();
+        Console.WriteLine("--- " + display.Name + "  UID=" + display.UID + (display.IsPrimary ? "  (primary)" : ""));
+        Console.WriteLine("    HDR      : " + (display.HDRState
+            ? "ON   <-- Windows ignores the GDI gamma ramp while HDR is on"
+            : "off"));
+    }
+
+    /// <summary>Midpoint of the ramp currently in the LUT, against a linear one.</summary>
+    static void ReportRamp(string label, ushort[] ramp, ushort linearMid)
+    {
+        Console.WriteLine("    " + label + ": " + (ramp == null
+            ? "could not be read"
+            : "mid=" + ramp[128] + "  (linear is " + linearMid + ")"));
+    }
+
+    /// <summary>
+    /// Read-only. Run it, drag the gamma slider in the NVIDIA control panel, run it again: if the
+    /// midpoint moves, NVIDIA writes the same GDI ramp we do; if it does not, its sliders go through
+    /// a driver path that Get/SetDeviceGammaRamp cannot see or reach.
+    /// </summary>
+    static int Read()
+    {
+        ushort linearMid = DisplayColorControl.BuildRamp(0.5, 0.5, 1.0)[128];
+        foreach (Display display in DisplayManagerHandler.Instance.GetActiveMonitors())
+        {
+            Describe(display);
+            ReportRamp("ramp now", DisplayColorControl.GetGammaRamp(display), linearMid);
+        }
+        return 0;
+    }
+
+    /// <summary>
+    /// Writes gamma 2.2 to every display, reads it back immediately and again after four seconds,
+    /// then puts the original ramp back. Prints what happened rather than a guess at why.
+    /// </summary>
+    static int Probe()
+    {
+        Console.WriteLine("GPU                 : " + DisplayManagerHandler.Instance.GraphicsCardType);
+        Console.WriteLine("GdiIcmGammaRange set: " + DisplayColorControl.GammaRangeIsUnlocked);
+        Console.WriteLine("Windows             : " + Environment.OSVersion.Version);
+
+        ushort linearMid = DisplayColorControl.BuildRamp(0.5, 0.5, 1.0)[128];
+        ushort wantedMid = DisplayColorControl.BuildRamp(0.5, 0.5, 2.2)[128];
+
+        foreach (Display display in DisplayManagerHandler.Instance.GetActiveMonitors())
+        {
+            Describe(display);
+
+            ushort[] before = DisplayColorControl.GetGammaRamp(display);
+            ReportRamp("ramp now", before, linearMid);
+            if (before == null)
+            {
+                Console.WriteLine("    VERDICT  : no device context for this display - the GDI path cannot reach it.");
+                continue;
+            }
+
+            Console.WriteLine("    setting gamma 2.2, watch the screen...");
+            bool set = DisplayColorControl.SetGammaRamp(display, 0.5, 0.5, 2.2);
+            ushort[] now = DisplayColorControl.GetGammaRamp(display);
+            Console.WriteLine("    set 2.2  : returned " + set + ", reads back mid=" + (now == null ? "null" : now[128].ToString()) + "  (asked for " + wantedMid + ")");
+
+            System.Threading.Thread.Sleep(4000);
+            ushort[] later = DisplayColorControl.GetGammaRamp(display);
+            ReportRamp("after 4s ", later, linearMid);
+
+            bool held = later != null && now != null && later.SequenceEqual(now);
+            bool stored = now != null && now[128] == wantedMid;
+            if (!set)
+                Console.WriteLine("    VERDICT  : Windows refused the ramp. Unlock GdiIcmGammaRange.");
+            else if (!stored)
+                Console.WriteLine("    VERDICT  : the call succeeded but the LUT holds something else - the driver is rewriting it.");
+            else if (!held)
+                Console.WriteLine("    VERDICT  : the ramp was accepted, then something replaced it within four seconds.");
+            else if (display.HDRState)
+                Console.WriteLine("    VERDICT  : the ramp is in the LUT and stays there, but HDR is on, so the screen never uses it.");
+            else
+                Console.WriteLine("    VERDICT  : the ramp is in the LUT and stays there. If the screen did not change, the driver is not applying the LUT.");
+
+            DisplayColorControl.RestoreGammaRamp(display, before);
+        }
+        Console.WriteLine();
+        Console.WriteLine("Original ramps restored. Press enter.");
+        Console.ReadLine();
+        return 0;
     }
 }
