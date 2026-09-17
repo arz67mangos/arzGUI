@@ -92,6 +92,29 @@ static class MonitorDeviceCheck
             Check(!unelevated.Success, "running unelevated fails instead of throwing");
             Check(MonitorDeviceControl.GetMonitorDevices().First(d => d.Equals(first)).IsEnabled == first.IsEnabled,
                 "running unelevated left the device alone");
+            Console.WriteLine("  (run this as administrator to also check the state change itself)");
+        }
+        else
+        {
+            // The only way to check the part that matters. The screen flickers and comes back; the
+            // snapshot restore at the end is the same code path the daemon uses on Closed.
+            Console.WriteLine("== live state change (elevated) ==");
+            Console.WriteLine("  flipping '" + first.Name + "' - the screen will blink");
+            MonitorDeviceSnapshot before = MonitorDeviceControl.Capture();
+
+            action.Enable = !first.IsEnabled;
+            Check(action.RunAction(ApplicationChangedType.Started).Success, "the action changes the device");
+            System.Threading.Thread.Sleep(2000);
+            MonitorDevice afterChange = MonitorDeviceControl.GetMonitorDevices().FirstOrDefault(d => d.Equals(first));
+            Check(afterChange != null && afterChange.IsEnabled == !first.IsEnabled,
+                "the device reports the new state (" + (afterChange == null ? "gone" : afterChange.IsEnabled.ToString()) + ")");
+
+            Check(MonitorDeviceControl.Restore(before), "the snapshot restores the device");
+            System.Threading.Thread.Sleep(2000);
+            MonitorDevice afterRestore = MonitorDeviceControl.GetMonitorDevices().FirstOrDefault(d => d.Equals(first));
+            Check(afterRestore != null && afterRestore.IsEnabled == first.IsEnabled,
+                "the device is back where it started (" + (afterRestore == null ? "gone" : afterRestore.IsEnabled.ToString()) + ")");
+            action.Enable = false;
         }
 
         Console.WriteLine("== settings round trip ==");
