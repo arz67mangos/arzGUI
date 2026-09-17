@@ -1,4 +1,4 @@
-using AutoActions.Threading;
+﻿using AutoActions.Threading;
 using AutoActions.UWP;
 using System;
 using System.Collections.Generic;
@@ -44,7 +44,7 @@ namespace AutoActions
         public event EventHandler<ApplicationChangedEventArgs> ApplicationChanged;
 
         // An identical error is logged at most once per interval, so a persistent fault
-        // (e.g. a UWP handler failing on every tick) cannot flood the log at two ticks per second.
+        // (e.g. a UWP handler failing on every tick) cannot flood the log one tick after another.
         static readonly TimeSpan ErrorLogThrottle = TimeSpan.FromSeconds(60);
         readonly Dictionary<string, DateTime> _lastErrorLog = new Dictionary<string, DateTime>();
 
@@ -233,7 +233,7 @@ namespace AutoActions
                 }
                 finally
                 {
-                    // Each Process holds a handle. At two enumerations per second these must be
+                    // Each Process holds a handle. Across a whole-machine enumeration every tick these must be
                     // released explicitly instead of waiting for the finalizer.
                     if (processes != null)
                         foreach (Process process in processes)
