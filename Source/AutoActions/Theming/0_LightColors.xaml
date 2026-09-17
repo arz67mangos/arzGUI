@@ -12,9 +12,8 @@
     <Color x:Key="GlassSurfaceColor">#A8F7FAFF</Color>
     <Color x:Key="GlassRaisedColor">#D6FFFFFF</Color>
     <Color x:Key="GlassStrokeColor">#663C5E82</Color>
-    <Color x:Key="AmbientBlueColor">#704B8EEA</Color>
-    <Color x:Key="AmbientCyanColor">#5A55C7D9</Color>
-    <Color x:Key="AmbientVioletColor">#496F69D9</Color>
+    <Color x:Key="AcrylicTintColor">#66F2F6FB</Color>
+    <Color x:Key="TransparentColor">#00000000</Color>
     <Color x:Key="ShadowColor">#280B2038</Color>
     <Color x:Key="StrokeColor">#DFE3E8</Color>
     <Color x:Key="StrokeStrongColor">#C3C9D1</Color>
@@ -49,9 +48,8 @@
     <SolidColorBrush x:Key="GlassSurfaceBrush" Color="{StaticResource GlassSurfaceColor}"/>
     <SolidColorBrush x:Key="GlassRaisedBrush" Color="{StaticResource GlassRaisedColor}"/>
     <SolidColorBrush x:Key="GlassStrokeBrush" Color="{StaticResource GlassStrokeColor}"/>
-    <SolidColorBrush x:Key="AmbientBlueBrush" Color="{StaticResource AmbientBlueColor}"/>
-    <SolidColorBrush x:Key="AmbientCyanBrush" Color="{StaticResource AmbientCyanColor}"/>
-    <SolidColorBrush x:Key="AmbientVioletBrush" Color="{StaticResource AmbientVioletColor}"/>
+    <SolidColorBrush x:Key="AcrylicTintBrush" Color="{StaticResource AcrylicTintColor}"/>
+    <SolidColorBrush x:Key="TransparentBrush" Color="{StaticResource TransparentColor}"/>
     <SolidColorBrush x:Key="StrokeBrush" Color="{StaticResource StrokeColor}"/>
     <SolidColorBrush x:Key="StrokeStrongBrush" Color="{StaticResource StrokeStrongColor}"/>
     <SolidColorBrush x:Key="TextPrimaryBrush" Color="{StaticResource TextPrimaryColor}"/>

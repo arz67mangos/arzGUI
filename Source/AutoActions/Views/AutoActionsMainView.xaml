@@ -10,11 +10,15 @@
         xmlns:pres="clr-namespace:AutoActions.ProjectResources;assembly=AutoActions.ProjectResources"
         xmlns:dsp="clr-namespace:AutoActions.Displays;assembly=AutoActions.Displays"
         xmlns:thm="clr-namespace:AutoActions.Theming"
+        xmlns:shell="clr-namespace:System.Windows.Shell;assembly=PresentationFramework"
         xmlns:local="clr-namespace:AutoActions.Views"
         xmlns:root="clr-namespace:AutoActions"
         mc:Ignorable="d"
-        Title="{x:Static pres:ProjectLocales.AutoActions}" Name="MainWindow" MinHeight="540" MinWidth="840" Background="{DynamicResource WindowBackdropBrush}" Closing="Window_Closing"  Visibility="{Binding ShowView, Mode=TwoWay, Converter={StaticResource VisibilityBooleanConverter}}"
-         Loaded="MainWindow_Loaded" TextOptions.TextFormattingMode="Display" UseLayoutRounding="True">
+        Title="{x:Static pres:ProjectLocales.AutoActions}" Name="MainWindow" MinHeight="540" MinWidth="840" Background="{DynamicResource TransparentBrush}" WindowStyle="None" ResizeMode="CanResize" Closing="Window_Closing" Visibility="{Binding ShowView, Mode=TwoWay, Converter={StaticResource VisibilityBooleanConverter}}"
+         Loaded="MainWindow_Loaded" StateChanged="MainWindow_StateChanged" TextOptions.TextFormattingMode="Display" UseLayoutRounding="True">
+    <shell:WindowChrome.WindowChrome>
+        <shell:WindowChrome CaptionHeight="38" ResizeBorderThickness="6" GlassFrameThickness="-1" CornerRadius="0" UseAeroCaptionButtons="False"/>
+    </shell:WindowChrome.WindowChrome>
     <!--
         THESIS: ArzFlow makes application-state automation readable as a calm sequence, not a dense settings table.
         OWN-WORLD: midnight-to-graphite ground, translucent layered surfaces, coral intent, mint status, soft 10–14px corners.
@@ -73,13 +77,35 @@
         </Style>
 
     </Window.Resources>
-    <Grid x:Name="MainGrid" Background="Transparent">
+    <Grid x:Name="MainGrid" Background="{DynamicResource TransparentBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="38"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
         <Grid.RenderTransform>
             <TranslateTransform x:Name="MainGridTranslate"/>
         </Grid.RenderTransform>
+        <Border Grid.Row="0" Background="{DynamicResource GlassSurfaceBrush}" BorderBrush="{DynamicResource GlassStrokeBrush}" BorderThickness="0,0,0,1">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Orientation="Horizontal" Margin="12,0" VerticalAlignment="Center">
+                    <Image Source="/AutoActions.ProjectResources;component/Resources/Logo.png" Width="18" Height="18" RenderOptions.BitmapScalingMode="HighQuality"/>
+                    <TextBlock Text="{x:Static pres:ProjectLocales.AutoActions}" Foreground="{DynamicResource TextPrimaryBrush}" FontSize="13" Margin="8,0,0,0" VerticalAlignment="Center"/>
+                </StackPanel>
+                <StackPanel Grid.Column="1" Orientation="Horizontal" shell:WindowChrome.IsHitTestVisibleInChrome="True">
+                    <Button Style="{StaticResource GhostButton}" FontFamily="{StaticResource IconFont}" Content="&#xE921;" Width="46" Height="38" Padding="0" Margin="0" ToolTip="Minimize" Click="Minimize_Click"/>
+                    <Button x:Name="MaximizeButton" Style="{StaticResource GhostButton}" FontFamily="{StaticResource IconFont}" Content="&#xE922;" Width="46" Height="38" Padding="0" Margin="0" ToolTip="Maximize" Click="Maximize_Click"/>
+                    <Button Style="{StaticResource GhostButton}" FontFamily="{StaticResource IconFont}" Content="&#xE8BB;" Width="46" Height="38" Padding="0" Margin="0" ToolTip="Close to tray" Click="Close_Click"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
         <!-- Navigation: a TabControl styled as a left sidebar (SidebarTabControl). The header and
              footer blocks are attached content; every tab's page is unchanged. -->
-        <TabControl Style="{StaticResource SidebarTabControl}" Padding="8">
+        <TabControl Grid.Row="1" Style="{StaticResource SidebarTabControl}" Padding="8">
 
             <thm:Sidebar.Header>
                 <StackPanel>

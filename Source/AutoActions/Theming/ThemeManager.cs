@@ -4,6 +4,7 @@ using System;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Interop;
+using System.Windows.Media;
 
 namespace AutoActions.Theming
 {
@@ -15,8 +16,8 @@ namespace AutoActions.Theming
     /// </summary>
     public static class ThemeManager
     {
-        static readonly Uri LightSource = new Uri("pack://application:,,,/Theming/0_LightColors.xaml", UriKind.Absolute);
-        static readonly Uri DarkSource = new Uri("pack://application:,,,/Theming/0_DarkColors.xaml", UriKind.Absolute);
+        static readonly Uri LightSource = new Uri("pack://application:,,,/AutoActions;component/Theming/0_LightColors.xaml", UriKind.Absolute);
+        static readonly Uri DarkSource = new Uri("pack://application:,,,/AutoActions;component/Theming/0_DarkColors.xaml", UriKind.Absolute);
 
         static ResourceDictionary _current;
         static Func<ThemeSetting> _settingProvider;
@@ -93,6 +94,33 @@ namespace AutoActions.Theming
         static extern int DwmSetWindowAttribute(IntPtr hwnd, int attribute, ref int value, int size);
 
         const int DWMWA_USE_IMMERSIVE_DARK_MODE = 20;
+        const int DWMWA_WINDOW_CORNER_PREFERENCE = 33;
+        const int DWMWA_SYSTEMBACKDROP_TYPE = 38;
+        const int DWMWCP_ROUND = 2;
+        const int DWMSBT_TRANSIENTWINDOW = 3;
+
+        /// <summary>Uses Windows 11 Desktop Acrylic behind the WPF client area.</summary>
+        public static void ApplyDesktopAcrylic(Window window)
+        {
+            if (window == null)
+                return;
+            try
+            {
+                IntPtr handle = new WindowInteropHelper(window).Handle;
+                if (handle == IntPtr.Zero)
+                    return;
+                HwndSource source = HwndSource.FromHwnd(handle);
+                if (source != null && source.CompositionTarget != null)
+                    source.CompositionTarget.BackgroundColor = Colors.Transparent;
+                int backdrop = DWMSBT_TRANSIENTWINDOW;
+                int corners = DWMWCP_ROUND;
+                DwmSetWindowAttribute(handle, DWMWA_SYSTEMBACKDROP_TYPE, ref backdrop, sizeof(int));
+                DwmSetWindowAttribute(handle, DWMWA_WINDOW_CORNER_PREFERENCE, ref corners, sizeof(int));
+            }
+            catch
+            {
+            }
+        }
 
         /// <summary>Dark title bar on Windows 10 20H1+/11; silently ignored elsewhere.</summary>
         static void ApplyTitleBar(Window window)

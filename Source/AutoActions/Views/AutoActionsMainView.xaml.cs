@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Animation;
+using AutoActions.Theming;
 
 namespace AutoActions.Views
 {
@@ -34,6 +35,7 @@ namespace AutoActions.Views
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
+            ThemeManager.ApplyDesktopAcrylic(this);
             try
             {
                 Globals.Instance.SettingsLoaded += Instance_SettingsLoaded;
@@ -57,6 +59,32 @@ namespace AutoActions.Views
                     EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseOut }
                 });
             }
+        }
+
+        private void Minimize_Click(object sender, RoutedEventArgs e)
+        {
+            SystemCommands.MinimizeWindow(this);
+        }
+
+        private void Maximize_Click(object sender, RoutedEventArgs e)
+        {
+            if (WindowState == WindowState.Maximized)
+                SystemCommands.RestoreWindow(this);
+            else
+                SystemCommands.MaximizeWindow(this);
+        }
+
+        private void Close_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
+
+        private void MainWindow_StateChanged(object sender, EventArgs e)
+        {
+            if (MaximizeButton == null)
+                return;
+            MaximizeButton.Content = WindowState == WindowState.Maximized ? "\uE923" : "\uE922";
+            MaximizeButton.ToolTip = WindowState == WindowState.Maximized ? "Restore" : "Maximize";
         }
 
         private void Instance_SettingsLoaded(object sender, EventArgs e)

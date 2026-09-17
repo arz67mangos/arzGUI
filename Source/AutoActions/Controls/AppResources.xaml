@@ -20,9 +20,8 @@
   <Color x:Key="GlassSurfaceColor">#A8F7FAFF</Color>
   <Color x:Key="GlassRaisedColor">#D6FFFFFF</Color>
   <Color x:Key="GlassStrokeColor">#663C5E82</Color>
-  <Color x:Key="AmbientBlueColor">#704B8EEA</Color>
-  <Color x:Key="AmbientCyanColor">#5A55C7D9</Color>
-  <Color x:Key="AmbientVioletColor">#496F69D9</Color>
+  <Color x:Key="AcrylicTintColor">#66F2F6FB</Color>
+  <Color x:Key="TransparentColor">#00000000</Color>
   <Color x:Key="ShadowColor">#280B2038</Color>
   <!-- Borders -->
   <Color x:Key="StrokeColor">#DFE3E8</Color>
@@ -62,9 +61,8 @@
   <SolidColorBrush x:Key="GlassSurfaceBrush" Color="{StaticResource GlassSurfaceColor}" />
   <SolidColorBrush x:Key="GlassRaisedBrush" Color="{StaticResource GlassRaisedColor}" />
   <SolidColorBrush x:Key="GlassStrokeBrush" Color="{StaticResource GlassStrokeColor}" />
-  <SolidColorBrush x:Key="AmbientBlueBrush" Color="{StaticResource AmbientBlueColor}" />
-  <SolidColorBrush x:Key="AmbientCyanBrush" Color="{StaticResource AmbientCyanColor}" />
-  <SolidColorBrush x:Key="AmbientVioletBrush" Color="{StaticResource AmbientVioletColor}" />
+  <SolidColorBrush x:Key="AcrylicTintBrush" Color="{StaticResource AcrylicTintColor}" />
+  <SolidColorBrush x:Key="TransparentBrush" Color="{StaticResource TransparentColor}" />
   <SolidColorBrush x:Key="StrokeBrush" Color="{StaticResource StrokeColor}" />
   <SolidColorBrush x:Key="StrokeStrongBrush" Color="{StaticResource StrokeStrongColor}" />
   <SolidColorBrush x:Key="TextPrimaryBrush" Color="{StaticResource TextPrimaryColor}" />
@@ -701,30 +699,11 @@
     <Setter Property="Template">
       <Setter.Value>
         <ControlTemplate TargetType="TabControl">
-          <Grid Background="{DynamicResource WindowBackdropBrush}" KeyboardNavigation.TabNavigation="Local" SnapsToDevicePixels="True" ClipToBounds="True">
+          <Grid Background="{DynamicResource AcrylicTintBrush}" KeyboardNavigation.TabNavigation="Local" SnapsToDevicePixels="True" ClipToBounds="True">
             <Grid.ColumnDefinitions>
               <ColumnDefinition Width="220" />
               <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <!-- Static colour blooms sit below the translucent material. Their pre-blurred
-                             edges give WPF glass depth without a fragile transparent native window. -->
-            <Grid Grid.ColumnSpan="2" IsHitTestVisible="False">
-              <Ellipse Width="720" Height="520" Fill="{DynamicResource AmbientBlueBrush}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="-230,-250,0,0">
-                <Ellipse.Effect>
-                  <BlurEffect Radius="100" RenderingBias="Performance" />
-                </Ellipse.Effect>
-              </Ellipse>
-              <Ellipse Width="640" Height="440" Fill="{DynamicResource AmbientCyanBrush}" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,-210,-240,0">
-                <Ellipse.Effect>
-                  <BlurEffect Radius="110" RenderingBias="Performance" />
-                </Ellipse.Effect>
-              </Ellipse>
-              <Ellipse Width="680" Height="500" Fill="{DynamicResource AmbientVioletBrush}" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="120,0,0,-330">
-                <Ellipse.Effect>
-                  <BlurEffect Radius="120" RenderingBias="Performance" />
-                </Ellipse.Effect>
-              </Ellipse>
-            </Grid>
             <Border Grid.Column="0" Margin="12" Background="{DynamicResource GlassSurfaceBrush}" BorderBrush="{DynamicResource GlassStrokeBrush}" BorderThickness="1" CornerRadius="16">
               <Border.Effect>
                 <DropShadowEffect Color="{DynamicResource ShadowColor}" BlurRadius="28" ShadowDepth="8" Opacity="0.34" RenderingBias="Performance" />
