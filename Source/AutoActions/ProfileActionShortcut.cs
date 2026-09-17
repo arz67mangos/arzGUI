@@ -1,4 +1,5 @@
 ﻿using AutoActions.Profiles.Actions;
+using AutoActions.ProjectResources;
 using CodectoryCore;
 using CodectoryCore.UI.Wpf;
 using Newtonsoft.Json;
@@ -41,8 +42,14 @@ namespace AutoActions
         public string Hotkey
         {
             get => _hotkey;
-            set { _hotkey = value ?? string.Empty; OnPropertyChanged(); }
+            set { _hotkey = value ?? string.Empty; OnPropertyChanged(); OnPropertyChanged(nameof(HotkeyDisplay)); }
         }
+
+        /// <summary>
+        /// What the hotkey box shows. The box is read-only and takes its value from keystrokes, so
+        /// when it is empty it has to say what to do with it instead of looking like a dead field.
+        /// </summary>
+        public string HotkeyDisplay => string.IsNullOrEmpty(Hotkey) ? ProjectLocales.HotkeyPlaceholder : Hotkey;
 
         private bool _hotkeyIsRegistered = true;
 

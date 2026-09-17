@@ -1349,4 +1349,7 @@ Public License instead of this License.  But first, please read
   <data name="MessageMissingMonitorDevice" xml:space="preserve">
     <value>Select a monitor device.</value>
   </data>
+  <data name="HotkeyPlaceholder" xml:space="preserve">
+    <value>Click here, then press keys</value>
+  </data>
 </root>

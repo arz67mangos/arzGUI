@@ -1751,5 +1751,14 @@ namespace AutoActions.ProjectResources {
                 return ResourceManager.GetString("MessageMissingMonitorDevice", resourceCulture);
             }
         }
+        /// <summary>
+        ///   Looks up a localized string similar to Click here, then press keys.
+        /// </summary>
+        public static string HotkeyPlaceholder {
+            get {
+                return ResourceManager.GetString("HotkeyPlaceholder", resourceCulture);
+            }
+        }
+        
     }
 }

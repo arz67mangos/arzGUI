@@ -633,4 +633,7 @@
   <data name="MessageMissingMonitorDevice" xml:space="preserve">
     <value>Wählen Sie ein Monitorgerät aus.</value>
   </data>
+  <data name="HotkeyPlaceholder" xml:space="preserve">
+    <value>Hier klicken, dann Tasten drücken</value>
+  </data>
 </root>
