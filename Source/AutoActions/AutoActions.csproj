@@ -334,6 +334,7 @@
     <Compile Include="Profiles\Actions\AudioDeviceAction.cs" />
     <Compile Include="Profiles\Actions\MicMonitoringAction.cs" />
     <Compile Include="Profiles\Actions\DisplayColorAction.cs" />
+    <Compile Include="Profiles\Actions\MonitorDeviceAction.cs" />
     <Compile Include="Profiles\Actions\RunProgramAction.cs" />
     <Compile Include="Profiles\Actions\ApplicationAction.cs" />
     <Compile Include="Profiles\Actions\DisplayAction.cs" />
@@ -348,6 +349,10 @@
     </Compile>
     <Compile Include="Views\MicMonitoringActionView.xaml.cs">
       <DependentUpon>MicMonitoringActionView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\MonitorDeviceActionView.xaml.cs">
+      <DependentUpon>MonitorDeviceActionView.xaml</DependentUpon>
+      <SubType>Code</SubType>
     </Compile>
     <Compile Include="Views\DisplayColorActionView.xaml.cs">
       <DependentUpon>DisplayColorActionView.xaml</DependentUpon>
@@ -425,6 +430,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\MicMonitoringActionView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\MonitorDeviceActionView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

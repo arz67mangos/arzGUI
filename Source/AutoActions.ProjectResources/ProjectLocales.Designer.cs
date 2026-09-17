@@ -1662,5 +1662,94 @@ namespace AutoActions.ProjectResources {
                 return ResourceManager.GetString("Behaviour", resourceCulture);
             }
         }
+            /// <summary>
+        ///   Looks up a localized string similar to Monitor device.
+        /// </summary>
+        public static string MonitorDeviceAction {
+            get {
+                return ResourceManager.GetString("MonitorDeviceAction", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Monitor.
+        /// </summary>
+        public static string MonitorDevice {
+            get {
+                return ResourceManager.GetString("MonitorDevice", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to State.
+        /// </summary>
+        public static string MonitorDeviceState {
+            get {
+                return ResourceManager.GetString("MonitorDeviceState", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enable.
+        /// </summary>
+        public static string MonitorDeviceEnable {
+            get {
+                return ResourceManager.GetString("MonitorDeviceEnable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Disable.
+        /// </summary>
+        public static string MonitorDeviceDisable {
+            get {
+                return ResourceManager.GetString("MonitorDeviceDisable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Disabling the monitor device is how a true stretched resolution sta....
+        /// </summary>
+        public static string MonitorDeviceHint {
+            get {
+                return ResourceManager.GetString("MonitorDeviceHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Changing a device in Device Manager needs administrator rights, and....
+        /// </summary>
+        public static string MonitorDeviceNeedsAdministrator {
+            get {
+                return ResourceManager.GetString("MonitorDeviceNeedsAdministrator", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Restart as administrator.
+        /// </summary>
+        public static string MonitorDeviceRestartAsAdministrator {
+            get {
+                return ResourceManager.GetString("MonitorDeviceRestartAsAdministrator", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The monitor device could not be changed..
+        /// </summary>
+        public static string MonitorDeviceFailed {
+            get {
+                return ResourceManager.GetString("MonitorDeviceFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select a monitor device..
+        /// </summary>
+        public static string MessageMissingMonitorDevice {
+            get {
+                return ResourceManager.GetString("MessageMissingMonitorDevice", resourceCulture);
+            }
+        }
     }
 }

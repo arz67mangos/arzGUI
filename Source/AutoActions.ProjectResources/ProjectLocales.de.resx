@@ -603,4 +603,34 @@
   <data name="Behaviour" xml:space="preserve">
     <value>Verhalten</value>
   </data>
+  <data name="MonitorDeviceAction" xml:space="preserve">
+    <value>Monitorgerät</value>
+  </data>
+  <data name="MonitorDevice" xml:space="preserve">
+    <value>Monitor</value>
+  </data>
+  <data name="MonitorDeviceState" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="MonitorDeviceEnable" xml:space="preserve">
+    <value>Aktivieren</value>
+  </data>
+  <data name="MonitorDeviceDisable" xml:space="preserve">
+    <value>Deaktivieren</value>
+  </data>
+  <data name="MonitorDeviceHint" xml:space="preserve">
+    <value>Ein deaktiviertes Monitorgerät sorgt dafür, dass eine echte gestreckte Auflösung auch in Spielen erhalten bleibt, die den Skalierungsmodus überschreiben. Solange es deaktiviert ist, hat Windows keine Gammakurve für diesen Bildschirm: Helligkeit, Kontrast und Gamma bewirken nichts - digitale Vibranz und Farbton funktionieren weiter. Der Zustand wird beim Beenden der Anwendung wiederhergestellt.</value>
+  </data>
+  <data name="MonitorDeviceNeedsAdministrator" xml:space="preserve">
+    <value>Änderungen im Geräte-Manager erfordern Administratorrechte, und ArzFlow läuft nicht als Administrator. Diese Aktion schlägt bis dahin fehl.</value>
+  </data>
+  <data name="MonitorDeviceRestartAsAdministrator" xml:space="preserve">
+    <value>Als Administrator neu starten</value>
+  </data>
+  <data name="MonitorDeviceFailed" xml:space="preserve">
+    <value>Das Monitorgerät konnte nicht geändert werden.</value>
+  </data>
+  <data name="MessageMissingMonitorDevice" xml:space="preserve">
+    <value>Wählen Sie ein Monitorgerät aus.</value>
+  </data>
 </root>

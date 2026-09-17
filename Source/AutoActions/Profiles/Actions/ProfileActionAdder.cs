@@ -75,7 +75,8 @@ namespace AutoActions.Profiles.Actions
                     new ActionTypeDescription(typeof(ReferenceProfileAction), ProjectLocales.ReferenceProfileAction),
                     new ActionTypeDescription(typeof(AudioDeviceAction), ProjectLocales.AudioAction),
                     new ActionTypeDescription(typeof(MicMonitoringAction), ProjectLocales.MicMonitoring),
-                    new ActionTypeDescription(typeof(DisplayColorAction), ProjectLocales.DisplayColorAction) };
+                    new ActionTypeDescription(typeof(DisplayColorAction), ProjectLocales.DisplayColorAction),
+                    new ActionTypeDescription(typeof(MonitorDeviceAction), ProjectLocales.MonitorDeviceAction) };
             }
         }
 

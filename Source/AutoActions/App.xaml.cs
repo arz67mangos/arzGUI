@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -26,6 +26,9 @@ namespace AutoActions
 
         static Mutex mutex;
 
+        /// <summary>Passed to the elevated copy by MonitorDeviceAction.RestartAsAdministrator.</summary>
+        public const string RestartArgument = "--restart";
+
         static readonly string CrashFilePath = $"{AppDomain.CurrentDomain.BaseDirectory}AutoActions.crash.log";
 
         [STAThread]
@@ -34,7 +37,10 @@ namespace AutoActions
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
          bool createNew = false;
             mutex = new Mutex(true, "{2846416C-610B-4A6B-A31C-A4AA6826E9BE}", out createNew);
-            if (mutex.WaitOne(TimeSpan.Zero, true))
+            // A copy started by "restart as administrator" waits for the one that launched it to let
+            // go of the mutex, instead of telling the user AutoActions is already running.
+            bool restarting = Environment.GetCommandLineArgs().Any(a => string.Equals(a, RestartArgument, StringComparison.OrdinalIgnoreCase));
+            if (mutex.WaitOne(restarting ? TimeSpan.FromSeconds(20) : TimeSpan.Zero, true))
             {
                 var application = new App();
                 application.DispatcherUnhandledException += Application_DispatcherUnhandledException;

@@ -36,6 +36,9 @@ namespace AutoActions
         // DisplayColorAction: an exclusive-fullscreen game overwrites the gamma ramp when it launches,
         // so for those the action has to sit on GotFocus and there is no Started to capture at.
         readonly Dictionary<ApplicationItem, DisplayColorSnapshot> _displayColorSnapshots = new Dictionary<ApplicationItem, DisplayColorSnapshot>();
+        // And for monitor devices. Started only: a device enable is a hardware change that takes a
+        // second and flickers the screen, so it has no business running on a focus change.
+        readonly Dictionary<ApplicationItem, MonitorDeviceSnapshot> _monitorDeviceSnapshots = new Dictionary<ApplicationItem, MonitorDeviceSnapshot>();
         private bool _showView = false;
         private ApplicationItem _currentApplication = null;
         private Profile _currentProfile = null;
@@ -281,6 +284,15 @@ namespace AutoActions
                     }
                 }
 
+                bool touchesMonitorDevice = actions.OfType<MonitorDeviceAction>().Any();
+                if (touchesMonitorDevice && changedType == ApplicationChangedType.Started)
+                {
+                    MonitorDeviceSnapshot snapshot = MonitorDeviceControl.Capture();
+                    lock (_monitorDeviceSnapshots)
+                        _monitorDeviceSnapshots[application] = snapshot;
+                    Globals.Logs.Add($"[{application.ApplicationName}] monitor devices before Started actions: {snapshot}", false);
+                }
+
                 if (actions.Count > 0)
                     App.Current.Dispatcher.Invoke(() => LastActions.Clear());
                 foreach (var action in actions)
@@ -329,6 +341,25 @@ namespace AutoActions
                     {
                         Globals.Logs.Add($"[{application.ApplicationName}] restoring display colour to {colorSnapshot}.", false);
                         DisplayColorControl.Restore(colorSnapshot);
+                    }
+                }
+
+                if (changedType == ApplicationChangedType.Closed)
+                {
+                    MonitorDeviceSnapshot deviceSnapshot;
+                    bool capturedDevices;
+                    lock (_monitorDeviceSnapshots)
+                    {
+                        capturedDevices = _monitorDeviceSnapshots.TryGetValue(application, out deviceSnapshot);
+                        if (capturedDevices)
+                            _monitorDeviceSnapshots.Remove(application);
+                    }
+                    if (capturedDevices && touchesMonitorDevice)
+                        Globals.Logs.Add($"[{application.ApplicationName}] explicit Closed monitor device action ran; captured state ({deviceSnapshot}) discarded.", false);
+                    else if (capturedDevices)
+                    {
+                        Globals.Logs.Add($"[{application.ApplicationName}] restoring monitor devices to {deviceSnapshot}.", false);
+                        MonitorDeviceControl.Restore(deviceSnapshot);
                     }
                 }
 
@@ -475,6 +506,8 @@ namespace AutoActions
             // Static event, so drop any earlier subscription before adding one.
             DisplayColorControl.NewLog -= DisplayColorControl_NewLog;
             DisplayColorControl.NewLog += DisplayColorControl_NewLog;
+            MonitorDeviceControl.NewLog -= DisplayColorControl_NewLog;
+            MonitorDeviceControl.NewLog += DisplayColorControl_NewLog;
             DisplayManagerHandler.Instance.SelectedHDR = !Settings.GlobalAutoActions;
             HDRIsActive = DisplayManagerHandler.Instance.GlobalHDRIsActive;
         }

@@ -33,6 +33,9 @@
         <DataTemplate DataType="{x:Type prflActns:DisplayColorAction}">
             <local:DisplayColorActionView/>
         </DataTemplate>
+        <DataTemplate DataType="{x:Type prflActns:MonitorDeviceAction}">
+            <local:MonitorDeviceActionView/>
+        </DataTemplate>
         <DataTemplate x:Key="ActionTypeTemplate" DataType="ActionTypeDescription">
             <TextBlock Style="{StaticResource DefaultTextBlock}"  Text="{Binding TypeDescription }"/>
         </DataTemplate>

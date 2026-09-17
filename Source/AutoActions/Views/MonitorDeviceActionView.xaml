@@ -1,0 +1,62 @@
+<UserControl x:Class="AutoActions.Views.MonitorDeviceActionView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:AutoActions.Views"
+             xmlns:dsp="clr-namespace:AutoActions.Displays;assembly=AutoActions.Displays"
+             xmlns:pres="clr-namespace:AutoActions.ProjectResources;assembly=AutoActions.ProjectResources"
+             xmlns:prflActns="clr-namespace:AutoActions.Profiles.Actions"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance Type=prflActns:MonitorDeviceAction, IsDesignTimeCreatable=False}">
+    <UserControl.Resources>
+        <DataTemplate x:Key="MonitorDeviceItemTemplate" DataType="dsp:MonitorDevice">
+            <TextBlock Style="{StaticResource DefaultTextBlock}" Text="{Binding Description}"/>
+        </DataTemplate>
+    </UserControl.Resources>
+
+    <Grid VerticalAlignment="Top">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Style="{StaticResource DefaultTextBlock}" Grid.Row="0" Grid.Column="0" Margin="5" Text="{x:Static pres:ProjectLocales.MonitorDevice}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+        <ComboBox Grid.Row="0" Grid.Column="1" Margin="5" MinWidth="260" HorizontalAlignment="Left"
+                  ItemsSource="{Binding MonitorDevices}"
+                  SelectedItem="{Binding Device, UpdateSourceTrigger=PropertyChanged}"
+                  ItemTemplate="{StaticResource MonitorDeviceItemTemplate}"/>
+
+        <TextBlock Style="{StaticResource DefaultTextBlock}" Grid.Row="1" Grid.Column="0" Margin="5" Text="{x:Static pres:ProjectLocales.MonitorDeviceState}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+        <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" Margin="5">
+            <RadioButton GroupName="MonitorDeviceState" Margin="0,0,16,0" VerticalAlignment="Center"
+                         Content="{x:Static pres:ProjectLocales.MonitorDeviceDisable}"
+                         IsChecked="{Binding Enable, Mode=OneWay, Converter={StaticResource InvertBooleanConverter}}"/>
+            <RadioButton GroupName="MonitorDeviceState" VerticalAlignment="Center"
+                         Content="{x:Static pres:ProjectLocales.MonitorDeviceEnable}"
+                         IsChecked="{Binding Enable, Mode=TwoWay}"/>
+        </StackPanel>
+
+        <Border Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Margin="5,10,5,0" Padding="10" CornerRadius="6"
+                BorderThickness="1" BorderBrush="{DynamicResource WarningBrush}" Background="{DynamicResource SurfaceRaisedBrush}"
+                Visibility="{Binding ElevationWarningIsVisible, Converter={StaticResource VisibilityBooleanConverter}}">
+            <StackPanel>
+                <TextBlock Style="{StaticResource DefaultTextBlock}" TextWrapping="Wrap" Foreground="{DynamicResource WarningBrush}"
+                           Text="{x:Static pres:ProjectLocales.MonitorDeviceNeedsAdministrator}"/>
+                <Button Style="{StaticResource SecondaryButton}" Margin="0,8,0,0" HorizontalAlignment="Left"
+                        Command="{Binding RestartAsAdministratorCommand}"
+                        Content="{x:Static pres:ProjectLocales.MonitorDeviceRestartAsAdministrator}"/>
+            </StackPanel>
+        </Border>
+
+        <TextBlock Style="{StaticResource DefaultTextBlock}" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Margin="5,10,5,5"
+                   Foreground="{DynamicResource TextSecondaryBrush}" TextWrapping="Wrap" MaxWidth="460" HorizontalAlignment="Left"
+                   Text="{x:Static pres:ProjectLocales.MonitorDeviceHint}"/>
+    </Grid>
+</UserControl>

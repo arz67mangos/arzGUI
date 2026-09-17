@@ -213,6 +213,7 @@
     <Compile Include="ColorDepth.cs" />
     <Compile Include="Display.cs" />
     <Compile Include="DisplayColorControl.cs" />
+    <Compile Include="MonitorDeviceControl.cs" />
     <Compile Include="DisplayInformation.cs" />
     <Compile Include="DisplayInterop.cs" />
     <Compile Include="DisplayManagerBase.cs" />

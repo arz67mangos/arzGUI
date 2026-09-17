@@ -1319,4 +1319,34 @@ Public License instead of this License.  But first, please read
   <data name="Behaviour" xml:space="preserve">
     <value>Behaviour</value>
   </data>
+  <data name="MonitorDeviceAction" xml:space="preserve">
+    <value>Monitor device</value>
+  </data>
+  <data name="MonitorDevice" xml:space="preserve">
+    <value>Monitor</value>
+  </data>
+  <data name="MonitorDeviceState" xml:space="preserve">
+    <value>State</value>
+  </data>
+  <data name="MonitorDeviceEnable" xml:space="preserve">
+    <value>Enable</value>
+  </data>
+  <data name="MonitorDeviceDisable" xml:space="preserve">
+    <value>Disable</value>
+  </data>
+  <data name="MonitorDeviceHint" xml:space="preserve">
+    <value>Disabling the monitor device is how a true stretched resolution stays put in games that override the scaling mode. While it is disabled Windows has no gamma ramp for that display, so brightness, contrast and gamma do nothing - digital vibrance and hue keep working. The state is put back when the application closes.</value>
+  </data>
+  <data name="MonitorDeviceNeedsAdministrator" xml:space="preserve">
+    <value>Changing a device in Device Manager needs administrator rights, and ArzFlow is not running as administrator. This action will fail until it is.</value>
+  </data>
+  <data name="MonitorDeviceRestartAsAdministrator" xml:space="preserve">
+    <value>Restart as administrator</value>
+  </data>
+  <data name="MonitorDeviceFailed" xml:space="preserve">
+    <value>The monitor device could not be changed.</value>
+  </data>
+  <data name="MessageMissingMonitorDevice" xml:space="preserve">
+    <value>Select a monitor device.</value>
+  </data>
 </root>
