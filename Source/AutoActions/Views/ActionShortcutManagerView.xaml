@@ -46,7 +46,7 @@
                              ToolTip="{x:Static pres:ProjectLocales.HotkeyHint}"
                              PreviewKeyDown="HotkeyBox_PreviewKeyDown" Margin="5" VerticalAlignment="Top" HorizontalAlignment="Stretch"/>
                     <TextBlock Style="{StaticResource CaptionTextBlock}" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="4" Foreground="{DynamicResource WarningBrush}"
-                               Text="{x:Static pres:ProjectLocales.HotkeyUnavailable}" TextTrimming="CharacterEllipsis" ToolTip="{x:Static pres:ProjectLocales.HotkeyUnavailable}"
+                               Text="{x:Static pres:ProjectLocales.HotkeyUnavailable}" TextWrapping="Wrap"
                                Visibility="{Binding HotkeyFailed, Converter={StaticResource VisibilityBooleanConverter}}" Margin="5,0"/>
                     <TextBlock Style="{StaticResource DefaultTextBlock}" Grid.Column="0" Grid.ColumnSpan="3"  Grid.Row="5" Text="{Binding Action.ActionDescription}" TextTrimming="CharacterEllipsis" ToolTip="{Binding  Action.ActionDescription}"  Margin="5,1" VerticalAlignment="Top" HorizontalAlignment="Left" />
                 </Grid>

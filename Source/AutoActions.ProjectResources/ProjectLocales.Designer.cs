@@ -1759,6 +1759,22 @@ namespace AutoActions.ProjectResources {
                 return ResourceManager.GetString("HotkeyPlaceholder", resourceCulture);
             }
         }
+        /// <summary>
+        ///   Looks up a localized string similar to No profile selected.
+        /// </summary>
+        public static string MessageMissingReferenceProfile {
+            get {
+                return ResourceManager.GetString("MessageMissingReferenceProfile", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Browse.
+        /// </summary>
+        public static string Browse {
+            get {
+                return ResourceManager.GetString("Browse", resourceCulture);
+            }
+        }
         
     }
 }

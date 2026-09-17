@@ -29,7 +29,7 @@
         <TextBlock Style="{StaticResource DefaultTextBlock}" Grid.Row="2" Grid.Column="0" Text="{x:Static pres:ProjectLocales.WaitForProgramEnd}" HorizontalAlignment="Left" VerticalAlignment="Top"/>
 
         <TextBox Grid.Row="0" Grid.Column="1" Margin="5" Text="{Binding FilePath, UpdateSourceTrigger=PropertyChanged}" />
-        <Button Grid.Row="0" Grid.Column="2" Content="..."  Command="{Binding GetFileCommand}"  HorizontalAlignment="Left" Width="Auto" Height="26" Margin="5" VerticalAlignment="Center"/>
+        <Button Grid.Row="0" Grid.Column="2" Style="{StaticResource ActionIconButton}" Content="&#xE712;" ToolTip="{x:Static pres:ProjectLocales.Browse}" AutomationProperties.Name="{x:Static pres:ProjectLocales.Browse}" Command="{Binding GetFileCommand}" HorizontalAlignment="Left" Margin="5" VerticalAlignment="Center"/>
 
         <TextBox Grid.Row="1" Grid.ColumnSpan="2" Grid.Column="1" Margin="5"  Text="{Binding Arguments}" />
 

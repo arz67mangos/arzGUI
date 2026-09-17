@@ -636,4 +636,10 @@
   <data name="HotkeyPlaceholder" xml:space="preserve">
     <value>Hier klicken, dann Tasten drücken</value>
   </data>
+  <data name="MessageMissingReferenceProfile" xml:space="preserve">
+    <value>Kein Profil ausgewählt</value>
+  </data>
+  <data name="Browse" xml:space="preserve">
+    <value>Durchsuchen</value>
+  </data>
 </root>

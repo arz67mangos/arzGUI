@@ -32,10 +32,21 @@ namespace AutoActions.Profiles.Actions
         public Guid ReferenceGuid { get => _referenceGuid; set { _referenceGuid = value; OnPropertyChanged(); OnPropertyChanged(nameof(ReferenceProfile)); OnPropertyChanged(nameof(CanSave)); } }
 
 
-        public Profile ReferenceProfile { get => AllProfiles.FirstOrDefault(p => p.GUID.Equals(ReferenceGuid)); set { ReferenceGuid = value.GUID;  } }
+        public Profile ReferenceProfile { get => AllProfiles.FirstOrDefault(p => p.GUID.Equals(ReferenceGuid)); set { ReferenceGuid = value == null ? Guid.Empty : value.GUID; } }
 
 
-        public override string ActionDescription => $"{ReferenceProfile.Name}";
+        /// <summary>
+        /// Null until a profile is picked, and null again once the profile it points at is deleted -
+        /// so this cannot dereference it. Reading the description used to throw in both cases.
+        /// </summary>
+        public override string ActionDescription
+        {
+            get
+            {
+                Profile profile = ReferenceProfile;
+                return profile != null ? profile.Name : ProjectResources.ProjectLocales.MessageMissingReferenceProfile;
+            }
+        }
 
 
 

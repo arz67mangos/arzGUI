@@ -1352,4 +1352,10 @@ Public License instead of this License.  But first, please read
   <data name="HotkeyPlaceholder" xml:space="preserve">
     <value>Click here, then press keys</value>
   </data>
+  <data name="MessageMissingReferenceProfile" xml:space="preserve">
+    <value>No profile selected</value>
+  </data>
+  <data name="Browse" xml:space="preserve">
+    <value>Browse</value>
+  </data>
 </root>

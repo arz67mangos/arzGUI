@@ -1,4 +1,4 @@
-<corewpf:MainWindowBase x:Class="AutoActions.Views.AutoActionsMainView"
+﻿<corewpf:MainWindowBase x:Class="AutoActions.Views.AutoActionsMainView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:corewpf="clr-namespace:CodectoryCore.UI.Wpf;assembly=CodectoryCore.UI.Wpf"
@@ -14,7 +14,7 @@
         xmlns:local="clr-namespace:AutoActions.Views"
         xmlns:root="clr-namespace:AutoActions"
         mc:Ignorable="d"
-        Title="{x:Static pres:ProjectLocales.AutoActions}" Name="MainWindow" MinHeight="540" MinWidth="840" Background="{DynamicResource TransparentBrush}" WindowStyle="None" ResizeMode="CanResize" Closing="Window_Closing" Visibility="{Binding ShowView, Mode=TwoWay, Converter={StaticResource VisibilityBooleanConverter}}"
+        Title="{x:Static pres:ProjectLocales.AutoActions}" Name="MainWindow" MinHeight="700" MinWidth="1280" Background="{DynamicResource TransparentBrush}" WindowStyle="None" ResizeMode="CanResize" Closing="Window_Closing" Visibility="{Binding ShowView, Mode=TwoWay, Converter={StaticResource VisibilityBooleanConverter}}"
          Loaded="MainWindow_Loaded" StateChanged="MainWindow_StateChanged" TextOptions.TextFormattingMode="Display" UseLayoutRounding="True">
     <shell:WindowChrome.WindowChrome>
         <shell:WindowChrome CaptionHeight="38" ResizeBorderThickness="6" GlassFrameThickness="-1" CornerRadius="0" UseAeroCaptionButtons="False"/>
