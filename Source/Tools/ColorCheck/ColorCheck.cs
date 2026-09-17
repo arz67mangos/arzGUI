@@ -107,6 +107,7 @@ static class ColorCheck
         Console.WriteLine("    HDR      : " + (display.HDRState
             ? "ON   <-- Windows ignores the GDI gamma ramp while HDR is on"
             : "off"));
+        DeviceContexts(display);
     }
 
     /// <summary>Midpoint of the ramp currently in the LUT, against a linear one.</summary>
@@ -154,7 +155,7 @@ static class ColorCheck
             ReportRamp("ramp now", before, linearMid);
             if (before == null)
             {
-                Console.WriteLine("    VERDICT  : no device context for this display - the GDI path cannot reach it.");
+                Console.WriteLine("    VERDICT  : this display has no readable gamma ramp - see the table above.");
                 continue;
             }
 
@@ -186,5 +187,68 @@ static class ColorCheck
         Console.WriteLine("Original ramps restored. Press enter.");
         Console.ReadLine();
         return 0;
+    }
+
+    const int TECHNOLOGY     = 2;
+    const int BITSPIXEL      = 12;
+    const int COLORRES       = 108;
+    const int COLORMGMTCAPS  = 121;
+    const int CM_GAMMA_RAMP  = 2;
+
+    [System.Runtime.InteropServices.DllImport("gdi32.dll", CharSet = System.Runtime.InteropServices.CharSet.Auto, SetLastError = true)]
+    static extern IntPtr CreateDC(string driver, string device, string port, IntPtr deviceMode);
+    [System.Runtime.InteropServices.DllImport("gdi32.dll")]
+    static extern bool DeleteDC(IntPtr hdc);
+    [System.Runtime.InteropServices.DllImport("gdi32.dll")]
+    static extern int GetDeviceCaps(IntPtr hdc, int index);
+    [System.Runtime.InteropServices.DllImport("gdi32.dll", SetLastError = true)]
+    static extern bool GetDeviceGammaRamp(IntPtr hdc, [System.Runtime.InteropServices.In, System.Runtime.InteropServices.Out] ushort[] ramp);
+    [System.Runtime.InteropServices.DllImport("user32.dll")]
+    static extern IntPtr GetDC(IntPtr hwnd);
+    [System.Runtime.InteropServices.DllImport("user32.dll")]
+    static extern int ReleaseDC(IntPtr hwnd, IntPtr hdc);
+
+    /// <summary>
+    /// The same question asked four ways. CreateDisplayDC passes the device name as both driver and
+    /// device, which is one of several accepted forms - if another form can read the ramp where that
+    /// one cannot, the fix is one line. If none can, the display is in a mode with no GDI gamma ramp
+    /// and COLORMGMTCAPS says so.
+    /// </summary>
+    static void DeviceContexts(Display display)
+    {
+        Console.WriteLine("    device contexts (name | handle | gamma ramp cap | read | error):");
+        Try("CreateDC(name, name)", CreateDC(display.Name, display.Name, null, IntPtr.Zero), true);
+        Try("CreateDC(DISPLAY, name)", CreateDC("DISPLAY", display.Name, null, IntPtr.Zero), true);
+        Try("CreateDC(name, null)", CreateDC(display.Name, null, null, IntPtr.Zero), true);
+        IntPtr screen = GetDC(IntPtr.Zero);
+        Try("GetDC(null)", screen, false);
+        if (screen != IntPtr.Zero)
+            ReleaseDC(IntPtr.Zero, screen);
+    }
+
+    static void Try(string how, IntPtr hdc, bool deleteIt)
+    {
+        if (hdc == IntPtr.Zero)
+        {
+            Console.WriteLine("      " + how.PadRight(26) + " could not be opened, error " + System.Runtime.InteropServices.Marshal.GetLastWin32Error());
+            return;
+        }
+        try
+        {
+            int caps = GetDeviceCaps(hdc, COLORMGMTCAPS);
+            ushort[] ramp = new ushort[768];
+            bool read = GetDeviceGammaRamp(hdc, ramp);
+            int error = System.Runtime.InteropServices.Marshal.GetLastWin32Error();
+            Console.WriteLine("      " + how.PadRight(26)
+                + " caps=" + caps + ((caps & CM_GAMMA_RAMP) != 0 ? " (has CM_GAMMA_RAMP)" : " (NO CM_GAMMA_RAMP)")
+                + "  read=" + read + (read ? "  mid=" + ramp[128] : "  error=" + error)
+                + "  " + GetDeviceCaps(hdc, BITSPIXEL) + "bpp, colorres " + GetDeviceCaps(hdc, COLORRES)
+                + ", technology " + GetDeviceCaps(hdc, TECHNOLOGY));
+        }
+        finally
+        {
+            if (deleteIt)
+                DeleteDC(hdc);
+        }
     }
 }
