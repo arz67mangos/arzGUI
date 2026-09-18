@@ -13,6 +13,10 @@ start or focus, then restores the previous state on close or lost focus.
 Repository: <https://github.com/arz67mangos/arzGUI>
 Upstream: <https://github.com/Codectory/AutoActions>
 
+![The Profiles page: a profile's started and closed actions](docs/images/profiles.png)
+
+*A profile's lifecycle lanes: what runs when the game starts, and what puts the desktop back when it closes.*
+
 ## Example workflows
 
 - **Valorant true stretched:** disable a secondary display device, switch to a stretched resolution,
@@ -26,6 +30,13 @@ Upstream: <https://github.com/Codectory/AutoActions>
   for games or apps that need it.
 - **Launch a complete setup:** start companion programs, apply a saved preset, or run any action from
   a global hotkey instead of opening the full app.
+
+## What it looks like
+
+| | |
+|---|---|
+| ![Status](docs/images/status.png) | ![Quick settings](docs/images/quick-settings.png) |
+| **Status** — what is running, which profile it matched, the applications you have registered and your hotkey shortcuts. | **Quick settings** — drive display colour, audio and HDR by hand, and save any combination as a named preset. |
 
 ## Getting it
 
