@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -252,7 +252,8 @@ namespace CodectoryCore.UI.Wpf
             ShowInTaskbar = false;
             Topmost = true;
             StackPanel panel = new StackPanel { Background = Brushes.Transparent };
-            _image = new System.Windows.Controls.Image { Stretch = Stretch.None };
+            // The splash art is 1672x941; at its own pixel size it covers most of a screen.
+            _image = new System.Windows.Controls.Image { Stretch = Stretch.Uniform, MaxWidth = 560 };
             _text = new TextBlock { Margin = new Thickness(12), HorizontalAlignment = HorizontalAlignment.Center };
             panel.Children.Add(_image);
             panel.Children.Add(_text);

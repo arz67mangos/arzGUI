@@ -1,92 +1,75 @@
-﻿using AudioSwitcher.AudioApi;
-using AudioSwitcher.AudioApi.CoreAudio;
+using CoreAudio;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 
 namespace AutoActions.Audio
 {
+    /// <summary>
+    /// A playback or recording endpoint. Wraps an <see cref="MMDevice"/> from the CoreAudio package;
+    /// the app only ever needs to name a device, identify it across restarts, and make it default.
+    /// </summary>
     public class AudioDevice
     {
+        // The endpoint id is "{0.0.0.00000000}.{a-real-guid}". The first real GUID in it identifies
+        // the device and is what settings files store - keep reading it exactly this way, or every
+        // saved audio action stops resolving.
+        static readonly Regex GuidInId = new Regex(
+            @"[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}",
+            RegexOptions.Compiled);
 
-        CoreAudioDevice BaseDevice;
-        public AudioDeviceType DeviceType
+        internal MMDevice BaseDevice { get; private set; }
+
+        public AudioDevice(MMDevice device)
         {
-            get
-            {
-                switch (BaseDevice.DeviceType)
-                {
-                    case AudioSwitcher.AudioApi.DeviceType.All:
-                        return AudioDeviceType.All;
-                    case AudioSwitcher.AudioApi.DeviceType.Capture:
-                        return AudioDeviceType.Capture;
-                    case AudioSwitcher.AudioApi.DeviceType.Playback:
-                        return AudioDeviceType.Playback;
-                    default:
-                        return AudioDeviceType.Unknown;
-                }
-            }
-        }
-        public  DeviceState State 
-        {
-            get
-            {
-                switch(BaseDevice.State)
-                {
-                    case AudioSwitcher.AudioApi.DeviceState.All:
-                        return DeviceState.All;
-                    case AudioSwitcher.AudioApi.DeviceState.Active:
-                        return DeviceState.Active;
-                    case AudioSwitcher.AudioApi.DeviceState.NotPresent:
-                        return DeviceState.NotPresent;
-                    case AudioSwitcher.AudioApi.DeviceState.Unplugged:
-                        return DeviceState.Unplugged;
-                    default:
-                        return DeviceState.Disabled;
-                }
-            }
+            BaseDevice = device;
+            ID = ToId(device.ID);
+            Name = device.FriendlyName;
+            DeviceType = device.DataFlow == DataFlow.Capture ? AudioDeviceType.Capture
+                : device.DataFlow == DataFlow.Render ? AudioDeviceType.Playback
+                : AudioDeviceType.All;
+            State = ToState(device.State);
         }
 
-        public bool IsDefaultCommunicationsDevice => BaseDevice.IsDefaultCommunicationsDevice;
-        public bool IsDefaultDevice => BaseDevice.IsDefaultDevice;
-        public string Name  => BaseDevice.FullName;
-        public Guid ID  => BaseDevice.Id;
+        public Guid ID { get; private set; }
 
-        public bool IsMuted => BaseDevice.IsMuted;
-        public double Volume => BaseDevice.Volume;
+        public string Name { get; private set; }
 
+        public AudioDeviceType DeviceType { get; private set; }
 
+        public DeviceState State { get; private set; }
 
-        public AudioDevice(CoreAudioDevice coreAudioDevice)
+        /// <summary>Read live: Windows, another application or a profile action can change it at any time.</summary>
+        public bool IsDefaultDevice
         {
-            BaseDevice = coreAudioDevice;
+            get { return AudioController.Instance.IsDefault(this); }
         }
+
         public void SetAsDefault()
         {
-            BaseDevice.SetAsDefault();
-
+            AudioController.Instance.SetDefault(this);
         }
 
-        public void SetAsDefaultCommunications()
+        /// <summary>The device guid inside an endpoint id, which is what settings files store.</summary>
+        public static Guid ToId(string endpointId)
         {
-            BaseDevice.SetAsDefaultCommunications();
-
+            Match match = endpointId == null ? Match.Empty : GuidInId.Match(endpointId);
+            return match.Success ? new Guid(match.Value) : Guid.Empty;
         }
 
-        public void SetMute(bool mute)
+        static DeviceState ToState(CoreAudio.DeviceState state)
         {
-            BaseDevice.Mute(mute);
+            if ((state & CoreAudio.DeviceState.Active) != 0)
+                return DeviceState.Active;
+            if ((state & CoreAudio.DeviceState.Unplugged) != 0)
+                return DeviceState.Unplugged;
+            if ((state & CoreAudio.DeviceState.NotPresent) != 0)
+                return DeviceState.NotPresent;
+            return DeviceState.Disabled;
         }
-        public void SetVolume(int volume)
+
+        public override string ToString()
         {
-            BaseDevice.Volume = volume;
+            return Name;
         }
-
-
-
-
-
     }
 }

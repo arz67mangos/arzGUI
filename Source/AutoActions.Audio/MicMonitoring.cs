@@ -1,4 +1,4 @@
-using CoreAudio;
+﻿using CoreAudio;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -116,39 +116,14 @@ namespace AutoActions.Audio
             }
         }
 
-        static readonly Guid MMDeviceEnumeratorClsid = new Guid("BCDE0395-E52F-467C-8E3D-C4579291692E");
-
         /// <summary>
-        /// The vendored AudioSwitcher wrappers (AudioApi.CoreAudio) and the CoreAudio package both
-        /// declare a coclass for the MMDeviceEnumerator CLSID. mmdevapi hands the same COM object to
-        /// both, the CLR keeps exactly one RCW per COM identity, and whichever library instantiates
-        /// second fails with an InvalidCastException to its own class - in this app that is CoreAudio,
-        /// because AudioController runs first. So when the plain constructor fails, obtain the COM
-        /// object by CLSID without naming a class and hand it to CoreAudio's wrapper through the two
-        /// private fields its constructor would have filled.
+        /// One enumerator for the whole app. The RCW workaround that used to live here is gone
+        /// with the vendored AudioSwitcher wrappers: nothing else declares a coclass for this
+        /// CLSID any more, so the plain constructor works.
         /// </summary>
         private static MMDeviceEnumerator CreateEnumerator()
         {
-            Guid eventContext = Guid.NewGuid();
-            try
-            {
-                return new MMDeviceEnumerator(eventContext);
-            }
-            catch (InvalidCastException)
-            {
-            }
-
-            Type enumeratorType = typeof(MMDeviceEnumerator);
-            System.Reflection.FieldInfo realEnumeratorField = enumeratorType.GetField("_realEnumerator", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-            System.Reflection.FieldInfo eventContextField = enumeratorType.GetField("eventContext", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-            if (realEnumeratorField == null || eventContextField == null)
-                throw new InvalidOperationException("CoreAudio.MMDeviceEnumerator no longer has the _realEnumerator/eventContext fields; the RCW workaround needs updating for this CoreAudio version.");
-
-            object rawEnumerator = Activator.CreateInstance(Type.GetTypeFromCLSID(MMDeviceEnumeratorClsid));
-            MMDeviceEnumerator enumerator = (MMDeviceEnumerator)System.Runtime.Serialization.FormatterServices.GetUninitializedObject(enumeratorType);
-            realEnumeratorField.SetValue(enumerator, rawEnumerator); // the runtime QIs the RCW for CoreAudio's IMMDeviceEnumerator here
-            eventContextField.SetValue(enumerator, eventContext);
-            return enumerator;
+            return new MMDeviceEnumerator(Guid.NewGuid());
         }
 
         /// <summary>All active playback endpoints.</summary>

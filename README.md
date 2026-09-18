@@ -85,6 +85,10 @@ AutoActions and by ArzFlow (the fork's previous name) load unchanged.
   that lock, so a run action with *wait for end* ticked kept an invisible arzGUI.exe alive — holding
   its own folder open. Shutdown now has a budget and the process ends regardless. The same lock no
   longer freezes the window on every settings change.
+- **Built only from source that ships with it.** The closed-source helper binaries the upstream
+  build carried are replaced by `Source/ArzGUI.Foundation`, and audio device switching runs on the
+  MIT-licensed CoreAudio package rather than vendored Ms-PL wrappers, so everything distributed has
+  corresponding source under the GPL.
 - **No upstream updater.** The original app checked Codectory's releases and would have replaced this
   build with theirs; that code is removed.
 
