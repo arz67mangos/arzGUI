@@ -79,4 +79,4 @@ for Enter at the end.
 
 
 arzGUI is a modified version of AutoActions by Codectory.
-https://github.com/arz67mangos/arz-AutoActions-edit
+https://github.com/arz67mangos/arzGUI

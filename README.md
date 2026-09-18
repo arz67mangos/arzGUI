@@ -10,7 +10,7 @@ a game. Different games suit different digital-vibrance, gamma, colour, resoluti
 display-device settings. arzGUI watches applications from the tray, applies the matching profile on
 start or focus, then restores the previous state on close or lost focus.
 
-Repository: <https://github.com/arz67mangos/arz-AutoActions-edit>
+Repository: <https://github.com/arz67mangos/arzGUI>
 Upstream: <https://github.com/Codectory/AutoActions>
 
 ## Example workflows
@@ -30,7 +30,7 @@ Upstream: <https://github.com/Codectory/AutoActions>
 ## Getting it
 
 Download the latest `arzGUI-<version>-x64.zip` from
-[Releases](https://github.com/arz67mangos/arz-AutoActions-edit/releases), unzip it anywhere and run
+[Releases](https://github.com/arz67mangos/arzGUI/releases), unzip it anywhere and run
 `arzGUI.exe`. It lives in the tray; closing the window only hides it. `README.txt` in the zip covers
 the same ground as this section.
 

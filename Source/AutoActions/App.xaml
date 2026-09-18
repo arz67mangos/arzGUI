@@ -23,7 +23,7 @@
             </ResourceDictionary.MergedDictionaries>
 
             <system:String x:Key="UpstreamRepoLink">https://github.com/Codectory/AutoActions</system:String>
-            <system:String x:Key="ForkRepoLink">https://github.com/arz67mangos/arz-AutoActions-edit</system:String>
+            <system:String x:Key="ForkRepoLink">https://github.com/arz67mangos/arzGUI</system:String>
 
             <!-- Tabs default to the sidebar look; dialogs that still use a plain TabControl get it too. -->
             <Style x:Key="DefaultTabHeader" TargetType="TabItem" BasedOn="{StaticResource SidebarTabItem}"/>
