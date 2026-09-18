@@ -63,7 +63,11 @@
             <Button Grid.Column="1" Style="{StaticResource SecondaryButton}" Content="{x:Static pres:ProjectLocales.Refresh}" Command="{Binding RefreshCommand}" VerticalAlignment="Center"/>
         </Grid>
 
-        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <!-- Background so the empty strips between cards are hit-testable, and the wheel handler
+             because combo boxes and text boxes swallow the wheel instead of passing it on. -->
+        <ScrollViewer x:Name="PageScroll" Grid.Row="1" Background="Transparent"
+                      VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"
+                      PreviewMouseWheel="PageScroll_PreviewMouseWheel">
             <StackPanel>
 
                 <!-- Display colour -->

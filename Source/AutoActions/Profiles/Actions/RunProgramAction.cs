@@ -1,4 +1,5 @@
-﻿using AutoActions.ProjectResources;
+﻿using AutoActions.Displays;
+using AutoActions.ProjectResources;
 using CodectoryCore.UI.Wpf;
 using Microsoft.Win32;
 using Newtonsoft.Json;
@@ -55,14 +56,33 @@ namespace AutoActions.Profiles.Actions
         {
             try
             {
-                if (File.Exists(FilePath))
+                if (!File.Exists(FilePath))
+                {
+                    CallNewLog(new CodectoryCore.Logging.LogEntry($"File {FilePath} doesn't exist.", CodectoryCore.Logging.LogEntryType.Error));
+                    return new ActionEndResult(false);
+                }
+                CallNewLog(new CodectoryCore.Logging.LogEntry($"Starting {FilePath}"));
+
+                // A child inherits our token, so an elevated ArzFlow would start the program as
+                // administrator - which breaks programs that refuse to run that way.
+                int processId = 0;
+                if (MonitorDeviceControl.IsElevated)
+                {
+                    string error;
+                    processId = Windows.UnelevatedProcess.Start(FilePath, Arguments, out error);
+                    if (processId == 0)
+                        CallNewLog(new CodectoryCore.Logging.LogEntry($"Could not start {FilePath} as the logged-on user ({error}). It will inherit ArzFlow's administrator rights.", CodectoryCore.Logging.LogEntryType.Error));
+                    else
+                        CallNewLog(new CodectoryCore.Logging.LogEntry($"Started {FilePath} as the logged-on user, not as administrator."));
+                }
+
+                if (processId == 0)
                 {
                     using (Process proc = new Process())
                     {
                         proc.StartInfo = new ProcessStartInfo(FilePath);
                         if (!string.IsNullOrEmpty(Arguments))
                             proc.StartInfo.Arguments = Arguments;
-                        CallNewLog(new CodectoryCore.Logging.LogEntry($"Starting {FilePath}"));
 
                         proc.Start();
                         if (WaitForEnd)
@@ -73,10 +93,16 @@ namespace AutoActions.Profiles.Actions
                         }
                     }
                 }
-                else
+                else if (WaitForEnd)
                 {
-                    CallNewLog(new CodectoryCore.Logging.LogEntry($"File {FilePath} doesn't exist.", CodectoryCore.Logging.LogEntryType.Error));
-                    return new ActionEndResult(false);
+                    CallNewLog(new CodectoryCore.Logging.LogEntry($"Wait for end of {FilePath}"));
+                    try
+                    {
+                        // Gone already is the same as ended, and that is all we are waiting for.
+                        Process.GetProcessById(processId).WaitForExit();
+                    }
+                    catch (ArgumentException) { }
+                    CallNewLog(new CodectoryCore.Logging.LogEntry($"Process {FilePath} ended."));
                 }
                 return new ActionEndResult(true);
             }
