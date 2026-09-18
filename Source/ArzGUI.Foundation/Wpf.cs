@@ -279,10 +279,20 @@ namespace CodectoryCore.UI.Wpf
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
             ShowInTaskbar = false;
             Topmost = true;
+            // The artwork brings its own background; without these the window's own white shows as a
+            // bar under it, where the caption sits.
+            AllowsTransparency = true;
+            Background = Brushes.Transparent;
             StackPanel panel = new StackPanel { Background = Brushes.Transparent };
             // The splash art is 1672x941; at its own pixel size it covers most of a screen.
             _image = new System.Windows.Controls.Image { Stretch = Stretch.Uniform, MaxWidth = 560 };
-            _text = new TextBlock { Margin = new Thickness(12), HorizontalAlignment = HorizontalAlignment.Center };
+            _text = new TextBlock
+            {
+                Margin = new Thickness(12),
+                HorizontalAlignment = HorizontalAlignment.Center,
+                Foreground = Brushes.White,
+                Visibility = Visibility.Collapsed
+            };
             panel.Children.Add(_image);
             panel.Children.Add(_text);
             Content = panel;
@@ -291,7 +301,12 @@ namespace CodectoryCore.UI.Wpf
         public string Text
         {
             get { return _text.Text; }
-            set { _text.Text = value; OnPropertyChanged(); }
+            set
+            {
+                _text.Text = value;
+                _text.Visibility = string.IsNullOrEmpty(value) ? Visibility.Collapsed : Visibility.Visible;
+                OnPropertyChanged();
+            }
         }
 
         public ImageSource Image
