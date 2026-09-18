@@ -1,7 +1,6 @@
 ﻿using AutoActions.UWP;
 using CodectoryCore.UI.Wpf;
 using CodectoryCore.Windows;
-using CodectoryCore.Windows.FileSystem;
 using CodectoryCore.Windows.Icons;
 using Newtonsoft.Json;
 using System;

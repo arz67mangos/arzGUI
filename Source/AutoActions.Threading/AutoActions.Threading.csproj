@@ -51,9 +51,6 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CodectoryCore">
-      <HintPath>..\Externals\CodectoryCore.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -67,6 +64,12 @@
     <Compile Include="IManagedThread.cs" />
     <Compile Include="ThreadManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ArzGUI.Foundation\ArzGUI.Foundation.csproj">
+      <Project>{97AD83DA-D347-4DD0-9418-ED60B04A629B}</Project>
+      <Name>ArzGUI.Foundation</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

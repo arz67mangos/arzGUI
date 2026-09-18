@@ -1,13 +1,31 @@
 # arzGUI
 
-A personal fork of [Codectory/AutoActions](https://github.com/Codectory/AutoActions) — a Windows
-tray app that watches for running applications and applies a profile of actions when they start,
-close, gain or lose focus: switch resolution, refresh rate, colour depth and HDR, change display
-colour (vibrance, hue, brightness, contrast, gamma), enable or disable a monitor device, change the
-default audio device, control microphone monitoring, run or kill programs.
+arzGUI is an independent, community-maintained modified version of
+[Codectory/AutoActions](https://github.com/Codectory/AutoActions). Codectory and the original
+contributors built the foundation; this project builds on it with new workflows, reliability work,
+and a redesigned Windows 11 interface. It is not affiliated with or endorsed by Codectory.
+
+I made arzGUI to remove the repetitive setup that my friends and I were doing every time we opened
+a game. Different games suit different digital-vibrance, gamma, colour, resolution, audio, and
+display-device settings. arzGUI watches applications from the tray, applies the matching profile on
+start or focus, then restores the previous state on close or lost focus.
 
 Repository: <https://github.com/arz67mangos/arz-AutoActions-edit>
-Upstream: <https://github.com/Codectory/AutoActions> (all of the original work is theirs)
+Upstream: <https://github.com/Codectory/AutoActions>
+
+## Example workflows
+
+- **Valorant true stretched:** disable a secondary display device, switch to a stretched resolution,
+  apply the preferred vibrance and gamma, then restore every setting when Valorant closes.
+- **Per-game competitive presets:** give each game its own resolution, refresh rate, colour depth,
+  digital vibrance, hue, brightness, contrast, and gamma. NVIDIA vibrance and hue require an NVIDIA
+  GPU; the other colour controls use Windows display APIs.
+- **HDR and couch gaming:** enable HDR, select a TV-friendly mode and audio output, then return to the
+  desktop monitor and speakers afterwards.
+- **Voice-chat setup:** switch playback or recording devices and enable microphone monitoring only
+  for games or apps that need it.
+- **Launch a complete setup:** start companion programs, apply a saved preset, or run any action from
+  a global hotkey instead of opening the full app.
 
 ## Getting it
 
@@ -132,9 +150,15 @@ end.
 | `MonitorDeviceCheck.exe` | the monitor enable/disable action; run it as administrator to include the live state change |
 | `GammaProbe.exe` | why gamma, vibrance or brightness will not change on a display |
 
-## Licence
+## Contributing and security
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the supported toolchain and pull-request checks. Report
+security problems privately as described in [SECURITY.md](SECURITY.md).
+
+## Licence and attribution
 
 arzGUI is a modified version of AutoActions by [Codectory](https://github.com/Codectory) and is
-distributed under the same licence, the GNU General Public License v3 — see [LICENSE](LICENSE). The
-fork is maintained for personal use; if you redistribute builds, the GPL's source and notice
-obligations apply to you as well.
+distributed under the same licence, the GNU General Public License v3 — see [LICENSE](LICENSE).
+[NOTICE.md](NOTICE.md) records the upstream attribution and modification notice, while
+[THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) lists bundled dependencies and their licences.
+Release archives include these files, and each release tag is the corresponding source code.

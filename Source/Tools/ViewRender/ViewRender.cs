@@ -15,13 +15,16 @@ internal static class ViewRender
     {
         string outputPath = args.Length > 0 ? Path.GetFullPath(args[0]) : Path.GetFullPath(@"..\..\.impeccable\review");
         string assemblyPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "arzGUI.exe");
+        Console.WriteLine("Loading application resources...");
         Assembly assembly = Assembly.LoadFrom(assemblyPath);
         Type appType = assembly.GetType("AutoActions.App", true);
         Application app = (Application)Activator.CreateInstance(appType);
         appType.GetMethod("InitializeComponent").Invoke(app, null);
+        Console.WriteLine("Loading settings...");
         Type globalsType = assembly.GetType("AutoActions.Globals", true);
         object globals = globalsType.GetField("Instance").GetValue(null);
         globalsType.GetMethod("LoadSettings").Invoke(globals, null);
+        Console.WriteLine("Rendering views...");
         Type windowType = assembly.GetType("AutoActions.Views.AutoActionsMainView", true);
         Directory.CreateDirectory(outputPath);
         Type themeManagerType = assembly.GetType("AutoActions.Theming.ThemeManager", true);
@@ -37,6 +40,7 @@ internal static class ViewRender
             {
                 for (int i = 0; i < pages.Length; i++)
                 {
+                    Console.WriteLine(theme + " " + width + " " + pages[i]);
                     Window window = (Window)Activator.CreateInstance(windowType);
                     window.Width = width;
                     window.Height = 800;

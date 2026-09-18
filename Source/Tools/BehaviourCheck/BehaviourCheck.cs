@@ -7,7 +7,7 @@ using System.Reflection;
 //
 //   $csc = "<VS>\MSBuild\Current\Bin\Roslyn\csc.exe"; $out = ".\Source\Debug_x64"
 //   & $csc /platform:x64 /langversion:7.3 /out:"$out\BehaviourCheck.exe" /r:"$out\arzGUI.exe" `
-//       /r:"$out\CodectoryCore.dll" /r:"$out\CodectoryCore.UI.Wpf.dll" `
+//       /r:"$out\ArzGUI.Foundation.dll" `
 //       /r:"<ref>\PresentationCore.dll" /r:"<ref>\WindowsBase.dll" `
 //       .\Source\Tools\BehaviourCheck\BehaviourCheck.cs
 //   Push-Location $out; .\BehaviourCheck.exe; Pop-Location

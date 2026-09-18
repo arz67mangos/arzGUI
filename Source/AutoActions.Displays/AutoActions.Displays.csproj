@@ -56,12 +56,6 @@
     <Reference Include="CCDWrapper, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\CCDWrapper.1.0.1\lib\net35\CCDWrapper.dll</HintPath>
     </Reference>
-    <Reference Include="CodectoryCore">
-      <HintPath>..\Externals\CodectoryCore.dll</HintPath>
-    </Reference>
-    <Reference Include="CodectoryCore.UI.Wpf">
-      <HintPath>..\Externals\CodectoryCore.UI.Wpf.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.Win32.Primitives, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Win32.Primitives.4.3.0\lib\net46\Microsoft.Win32.Primitives.dll</HintPath>
       <Private>True</Private>
@@ -234,6 +228,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ArzGUI.Foundation\ArzGUI.Foundation.csproj">
+      <Project>{97AD83DA-D347-4DD0-9418-ED60B04A629B}</Project>
+      <Name>ArzGUI.Foundation</Name>
+    </ProjectReference>
     <ProjectReference Include="..\AutoActions.Core\AutoActions.Core.csproj">
       <Project>{5b5fed18-5725-4daf-b5aa-b0fe328c0f16}</Project>
       <Name>AutoActions.Core</Name>

@@ -8,10 +8,9 @@
              xmlns:info="clr-namespace:AutoActions.Info"
              xmlns:thm="clr-namespace:AutoActions.Theming"
              xmlns:tb="http://www.hardcodet.net/taskbar"
-             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:system="clr-namespace:System;assembly=mscorlib"
              xmlns:pres="clr-namespace:AutoActions.ProjectResources;assembly=AutoActions.ProjectResources"
-             xmlns:corewpf="clr-namespace:CodectoryCore.UI.Wpf;assembly=CodectoryCore.UI.Wpf">
+             xmlns:corewpf="clr-namespace:CodectoryCore.UI.Wpf;assembly=ArzGUI.Foundation">
     <!--StartupUri="Views\AutoActionsMainView.xaml">-->
 
     <Application.Resources>

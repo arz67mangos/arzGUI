@@ -3,6 +3,11 @@ arzGUI
 
 Run arzGUI.exe. It lives in the tray; closing the window only hides it.
 
+arzGUI is a modified version of Codectory/AutoActions. It was built to automate
+the different display, colour, audio, and companion-app settings used by its
+maintainer and friends for different games. See NOTICE.md, LICENSE, and
+THIRD_PARTY_NOTICES.md for source, attribution, and licence details.
+
 
 Your settings
 -------------
@@ -71,5 +76,5 @@ for Enter at the end.
                              on a display
 
 
-arzGUI is a personal fork of AutoActions by Codectory.
+arzGUI is a modified version of AutoActions by Codectory.
 https://github.com/arz67mangos/arz-AutoActions-edit

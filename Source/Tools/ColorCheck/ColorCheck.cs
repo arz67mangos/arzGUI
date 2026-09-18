@@ -9,7 +9,7 @@ using System.Linq;
 //
 //   $csc = "<VS>\MSBuild\Current\Bin\Roslyn\csc.exe"; $out = ".\Source\Debug_x64"
 //   & $csc /platform:x64 /langversion:7.3 /out:"$out\ColorCheck.exe" /r:"$out\AutoActions.Displays.dll" `
-//       /r:"$out\CodectoryCore.dll" /r:"$out\CodectoryCore.UI.Wpf.dll" /r:"$out\NvAPIWrapper.dll" `
+//       /r:"$out\ArzGUI.Foundation.dll" /r:"$out\NvAPIWrapper.dll" `
 //       /r:"$out\Newtonsoft.Json.dll" /r:System.dll /r:System.Core.dll /r:System.Drawing.dll `
 //       .\Source\Tools\ColorCheck\ColorCheck.cs
 //   Push-Location $out; .\ColorCheck.exe test; Pop-Location

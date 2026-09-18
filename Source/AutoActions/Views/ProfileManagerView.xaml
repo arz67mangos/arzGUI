@@ -1,7 +1,7 @@
 ﻿<corewpf:UserControlBase x:Class="AutoActions.Views.ProfileManagerView" x:Name="ProfileManager"
  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
- xmlns:corewpf="clr-namespace:CodectoryCore.UI.Wpf;assembly=CodectoryCore.UI.Wpf" xmlns:root="clr-namespace:AutoActions"
+ xmlns:corewpf="clr-namespace:CodectoryCore.UI.Wpf;assembly=ArzGUI.Foundation" xmlns:root="clr-namespace:AutoActions"
  xmlns:actions="clr-namespace:AutoActions.Profiles.Actions" xmlns:pres="clr-namespace:AutoActions.ProjectResources;assembly=AutoActions.ProjectResources"
  mc:Ignorable="d" d:DataContext="{d:DesignInstance root:AutoActionsDaemon, IsDesignTimeCreatable=false}" d:DesignHeight="720" d:DesignWidth="1120">
  <corewpf:UserControlBase.DialogService><Binding Source="{StaticResource ProfileDialogService}"/></corewpf:UserControlBase.DialogService>
