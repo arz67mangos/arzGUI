@@ -64,7 +64,7 @@ Something went wrong
 arzGUI.log next to this file records what the app did; a crash is
 appended to arzGUI.crash.log. Both are next to the exe, not in %AppData%.
 
-Three checks ship with this build. Run them from this folder; each one waits
+Four checks ship with this build. Run them from this folder; each one waits
 for Enter at the end.
 
     RunProgramCheck.exe      run-program actions, and that they are not
@@ -74,6 +74,8 @@ for Enter at the end.
                              administrator to include the live state change
     GammaProbe.exe           why gamma, vibrance or brightness will not change
                              on a display
+    AudioCheck.exe           the playback and recording device list, which one is
+                             default, and that switching it works
 
 
 arzGUI is a modified version of AutoActions by Codectory.
