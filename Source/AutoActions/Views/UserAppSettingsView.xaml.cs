@@ -18,6 +18,15 @@ namespace AutoActions.Views
 
         }
 
+        private void PageScroll_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            // Without this the wheel does nothing over the gaps between the cards - there is no
+            // element there to receive it, so Windows sends it to whatever has keyboard focus - and
+            // combo boxes and text boxes swallow it where there is one.
+            PageScroll.ScrollToVerticalOffset(PageScroll.VerticalOffset - e.Delta / 2.0);
+            e.Handled = true;
+        }
+
 
     }
 }

@@ -244,6 +244,10 @@ namespace AutoActions
         {
             serializedJson = serializedJson.Replace("AutoHDR", "AutoActions");
             serializedJson = serializedJson.Replace("\"$type\": \"AutoActions.Displays.Display, AutoActions\"", "\"$type\": \"AutoActions.Displays.Display, AutoActions.Displays\"");
+            // The program assembly is arzGUI.exe now; everything an older version wrote names
+            // the types in it "..., AutoActions". Runs after the Displays line above, which is
+            // the one type that moved to its own assembly.
+            serializedJson = serializedJson.Replace(", AutoActions\"", ", arzGUI\"");
             serializedJson = serializedJson.Replace("\"Monitors\": [", "\"Displays\": [");
             serializedJson = serializedJson.Replace("\"SetHDR\":", "\"ChangeHDR\":");
             serializedJson = serializedJson.Replace("\"SetResolution\":", "\"ChangeResolution\":");

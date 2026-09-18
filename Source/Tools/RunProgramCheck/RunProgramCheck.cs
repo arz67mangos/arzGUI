@@ -6,13 +6,13 @@ using System;
 using System.IO;
 using System.Linq;
 
-// Check for RunProgramAction: a program started by an elevated ArzFlow must run at the logged-on
+// Check for RunProgramAction: a program started by an elevated arzGUI must run at the logged-on
 // user's integrity level, not as administrator. Deliberately not in the solution - there is no test
 // project here, and this needs a built output to run against. Build and run it from the output
 // directory, then run it a second time as administrator, which is the case that matters:
 //
 //   $csc = "<VS>\MSBuild\Current\Bin\Roslyn\csc.exe"; $out = ".\Source\Release_x64"
-//   & $csc /platform:x64 /langversion:7.3 /out:"$out\RunProgramCheck.exe" /r:"$out\AutoActions.exe" `
+//   & $csc /platform:x64 /langversion:7.3 /out:"$out\RunProgramCheck.exe" /r:"$out\arzGUI.exe" `
 //       /r:"$out\AutoActions.Displays.dll" /r:"$out\CodectoryCore.dll" /r:"$out\CodectoryCore.UI.Wpf.dll" `
 //       /r:"$out\AutoActions.ProjectResources.dll" /r:System.dll /r:System.Core.dll `
 //       /r:PresentationFramework.dll /r:WindowsBase.dll .\Source\Tools\RunProgramCheck\RunProgramCheck.cs
@@ -33,12 +33,12 @@ static class RunProgramCheck
     static int Main()
     {
         string system = Environment.GetFolderPath(Environment.SpecialFolder.System);
-        string report = Path.Combine(Path.GetTempPath(), "arzflow-runprogram-check.txt");
+        string report = Path.Combine(Path.GetTempPath(), "arzgui-runprogram-check.txt");
         if (File.Exists(report))
             if (failures == 0)
             File.Delete(report);
 
-        Console.WriteLine("  ArzFlow is elevated: " + MonitorDeviceControl.IsElevated);
+        Console.WriteLine("  arzGUI is elevated: " + MonitorDeviceControl.IsElevated);
 
         RunProgramAction action = new RunProgramAction
         {

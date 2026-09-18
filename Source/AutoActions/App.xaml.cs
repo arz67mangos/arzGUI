@@ -29,7 +29,7 @@ namespace AutoActions
         /// <summary>Passed to the elevated copy by MonitorDeviceAction.RestartAsAdministrator.</summary>
         public const string RestartArgument = "--restart";
 
-        static readonly string CrashFilePath = $"{AppDomain.CurrentDomain.BaseDirectory}AutoActions.crash.log";
+        static readonly string CrashFilePath = $"{AppDomain.CurrentDomain.BaseDirectory}arzGUI.crash.log";
 
         [STAThread]
         public static void Main()
@@ -70,7 +70,7 @@ namespace AutoActions
                 mutex.ReleaseMutex();
 
             // The user asked to quit, so quit: a native or COM thread that outlives the dispatcher
-            // would otherwise leave a running AutoActions.exe holding its own folder open, which
+            // would otherwise leave a running arzGUI.exe holding its own folder open, which
             // looks like the app ignored Exit.
             Environment.Exit(e.ApplicationExitCode);
         }
@@ -90,7 +90,7 @@ namespace AutoActions
         }
 
         /// <summary>
-        /// Records a fatal exception in the normal log and in AutoActions.crash.log next to the exe.
+        /// Records a fatal exception in the normal log and in arzGUI.crash.log next to the exe.
         /// The crash file is written unconditionally, because the normal log file is optional and
         /// the process is about to die.
         /// </summary>

@@ -20,7 +20,7 @@
         <shell:WindowChrome CaptionHeight="38" ResizeBorderThickness="6" GlassFrameThickness="-1" CornerRadius="0" UseAeroCaptionButtons="False"/>
     </shell:WindowChrome.WindowChrome>
     <!--
-        THESIS: ArzFlow makes application-state automation readable as a calm sequence, not a dense settings table.
+        THESIS: arzGUI makes application-state automation readable as a calm sequence, not a dense settings table.
         OWN-WORLD: midnight-to-graphite ground, translucent layered surfaces, coral intent, mint status, soft 10–14px corners.
         STORY: choose a profile, understand each lifecycle lane, then add, edit, or remove an action without ambiguity.
         FIRST VIEWPORT: compact glass sidebar at left; profile list and four action lanes occupy the working canvas; actions stay close to their cards.

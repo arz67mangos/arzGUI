@@ -6,8 +6,8 @@ using System.Text;
 namespace AutoActions.Windows
 {
     /// <summary>
-    /// Starts a program as the logged-on user when ArzFlow itself is elevated. A child process
-    /// normally inherits the parent's token, so a run-program action fired from an elevated ArzFlow
+    /// Starts a program as the logged-on user when arzGUI itself is elevated. A child process
+    /// normally inherits the parent's token, so a run-program action fired from an elevated arzGUI
     /// would start the program as administrator - which breaks anything that refuses to run elevated
     /// (OpenTabletDriver) or writes its settings to the wrong place. The token comes from the shell
     /// (explorer.exe), which is always the interactive user at their normal integrity level.

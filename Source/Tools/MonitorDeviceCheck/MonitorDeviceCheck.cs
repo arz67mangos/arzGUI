@@ -12,7 +12,7 @@ using System.Linq;
 // output directory:
 //
 //   $csc = "<VS>\MSBuild\Current\Bin\Roslyn\csc.exe"; $out = ".\Source\Release_x64"
-//   & $csc /platform:x64 /langversion:7.3 /out:"$out\MonitorDeviceCheck.exe" /r:"$out\AutoActions.exe" `
+//   & $csc /platform:x64 /langversion:7.3 /out:"$out\MonitorDeviceCheck.exe" /r:"$out\arzGUI.exe" `
 //       /r:"$out\AutoActions.Displays.dll" /r:"$out\CodectoryCore.dll" /r:"$out\CodectoryCore.UI.Wpf.dll" `
 //       /r:"$out\Newtonsoft.Json.dll" /r:"$out\AutoActions.ProjectResources.dll" /r:System.dll /r:System.Core.dll `
 //       /r:PresentationFramework.dll /r:WindowsBase.dll .\Source\Tools\MonitorDeviceCheck\MonitorDeviceCheck.cs

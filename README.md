@@ -1,4 +1,4 @@
-# ArzFlow
+# arzGUI
 
 A personal fork of [Codectory/AutoActions](https://github.com/Codectory/AutoActions) — a Windows
 tray app that watches for running applications and applies a profile of actions when they start,
@@ -17,9 +17,9 @@ Upstream: <https://github.com/Codectory/AutoActions> (all of the original work i
   single, verified mode change with retries, and every step is logged with its Win32 result.
 - **The process watcher can no longer take the app down.** Every failure path in the 500 ms watcher
   loop is caught and logged (throttled), `Process` handles are disposed, and unhandled exceptions are
-  written to `AutoActions.crash.log` next to the exe before the process dies.
+  written to `arzGUI.crash.log` next to the exe before the process dies.
 - **Microphone monitoring, built in.** Windows' "Listen to this device" is a mute and a volume on the
-  *Microphone* line of a playback device. ArzFlow controls exactly those: a card on the Status page
+  *Microphone* line of a playback device. arzGUI controls exactly those: a card on the Status page
   and a tray entry for manual use, a *Microphone monitoring* profile action for per-game use, device
   and line pickers in Settings. The state a profile changes on start is put back on close.
 - **A redesigned UI with light and dark themes.** Design tokens, a left sidebar, card-based Status
@@ -49,7 +49,7 @@ $msbuild = & "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere
 & $msbuild Source\AutoActions.sln -t:Build -m -p:Configuration=Debug -p:Platform=x64
 ```
 
-Output goes to `Source\Debug_x64\`; run `AutoActions.exe` from there. Notes:
+Output goes to `Source\Debug_x64\`; run `arzGUI.exe` from there. Notes:
 
 - `Source\Externals\x64\` and `x86\` hold the native `HDRController.dll`, built from
   `Source\HDRController\HDRController.sln` (Release, x64 and x86). The pre-build step copies the
@@ -57,19 +57,19 @@ Output goes to `Source\Debug_x64\`; run `AutoActions.exe` from there. Notes:
 - `Source\AutoActions\Controls\AppResources.xaml` is generated on every build from the numbered
   dictionaries next to it — don't edit it. Theme colours live in `Source\AutoActions\Theming\`.
 - Internal namespaces, assembly and file names still say `AutoActions`; only the product name changed.
-- There are no automated tests. Run the app and read `AutoActions.log` next to the exe: every
+- There are no automated tests. Run the app and read `arzGUI.log` next to the exe: every
   application event, mode change and mic-monitoring operation is logged.
 
 ## Diagnostics
 
-`AutoActions.log` (on by default, toggle in Settings) records application events as
+`arzGUI.log` (on by default, toggle in Settings) records application events as
 `[app] Started|Closed|GotFocus|LostFocus: profile '…', N action(s)` and every display change with
-its result code. `AutoActions.crash.log` is written only if the process dies from an unhandled
+its result code. `arzGUI.crash.log` is written only if the process dies from an unhandled
 exception.
 
 ## Licence
 
-ArzFlow is a modified version of AutoActions by [Codectory](https://github.com/Codectory) and is
+arzGUI is a modified version of AutoActions by [Codectory](https://github.com/Codectory) and is
 distributed under the same licence, the GNU General Public License v3 — see [LICENSE](LICENSE). The
 fork is maintained for personal use; if you redistribute builds, the GPL's source and notice
 obligations apply to you as well.

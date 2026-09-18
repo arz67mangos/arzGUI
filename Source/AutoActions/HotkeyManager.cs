@@ -43,7 +43,7 @@ namespace AutoActions
         {
             if (_source != null)
                 return;
-            HwndSourceParameters parameters = new HwndSourceParameters("ArzFlowHotkeys")
+            HwndSourceParameters parameters = new HwndSourceParameters("arzGUIHotkeys")
             {
                 // HWND_MESSAGE: a window that exists only to receive messages.
                 ParentWindow = new IntPtr(-3),

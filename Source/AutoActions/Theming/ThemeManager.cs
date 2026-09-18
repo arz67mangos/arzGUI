@@ -1,4 +1,4 @@
-using AutoActions.Windows;
+﻿using AutoActions.Windows;
 using Microsoft.Win32;
 using System;
 using System.Runtime.InteropServices;
@@ -16,8 +16,13 @@ namespace AutoActions.Theming
     /// </summary>
     public static class ThemeManager
     {
-        static readonly Uri LightSource = new Uri("pack://application:,,,/AutoActions;component/Theming/0_LightColors.xaml", UriKind.Absolute);
-        static readonly Uri DarkSource = new Uri("pack://application:,,,/AutoActions;component/Theming/0_DarkColors.xaml", UriKind.Absolute);
+        // Built from this assembly's own name: the exe is arzGUI.exe now, and a relative pack uri
+        // would resolve against whichever assembly happens to be the entry point.
+        static readonly string Component =
+            $"pack://application:,,,/{typeof(ThemeManager).Assembly.GetName().Name};component/";
+
+        static readonly Uri LightSource = new Uri(Component + "Theming/0_LightColors.xaml", UriKind.Absolute);
+        static readonly Uri DarkSource = new Uri(Component + "Theming/0_DarkColors.xaml", UriKind.Absolute);
 
         static ResourceDictionary _current;
         static Func<ThemeSetting> _settingProvider;

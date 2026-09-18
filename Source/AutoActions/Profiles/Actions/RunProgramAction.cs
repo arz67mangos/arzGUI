@@ -63,7 +63,7 @@ namespace AutoActions.Profiles.Actions
                 }
                 CallNewLog(new CodectoryCore.Logging.LogEntry($"Starting {FilePath}"));
 
-                // A child inherits our token, so an elevated ArzFlow would start the program as
+                // A child inherits our token, so an elevated arzGUI would start the program as
                 // administrator - which breaks programs that refuse to run that way.
                 int processId = 0;
                 if (MonitorDeviceControl.IsElevated)
@@ -71,7 +71,7 @@ namespace AutoActions.Profiles.Actions
                     string error;
                     processId = Windows.UnelevatedProcess.Start(FilePath, Arguments, out error);
                     if (processId == 0)
-                        CallNewLog(new CodectoryCore.Logging.LogEntry($"Could not start {FilePath} as the logged-on user ({error}). It will inherit ArzFlow's administrator rights.", CodectoryCore.Logging.LogEntryType.Error));
+                        CallNewLog(new CodectoryCore.Logging.LogEntry($"Could not start {FilePath} as the logged-on user ({error}). It will inherit arzGUI's administrator rights.", CodectoryCore.Logging.LogEntryType.Error));
                     else
                         CallNewLog(new CodectoryCore.Logging.LogEntry($"Started {FilePath} as the logged-on user, not as administrator."));
                 }

@@ -1,4 +1,4 @@
-// Build from the repository root:
+﻿// Build from the repository root:
 // & "$env:WINDIR\Microsoft.NET\Framework64\v4.0.30319\csc.exe" /nologo /target:exe /out:Source\Debug_x64\ViewRender.exe /r:PresentationCore.dll /r:PresentationFramework.dll /r:WindowsBase.dll /r:System.Xaml.dll Source\Tools\ViewRender\ViewRender.cs
 using System;
 using System.IO;
@@ -14,7 +14,7 @@ internal static class ViewRender
     static void Main(string[] args)
     {
         string outputPath = args.Length > 0 ? Path.GetFullPath(args[0]) : Path.GetFullPath(@"..\..\.impeccable\review");
-        string assemblyPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "AutoActions.exe");
+        string assemblyPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "arzGUI.exe");
         Assembly assembly = Assembly.LoadFrom(assemblyPath);
         Type appType = assembly.GetType("AutoActions.App", true);
         Application app = (Application)Activator.CreateInstance(appType);
@@ -31,7 +31,7 @@ internal static class ViewRender
         {
             ResourceDictionary colors = new ResourceDictionary
             {
-                Source = new Uri("pack://application:,,,/AutoActions;component/Theming/0_" + theme + "Colors.xaml", UriKind.Absolute)
+                Source = new Uri("pack://application:,,,/arzGUI;component/Theming/0_" + theme + "Colors.xaml", UriKind.Absolute)
             };
             app.Resources.MergedDictionaries.Add(colors);
             for (int i = 0; i < pages.Length; i++)

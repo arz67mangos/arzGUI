@@ -18,7 +18,7 @@ namespace AutoActions
     public class Globals : BaseViewModel
     {
 
-        public static Logs Logs = new Logs($"{System.AppDomain.CurrentDomain.BaseDirectory}AutoActions.log", "AutoActions", Assembly.GetExecutingAssembly().GetName().Version.ToString(), false);
+        public static Logs Logs = new Logs($"{System.AppDomain.CurrentDomain.BaseDirectory}arzGUI.log", "arzGUI", Assembly.GetExecutingAssembly().GetName().Version.ToString(), false);
 
         /// <summary>
         /// Process watcher poll interval. The enumeration itself is the app's whole idle cost, so
@@ -29,11 +29,11 @@ namespace AutoActions
         public static int GlobalRefreshInterval = 1000;
 
         /// <summary>
-        /// Settings live in %AppData%\ArzFlow, not next to the exe. Every update is a new folder,
+        /// Settings live in %AppData%\arzGUI, not next to the exe. Every update is a new folder,
         /// and profiles, applications, hotkeys and presets have to survive that.
         /// </summary>
         public static string SettingsFolder => Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "ArzFlow");
+            Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "arzGUI");
 
         private string SettingsPathCompatible => $"{System.AppDomain.CurrentDomain.BaseDirectory}UserSettings.xml";
 
@@ -41,6 +41,10 @@ namespace AutoActions
 
         /// <summary>Where older versions kept their settings, and where a file can be dropped to import it.</summary>
         private string LocalSettingsPath => $"{System.AppDomain.CurrentDomain.BaseDirectory}UserSettings.json";
+
+        /// <summary>What the same folder was called while the program was named ArzFlow.</summary>
+        private string PreviousSettingsPath => Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "ArzFlow", "UserSettings.json");
 
 
         public static Globals Instance = new Globals();
@@ -124,7 +128,16 @@ namespace AutoActions
             try
             {
                 if (!File.Exists(LocalSettingsPath))
+                {
+                    // Renaming the program renamed its settings folder; bring the old one across.
+                    if (!File.Exists(SettingsPath) && File.Exists(PreviousSettingsPath))
+                    {
+                        Directory.CreateDirectory(SettingsFolder);
+                        File.Copy(PreviousSettingsPath, SettingsPath, false);
+                        Globals.Logs.Add($"Took over the settings of the previous name from {PreviousSettingsPath}", false);
+                    }
                     return;
+                }
                 Directory.CreateDirectory(SettingsFolder);
                 File.Copy(LocalSettingsPath, SettingsPath, true);
                 string imported = $"{System.AppDomain.CurrentDomain.BaseDirectory}UserSettings.imported.json";

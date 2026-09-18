@@ -21,6 +21,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Threading;
 using System.Windows.Media.Imaging;
 
 namespace AutoActions
@@ -651,12 +652,29 @@ namespace AutoActions
                 Stop();
                 Globals.Instance.SaveSettings(true);
             });
-            if (!stopping.Wait(TimeSpan.FromSeconds(3)))
+            if (!WaitPumping(stopping, TimeSpan.FromSeconds(3)))
                 Globals.Logs.Add("The application watcher did not stop in time; exiting anyway.", false);
             Application.Current.Shutdown();
         }
 
  
+        /// <summary>
+        /// Waits for <paramref name="work"/> while still pumping the dispatcher, so anything the
+        /// worker marshals to the UI thread - a log line, an observable collection - can finish
+        /// instead of deadlocking against the wait. False when the budget ran out first.
+        /// </summary>
+        private static bool WaitPumping(Task work, TimeSpan budget)
+        {
+            DispatcherFrame frame = new DispatcherFrame();
+            work.ContinueWith(t => frame.Continue = false, TaskScheduler.Default);
+            DispatcherTimer deadline = new DispatcherTimer(budget, DispatcherPriority.Send,
+                (s, e) => frame.Continue = false, Dispatcher.CurrentDispatcher);
+            deadline.Start();
+            Dispatcher.PushFrame(frame);
+            deadline.Stop();
+            return work.IsCompleted;
+        }
+
         public void Start()
         {
             lock (_accessLock)
@@ -1042,13 +1060,17 @@ namespace AutoActions
         /// </summary>
         private void MigrateAutoStartEntry()
         {
-            const string previousName = "AutoActions";
-            if (!Settings.AutoStart || ProjectLocales.AutoActions == previousName)
+            // Every name this program has had. Each one left a Run key entry behind, and two of them
+            // would start two copies at logon.
+            string[] previousNames = { "AutoActions", "ArzFlow" };
+            if (!Settings.AutoStart)
                 return;
             try
             {
                 string location = System.Reflection.Assembly.GetEntryAssembly().Location;
-                AutoStart.Deactivate(previousName, location);
+                foreach (string previousName in previousNames)
+                    if (previousName != ProjectLocales.AutoActions)
+                        AutoStart.Deactivate(previousName, location);
                 AutoStart.Activate(ProjectLocales.AutoActions, location);
             }
             catch (Exception ex)

@@ -6,7 +6,7 @@ using System.Reflection;
 // solution - there is no test project here, and this needs a built Debug_x64 to run against.
 //
 //   $csc = "<VS>\MSBuild\Current\Bin\Roslyn\csc.exe"; $out = ".\Source\Debug_x64"
-//   & $csc /platform:x64 /langversion:7.3 /out:"$out\BehaviourCheck.exe" /r:"$out\AutoActions.exe" `
+//   & $csc /platform:x64 /langversion:7.3 /out:"$out\BehaviourCheck.exe" /r:"$out\arzGUI.exe" `
 //       /r:"$out\CodectoryCore.dll" /r:"$out\CodectoryCore.UI.Wpf.dll" `
 //       /r:"<ref>\PresentationCore.dll" /r:"<ref>\WindowsBase.dll" `
 //       .\Source\Tools\BehaviourCheck\BehaviourCheck.cs

@@ -142,7 +142,7 @@
     <value>All displays</value>
   </data>
   <data name="AlreadyRunning" xml:space="preserve">
-    <value>ArzFlow is already running.</value>
+    <value>arzGUI is already running.</value>
   </data>
   <data name="AppClosedActions" xml:space="preserve">
     <value>Application closed actions</value>
@@ -175,7 +175,7 @@
     <value>Audio</value>
   </data>
   <data name="AutoActions" xml:space="preserve">
-    <value>ArzFlow</value>
+    <value>arzGUI</value>
   </data>
   <data name="AutoActionsToolTip" xml:space="preserve">
     <value>Enable HDR on this monitor, based on the applications</value>
@@ -1143,7 +1143,7 @@ Public License instead of this License.  But first, please read
     <value>Status</value>
   </data>
   <data name="Updating" xml:space="preserve">
-    <value>Updating ArzFlow...</value>
+    <value>Updating arzGUI...</value>
   </data>
   <data name="Version" xml:space="preserve">
     <value>Version</value>
@@ -1338,7 +1338,7 @@ Public License instead of this License.  But first, please read
     <value>Disabling the monitor device is how a true stretched resolution stays put in games that override the scaling mode. While it is disabled Windows has no gamma ramp for that display, so brightness, contrast and gamma do nothing - digital vibrance and hue keep working. The state is put back when the application closes.</value>
   </data>
   <data name="MonitorDeviceNeedsAdministrator" xml:space="preserve">
-    <value>Changing a device in Device Manager needs administrator rights, and ArzFlow is not running as administrator. This action will fail until it is.</value>
+    <value>Changing a device in Device Manager needs administrator rights, and arzGUI is not running as administrator. This action will fail until it is.</value>
   </data>
   <data name="MonitorDeviceRestartAsAdministrator" xml:space="preserve">
     <value>Restart as administrator</value>
