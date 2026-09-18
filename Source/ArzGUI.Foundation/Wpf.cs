@@ -28,7 +28,26 @@ namespace CodectoryCore.UI.Wpf
 
     public class BaseViewModel : INotifyPropertyChanged
     {
-        public IDialogService DialogService { get; set; }
+        static IDialogService _sharedDialogService;
+        IDialogService _dialogService;
+
+        /// <summary>
+        /// The service a view model opens dialogs with. A window or user control hands it to its own
+        /// data context, but the view models that sit inside that one - a profile in a list, a
+        /// shortcut, the globals object - are never handed anything, and every one of them checks for
+        /// null and silently does nothing. So the first service assigned anywhere becomes the
+        /// fallback for all of them: the app has exactly one.
+        /// </summary>
+        public IDialogService DialogService
+        {
+            get { return _dialogService ?? _sharedDialogService; }
+            set
+            {
+                _dialogService = value;
+                if (value != null)
+                    _sharedDialogService = value;
+            }
+        }
         protected bool ThrowOnInvalidPropertyName { get; set; }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -213,6 +232,13 @@ namespace CodectoryCore.UI.Wpf
             Show(viewModel, size);
         }
 
+        static Window Shown(Window window)
+        {
+            if (window == null)
+                return null;
+            return new System.Windows.Interop.WindowInteropHelper(window).Handle == IntPtr.Zero ? null : window;
+        }
+
         private static void Show(DialogViewModelBase viewModel, DrawingSize? size)
         {
             if (viewModel == null)
@@ -222,7 +248,9 @@ namespace CodectoryCore.UI.Wpf
                 DataContext = viewModel,
                 Content = viewModel,
                 Title = viewModel.Title ?? string.Empty,
-                Owner = viewModel.Owner ?? (Application.Current == null ? null : Application.Current.MainWindow)
+                // Only a window that has actually been shown can own another one - starting minimised
+                // to tray leaves the main window unshown, and assigning it throws.
+                Owner = Shown(viewModel.Owner) ?? Shown(Application.Current == null ? null : Application.Current.MainWindow)
             };
             if (size.HasValue)
             {
