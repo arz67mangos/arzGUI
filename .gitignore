@@ -405,3 +405,9 @@ FodyWeavers.xsd
 # Native HDRController.dll per platform; the generic x64/ x86/ rules above would otherwise swallow these
 !Source/Externals/x64/
 !Source/Externals/x86/
+
+# User data that must never be committed
+UserSettings.json
+UserSettings.imported.json
+Backup_Settings_*.json
+*.crash.log
