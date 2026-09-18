@@ -69,6 +69,10 @@ namespace AutoActions
             if (mutex.WaitOne(TimeSpan.Zero, true))
                 mutex.ReleaseMutex();
 
+            // The user asked to quit, so quit: a native or COM thread that outlives the dispatcher
+            // would otherwise leave a running AutoActions.exe holding its own folder open, which
+            // looks like the app ignored Exit.
+            Environment.Exit(e.ApplicationExitCode);
         }
 
         private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)

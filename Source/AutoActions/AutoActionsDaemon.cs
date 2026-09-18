@@ -637,14 +637,22 @@ namespace AutoActions
 
         private void Shutdown()
         { 
-            Settings.Displays = DisplayManagerHandler.Instance?.Displays;
             Globals.Logs.Add($"Stopping application watcher...", false);
-            Stop();
             try
             {
                 TrayMenuHelper.SwitchTrayIcon(false);
             }
             catch { }
+            // Stop() waits for the watcher thread, which can be halfway through an action that runs
+            // for as long as it likes. Exit is a promise: give it a moment on a worker, then go.
+            Task stopping = Task.Run(() =>
+            {
+                Settings.Displays = DisplayManagerHandler.Instance?.Displays;
+                Stop();
+                Globals.Instance.SaveSettings(true);
+            });
+            if (!stopping.Wait(TimeSpan.FromSeconds(3)))
+                Globals.Logs.Add("The application watcher did not stop in time; exiting anyway.", false);
             Application.Current.Shutdown();
         }
 
@@ -767,7 +775,10 @@ namespace AutoActions
 
         private void Settings_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            lock (_accessLock)
+            // Deliberately not under _accessLock. None of this touches the action pipeline, and the
+            // watcher thread holds that lock for as long as an action runs - a run action with
+            // "wait for end" ticked holds it for as long as the program lives. Taking it here froze
+            // the whole window on any settings change, the exit path included.
             {
                 try
                 {
