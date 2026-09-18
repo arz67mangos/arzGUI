@@ -28,9 +28,19 @@ namespace AutoActions
         /// </summary>
         public static int GlobalRefreshInterval = 1000;
 
+        /// <summary>
+        /// Settings live in %AppData%\ArzFlow, not next to the exe. Every update is a new folder,
+        /// and profiles, applications, hotkeys and presets have to survive that.
+        /// </summary>
+        public static string SettingsFolder => Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "ArzFlow");
+
         private string SettingsPathCompatible => $"{System.AppDomain.CurrentDomain.BaseDirectory}UserSettings.xml";
 
-        private string SettingsPath => $"{System.AppDomain.CurrentDomain.BaseDirectory}UserSettings.json";
+        private string SettingsPath => Path.Combine(SettingsFolder, "UserSettings.json");
+
+        /// <summary>Where older versions kept their settings, and where a file can be dropped to import it.</summary>
+        private string LocalSettingsPath => $"{System.AppDomain.CurrentDomain.BaseDirectory}UserSettings.json";
 
 
         public static Globals Instance = new Globals();
@@ -48,6 +58,7 @@ namespace AutoActions
             Globals.Logs.Add("Saving settings..", false);
             try
             {
+                Directory.CreateDirectory(SettingsFolder);
                 Settings.SaveSettings(SettingsPath);
                 Globals.Logs.Add("Settings saved", false);
             }
@@ -62,6 +73,7 @@ namespace AutoActions
             try
             {
                 Globals.Logs.Add("Loading settings...", false);
+                ImportLocalSettings();
                 if (File.Exists(SettingsPath))
                 {
                     Settings = UserAppSettings.ReadSettings(SettingsPath);
@@ -85,7 +97,7 @@ namespace AutoActions
             }
             catch (Exception ex)
             {
-                string backupFile = $"{System.AppDomain.CurrentDomain.BaseDirectory}Backup_Settings_{DateTime.Now.ToString("yyyyMMddHHmmssfff")}.json";
+                string backupFile = Path.Combine(SettingsFolder, $"Backup_Settings_{DateTime.Now.ToString("yyyyMMddHHmmssfff")}.json");
                 if (File.Exists(SettingsPath))
                 {
                     File.Move(SettingsPath, backupFile);
@@ -100,6 +112,32 @@ namespace AutoActions
             }
             Globals.Logs.LogFileEnabled = Settings.CreateLogFile;
             Globals.Logs.Add("Settings loaded", false);
+        }
+
+        /// <summary>
+        /// Takes over a UserSettings.json sitting next to the exe: one an older version wrote, or
+        /// one copied there on purpose to carry a setup over. It is renamed afterwards, so this
+        /// happens once and an update never silently overwrites the settings it just imported.
+        /// </summary>
+        private void ImportLocalSettings()
+        {
+            try
+            {
+                if (!File.Exists(LocalSettingsPath))
+                    return;
+                Directory.CreateDirectory(SettingsFolder);
+                File.Copy(LocalSettingsPath, SettingsPath, true);
+                string imported = $"{System.AppDomain.CurrentDomain.BaseDirectory}UserSettings.imported.json";
+                if (File.Exists(imported))
+                    File.Delete(imported);
+                File.Move(LocalSettingsPath, imported);
+                Globals.Logs.Add($"Imported settings from {LocalSettingsPath} into {SettingsPath}", false);
+            }
+            catch (Exception ex)
+            {
+                Globals.Logs.Add("Could not import the settings file next to the program.", false);
+                Globals.Logs.AddException(ex);
+            }
         }
 
         private void FixAssignments()
