@@ -1,0 +1,9 @@
+Use case: logo-brand
+Asset type: Windows WPF application splash screen, exact canvas 1672 x 941 pixels
+Input images: the existing splash is the edit target; Logo.png is the approved three-loop ribbon mark. Preserve its exact silhouette and topology.
+Primary request: create a premium arzGUI liquid-glass splash.
+Scene/backdrop: deep midnight-blue to graphite background with a soft restrained blue-violet bloom.
+Subject: approved monochrome translucent glass ribbon centered above the wordmark; a large rounded liquid-glass card with edge refraction, a bright top-edge specular sweep, subtle warm chromatic bloom, and faint backdrop distortion.
+Style/medium: polished native Windows desktop splash, calm, precise, Apple-inspired translucent material.
+Text (verbatim): wordmark "arzGUI"; tagline "Windows automation, made personal."
+Constraints: render arzGUI exactly once, lowercase a-r-z and uppercase G-U-I; no version number, extra icons, mockup frame, watermark, or ARZ monogram.
