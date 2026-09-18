@@ -411,3 +411,11 @@ UserSettings.json
 UserSettings.imported.json
 Backup_Settings_*.json
 *.crash.log
+
+# Working notes and reference material: kept locally, never published
+CLAUDE.md
+AGENTS.md
+HANDOFF.md
+AUTOACTIONS_PLAN.md
+PROMPT_nvidia_color.md
+Reference/
