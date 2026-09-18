@@ -17,13 +17,10 @@
   <Color x:Key="BackdropStartColor">#EFF6FF</Color>
   <Color x:Key="BackdropMidColor">#E7F0FC</Color>
   <Color x:Key="BackdropEndColor">#DCE8F6</Color>
-  <Color x:Key="GlassSurfaceColor">#82F7FAFF</Color>
-  <Color x:Key="GlassRaisedColor">#B8FFFFFF</Color>
-  <Color x:Key="GlassHighlightColor">#E8FFFFFF</Color>
-  <Color x:Key="GlassBloomColor">#5878B8FF</Color>
-  <Color x:Key="GlassShadowEdgeColor">#4A6683A1</Color>
-  <Color x:Key="GlassStrokeColor">#8AFFFFFF</Color>
-  <Color x:Key="AcrylicTintColor">#4AF2F6FB</Color>
+  <Color x:Key="GlassSurfaceColor">#72F7FAFF</Color>
+  <Color x:Key="GlassRaisedColor">#96FFFFFF</Color>
+  <Color x:Key="GlassStrokeColor">#668CA6C0</Color>
+  <Color x:Key="AcrylicTintColor">#3EF2F6FB</Color>
   <Color x:Key="TransparentColor">#00000000</Color>
   <Color x:Key="ShadowColor">#280B2038</Color>
   <!-- Borders -->
@@ -61,23 +58,9 @@
     <GradientStop Color="{StaticResource BackdropMidColor}" Offset="0.52" />
     <GradientStop Color="{StaticResource BackdropEndColor}" Offset="1" />
   </LinearGradientBrush>
-  <LinearGradientBrush x:Key="GlassSurfaceBrush" StartPoint="0,0" EndPoint="1,1">
-    <GradientStop Color="{StaticResource GlassHighlightColor}" Offset="0" />
-    <GradientStop Color="{StaticResource GlassSurfaceColor}" Offset="0.12" />
-    <GradientStop Color="{StaticResource GlassBloomColor}" Offset="0.72" />
-    <GradientStop Color="{StaticResource GlassShadowEdgeColor}" Offset="1" />
-  </LinearGradientBrush>
-  <LinearGradientBrush x:Key="GlassRaisedBrush" StartPoint="0,0" EndPoint="1,1">
-    <GradientStop Color="{StaticResource GlassHighlightColor}" Offset="0" />
-    <GradientStop Color="{StaticResource GlassRaisedColor}" Offset="0.16" />
-    <GradientStop Color="{StaticResource GlassSurfaceColor}" Offset="0.74" />
-    <GradientStop Color="{StaticResource GlassShadowEdgeColor}" Offset="1" />
-  </LinearGradientBrush>
-  <LinearGradientBrush x:Key="GlassStrokeBrush" StartPoint="0,0" EndPoint="1,1">
-    <GradientStop Color="{StaticResource GlassHighlightColor}" Offset="0" />
-    <GradientStop Color="{StaticResource GlassStrokeColor}" Offset="0.45" />
-    <GradientStop Color="{StaticResource GlassShadowEdgeColor}" Offset="1" />
-  </LinearGradientBrush>
+  <SolidColorBrush x:Key="GlassSurfaceBrush" Color="{StaticResource GlassSurfaceColor}" />
+  <SolidColorBrush x:Key="GlassRaisedBrush" Color="{StaticResource GlassRaisedColor}" />
+  <SolidColorBrush x:Key="GlassStrokeBrush" Color="{StaticResource GlassStrokeColor}" />
   <SolidColorBrush x:Key="AcrylicTintBrush" Color="{StaticResource AcrylicTintColor}" />
   <SolidColorBrush x:Key="TransparentBrush" Color="{StaticResource TransparentColor}" />
   <SolidColorBrush x:Key="StrokeBrush" Color="{StaticResource StrokeColor}" />
