@@ -17,10 +17,13 @@
   <Color x:Key="BackdropStartColor">#EFF6FF</Color>
   <Color x:Key="BackdropMidColor">#E7F0FC</Color>
   <Color x:Key="BackdropEndColor">#DCE8F6</Color>
-  <Color x:Key="GlassSurfaceColor">#A8F7FAFF</Color>
-  <Color x:Key="GlassRaisedColor">#D6FFFFFF</Color>
-  <Color x:Key="GlassStrokeColor">#663C5E82</Color>
-  <Color x:Key="AcrylicTintColor">#66F2F6FB</Color>
+  <Color x:Key="GlassSurfaceColor">#82F7FAFF</Color>
+  <Color x:Key="GlassRaisedColor">#B8FFFFFF</Color>
+  <Color x:Key="GlassHighlightColor">#E8FFFFFF</Color>
+  <Color x:Key="GlassBloomColor">#5878B8FF</Color>
+  <Color x:Key="GlassShadowEdgeColor">#4A6683A1</Color>
+  <Color x:Key="GlassStrokeColor">#8AFFFFFF</Color>
+  <Color x:Key="AcrylicTintColor">#4AF2F6FB</Color>
   <Color x:Key="TransparentColor">#00000000</Color>
   <Color x:Key="ShadowColor">#280B2038</Color>
   <!-- Borders -->
@@ -58,9 +61,23 @@
     <GradientStop Color="{StaticResource BackdropMidColor}" Offset="0.52" />
     <GradientStop Color="{StaticResource BackdropEndColor}" Offset="1" />
   </LinearGradientBrush>
-  <SolidColorBrush x:Key="GlassSurfaceBrush" Color="{StaticResource GlassSurfaceColor}" />
-  <SolidColorBrush x:Key="GlassRaisedBrush" Color="{StaticResource GlassRaisedColor}" />
-  <SolidColorBrush x:Key="GlassStrokeBrush" Color="{StaticResource GlassStrokeColor}" />
+  <LinearGradientBrush x:Key="GlassSurfaceBrush" StartPoint="0,0" EndPoint="1,1">
+    <GradientStop Color="{StaticResource GlassHighlightColor}" Offset="0" />
+    <GradientStop Color="{StaticResource GlassSurfaceColor}" Offset="0.12" />
+    <GradientStop Color="{StaticResource GlassBloomColor}" Offset="0.72" />
+    <GradientStop Color="{StaticResource GlassShadowEdgeColor}" Offset="1" />
+  </LinearGradientBrush>
+  <LinearGradientBrush x:Key="GlassRaisedBrush" StartPoint="0,0" EndPoint="1,1">
+    <GradientStop Color="{StaticResource GlassHighlightColor}" Offset="0" />
+    <GradientStop Color="{StaticResource GlassRaisedColor}" Offset="0.16" />
+    <GradientStop Color="{StaticResource GlassSurfaceColor}" Offset="0.74" />
+    <GradientStop Color="{StaticResource GlassShadowEdgeColor}" Offset="1" />
+  </LinearGradientBrush>
+  <LinearGradientBrush x:Key="GlassStrokeBrush" StartPoint="0,0" EndPoint="1,1">
+    <GradientStop Color="{StaticResource GlassHighlightColor}" Offset="0" />
+    <GradientStop Color="{StaticResource GlassStrokeColor}" Offset="0.45" />
+    <GradientStop Color="{StaticResource GlassShadowEdgeColor}" Offset="1" />
+  </LinearGradientBrush>
   <SolidColorBrush x:Key="AcrylicTintBrush" Color="{StaticResource AcrylicTintColor}" />
   <SolidColorBrush x:Key="TransparentBrush" Color="{StaticResource TransparentColor}" />
   <SolidColorBrush x:Key="StrokeBrush" Color="{StaticResource StrokeColor}" />
@@ -136,6 +153,11 @@
     <Setter Property="BorderThickness" Value="1" />
     <Setter Property="Background" Value="{DynamicResource GlassRaisedBrush}" />
     <Setter Property="SnapsToDevicePixels" Value="True" />
+    <Setter Property="Effect">
+      <Setter.Value>
+        <DropShadowEffect Color="{DynamicResource ShadowColor}" BlurRadius="22" ShadowDepth="7" Opacity="0.3" RenderingBias="Performance" />
+      </Setter.Value>
+    </Setter>
     <Style.Triggers>
       <Trigger Property="IsEnabled" Value="False">
         <Setter Property="Background" Value="{DynamicResource ControlDisabledBrush}" />
@@ -151,7 +173,7 @@
     <Setter Property="SnapsToDevicePixels" Value="True" />
   </Style>
   <Style x:Key="DefaultUserControl" TargetType="UserControl">
-    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="Background" Value="{DynamicResource TransparentBrush}" />
     <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
     <Setter Property="FontSize" Value="{StaticResource DefaultFontSize}" />
     <Setter Property="TextOptions.TextFormattingMode" Value="Display" />
@@ -160,7 +182,7 @@
   <!-- DialogService creates this Window type in the external UI assembly. Styling the shared
          host keeps every modal on the same live light/dark tokens as its UserControl content. -->
   <Style TargetType="{x:Type corewpf:DialogView}">
-    <Setter Property="Background" Value="{DynamicResource WindowBackdropBrush}" />
+    <Setter Property="Background" Value="{DynamicResource AcrylicTintBrush}" />
     <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
     <Setter Property="FontFamily" Value="Segoe UI" />
     <Setter Property="FontSize" Value="{StaticResource DefaultFontSize}" />
@@ -204,7 +226,7 @@
   </Style>
   <Style TargetType="MenuItem">
     <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
-    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="Background" Value="{DynamicResource TransparentBrush}" />
     <Setter Property="Padding" Value="8,6" />
     <Setter Property="FontSize" Value="{StaticResource DefaultFontSize}" />
     <Setter Property="FocusVisualStyle" Value="{x:Null}" />
@@ -303,7 +325,7 @@
     <Setter Property="Template">
       <Setter.Value>
         <ControlTemplate TargetType="{x:Type CheckBox}">
-          <Ellipse x:Name="Dot" Fill="Transparent" Stroke="{DynamicResource StrokeStrongBrush}" StrokeThickness="1.5" />
+          <Ellipse x:Name="Dot" Fill="{DynamicResource TransparentBrush}" Stroke="{DynamicResource StrokeStrongBrush}" StrokeThickness="1.5" />
           <ControlTemplate.Triggers>
             <Trigger Property="IsChecked" Value="True">
               <Setter TargetName="Dot" Property="Fill" Value="{DynamicResource SuccessBrush}" />
@@ -360,7 +382,7 @@
   <Style x:Key="DefaultButton" TargetType="Button">
     <Setter Property="Background" Value="{DynamicResource AccentBrush}" />
     <Setter Property="Foreground" Value="{DynamicResource AccentForegroundBrush}" />
-    <Setter Property="BorderBrush" Value="Transparent" />
+    <Setter Property="BorderBrush" Value="{DynamicResource TransparentBrush}" />
     <Setter Property="BorderThickness" Value="0" />
     <Setter Property="FontSize" Value="{StaticResource DefaultFontSize}" />
     <Setter Property="FontWeight" Value="SemiBold" />
@@ -450,8 +472,8 @@
   </Style>
   <!-- Ghost (text-only) button, for footers and toolbars -->
   <Style x:Key="GhostButton" TargetType="Button" BasedOn="{StaticResource SecondaryButton}">
-    <Setter Property="Background" Value="Transparent" />
-    <Setter Property="BorderBrush" Value="Transparent" />
+    <Setter Property="Background" Value="{DynamicResource TransparentBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource TransparentBrush}" />
     <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}" />
     <Setter Property="Padding" Value="10,6" />
   </Style>
@@ -492,7 +514,7 @@
     <Setter Property="Template">
       <Setter.Value>
         <ControlTemplate TargetType="{x:Type CheckBox}">
-          <Grid Background="Transparent">
+          <Grid Background="{DynamicResource TransparentBrush}">
             <Grid.ColumnDefinitions>
               <ColumnDefinition Width="Auto" />
               <ColumnDefinition Width="*" />
@@ -585,7 +607,7 @@
     <Setter Property="Template">
       <Setter.Value>
         <ControlTemplate TargetType="Slider">
-          <Grid VerticalAlignment="Center" Background="Transparent">
+          <Grid VerticalAlignment="Center" Background="{DynamicResource TransparentBrush}">
             <Track x:Name="PART_Track">
               <Track.DecreaseRepeatButton>
                 <RepeatButton Command="Slider.DecreaseLarge" Style="{StaticResource SliderTrackButton}" Background="{TemplateBinding Foreground}" />
@@ -616,7 +638,7 @@
     <Setter Property="Template">
       <Setter.Value>
         <ControlTemplate TargetType="ListBoxItem">
-          <Border x:Name="Bd" Background="Transparent" BorderBrush="Transparent" BorderThickness="1" CornerRadius="{StaticResource DefaultCornerRadius}" Margin="2" Padding="4" SnapsToDevicePixels="True">
+          <Border x:Name="Bd" Background="{DynamicResource TransparentBrush}" BorderBrush="{DynamicResource TransparentBrush}" BorderThickness="1" CornerRadius="{StaticResource DefaultCornerRadius}" Margin="2" Padding="4" SnapsToDevicePixels="True">
             <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
           </Border>
           <ControlTemplate.Triggers>
@@ -634,18 +656,18 @@
   </Style>
   <Style TargetType="ListBoxItem" BasedOn="{StaticResource ListBoxItemStyle}" />
   <Style TargetType="ListBox">
-    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="Background" Value="{DynamicResource TransparentBrush}" />
     <Setter Property="BorderThickness" Value="0" />
     <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
     <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
   </Style>
   <Style TargetType="ListView">
-    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="Background" Value="{DynamicResource TransparentBrush}" />
     <Setter Property="BorderThickness" Value="0" />
     <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
   </Style>
   <Style TargetType="ItemsControl">
-    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="Background" Value="{DynamicResource TransparentBrush}" />
     <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
   </Style>
   <!-- ===== Sidebar navigation (a TabControl with its TabPanel on the left) ===== -->
@@ -659,7 +681,7 @@
     <Setter Property="Template">
       <Setter.Value>
         <ControlTemplate TargetType="TabItem">
-          <Border x:Name="Bd" Background="Transparent" CornerRadius="{StaticResource DefaultCornerRadius}" Padding="12,9" SnapsToDevicePixels="True">
+          <Border x:Name="Bd" Background="{DynamicResource TransparentBrush}" CornerRadius="{StaticResource DefaultCornerRadius}" Padding="12,9" SnapsToDevicePixels="True">
             <Grid>
               <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
@@ -691,7 +713,7 @@
     </Setter>
   </Style>
   <Style x:Key="SidebarTabControl" TargetType="TabControl">
-    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="Background" Value="{DynamicResource TransparentBrush}" />
     <Setter Property="BorderThickness" Value="0" />
     <Setter Property="Padding" Value="0" />
     <Setter Property="TabStripPlacement" Value="Left" />
@@ -704,9 +726,9 @@
               <ColumnDefinition Width="220" />
               <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <Border Grid.Column="0" Margin="12" Background="{DynamicResource GlassSurfaceBrush}" BorderBrush="{DynamicResource GlassStrokeBrush}" BorderThickness="1" CornerRadius="16">
+            <Border Grid.Column="0" Margin="12" Background="{DynamicResource GlassRaisedBrush}" BorderBrush="{DynamicResource GlassStrokeBrush}" BorderThickness="1" CornerRadius="18">
               <Border.Effect>
-                <DropShadowEffect Color="{DynamicResource ShadowColor}" BlurRadius="28" ShadowDepth="8" Opacity="0.34" RenderingBias="Performance" />
+                <DropShadowEffect Color="{DynamicResource ShadowColor}" BlurRadius="34" ShadowDepth="10" Opacity="0.38" RenderingBias="Performance" />
               </Border.Effect>
               <DockPanel LastChildFill="True">
                 <ContentPresenter DockPanel.Dock="Top" Content="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(thm:Sidebar.Header)}" Margin="16,20,16,12" />
@@ -714,7 +736,7 @@
                 <TabPanel x:Name="HeaderPanel" IsItemsHost="True" KeyboardNavigation.TabIndex="1" Margin="0,4" VerticalAlignment="Top" />
               </DockPanel>
             </Border>
-            <Border Grid.Column="1" x:Name="ContentPanel" Background="Transparent" KeyboardNavigation.TabNavigation="Local" KeyboardNavigation.DirectionalNavigation="Contained" KeyboardNavigation.TabIndex="2">
+            <Border Grid.Column="1" x:Name="ContentPanel" Background="{DynamicResource TransparentBrush}" KeyboardNavigation.TabNavigation="Local" KeyboardNavigation.DirectionalNavigation="Contained" KeyboardNavigation.TabIndex="2">
               <ContentPresenter x:Name="PART_SelectedContentHost" ContentSource="SelectedContent" Margin="{TemplateBinding Padding}" />
             </Border>
           </Grid>
@@ -745,7 +767,7 @@
     </ControlTemplate.Triggers>
   </ControlTemplate>
   <ControlTemplate x:Key="ComboBoxTextBox" TargetType="{x:Type TextBox}">
-    <Border x:Name="PART_ContentHost" Focusable="False" Background="Transparent" />
+    <Border x:Name="PART_ContentHost" Focusable="False" Background="{DynamicResource TransparentBrush}" />
   </ControlTemplate>
   <Style x:Key="StyledComboBox" TargetType="{x:Type ComboBox}">
     <Setter Property="SnapsToDevicePixels" Value="True" />
@@ -766,7 +788,7 @@
           <Grid>
             <ToggleButton x:Name="ToggleButton" Template="{StaticResource ComboBoxToggleButton}" Focusable="False" ClickMode="Press" IsChecked="{Binding Path=IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" />
             <ContentPresenter x:Name="ContentSite" IsHitTestVisible="False" Content="{TemplateBinding SelectionBoxItem}" ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}" ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}" Margin="{TemplateBinding Padding}" VerticalAlignment="Center" HorizontalAlignment="Left" TextElement.Foreground="{TemplateBinding Foreground}" />
-            <TextBox x:Name="PART_EditableTextBox" Style="{x:Null}" Template="{StaticResource ComboBoxTextBox}" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="{TemplateBinding Padding}" Focusable="True" Background="Transparent" Foreground="{TemplateBinding Foreground}" CaretBrush="{DynamicResource TextPrimaryBrush}" Visibility="Hidden" IsReadOnly="{TemplateBinding IsReadOnly}" />
+            <TextBox x:Name="PART_EditableTextBox" Style="{x:Null}" Template="{StaticResource ComboBoxTextBox}" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="{TemplateBinding Padding}" Focusable="True" Background="{DynamicResource TransparentBrush}" Foreground="{TemplateBinding Foreground}" CaretBrush="{DynamicResource TextPrimaryBrush}" Visibility="Hidden" IsReadOnly="{TemplateBinding IsReadOnly}" />
             <Popup x:Name="Popup" Placement="Bottom" IsOpen="{TemplateBinding IsDropDownOpen}" AllowsTransparency="True" Focusable="False" PopupAnimation="Fade" VerticalOffset="4">
               <Grid x:Name="DropDown" SnapsToDevicePixels="True" MinWidth="{TemplateBinding ActualWidth}" MaxHeight="{TemplateBinding MaxDropDownHeight}">
                 <Border x:Name="DropDownBorder" Background="{DynamicResource SurfaceRaisedBrush}" BorderBrush="{DynamicResource StrokeStrongBrush}" BorderThickness="1" CornerRadius="{StaticResource DefaultCornerRadius}" />
@@ -804,7 +826,7 @@
     <Setter Property="Template">
       <Setter.Value>
         <ControlTemplate TargetType="{x:Type ComboBoxItem}">
-          <Border x:Name="Border" Background="Transparent" CornerRadius="{StaticResource SmallCornerRadius}" Padding="{TemplateBinding Padding}" SnapsToDevicePixels="True">
+          <Border x:Name="Border" Background="{DynamicResource TransparentBrush}" CornerRadius="{StaticResource SmallCornerRadius}" Padding="{TemplateBinding Padding}" SnapsToDevicePixels="True">
             <ContentPresenter TextElement.Foreground="{TemplateBinding Foreground}" />
           </Border>
           <ControlTemplate.Triggers>

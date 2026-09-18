@@ -92,7 +92,12 @@ namespace AutoActions.Theming
                 if (_settingProvider() == ThemeSetting.System)
                     Apply(ThemeSetting.System);
             };
-            EventManager.RegisterClassHandler(typeof(Window), FrameworkElement.LoadedEvent, new RoutedEventHandler((o, e) => ApplyTitleBar(o as Window)));
+            EventManager.RegisterClassHandler(typeof(Window), FrameworkElement.LoadedEvent, new RoutedEventHandler((o, e) =>
+            {
+                Window window = o as Window;
+                ApplyTitleBar(window);
+                ApplyDesktopAcrylic(window);
+            }));
         }
 
         [DllImport("dwmapi.dll", PreserveSig = true)]

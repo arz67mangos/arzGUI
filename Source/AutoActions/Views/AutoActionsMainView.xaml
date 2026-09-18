@@ -205,7 +205,7 @@
                                 <DataTemplate>
                                     <Grid>
                                         <TextBlock/>
-                                        <Border Margin="0,3" Padding="9" CornerRadius="{StaticResource SmallCornerRadius}" Background="{DynamicResource GlassSurfaceBrush}" BorderBrush="{DynamicResource GlassStrokeBrush}" BorderThickness="1">
+                                        <Border Style="{StaticResource DefaultBorder}" Margin="0,4" Padding="10" CornerRadius="10" Background="{DynamicResource GlassSurfaceBrush}">
                                         <Grid>
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition SharedSizeGroup="IconColumn" Width="Auto"/>

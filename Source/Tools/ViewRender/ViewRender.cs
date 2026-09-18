@@ -24,45 +24,46 @@ internal static class ViewRender
         globalsType.GetMethod("LoadSettings").Invoke(globals, null);
         Type windowType = assembly.GetType("AutoActions.Views.AutoActionsMainView", true);
         Directory.CreateDirectory(outputPath);
+        Type themeManagerType = assembly.GetType("AutoActions.Theming.ThemeManager", true);
+        Type themeSettingType = assembly.GetType("AutoActions.Theming.ThemeSetting", true);
+        MethodInfo applyTheme = themeManagerType.GetMethod("Apply", new[] { themeSettingType });
         string[] themes = { "Light", "Dark" };
-        string[] pages = { "profiles", "applications", "displays", "settings" };
-        int[] indices = { 2, 3, 4, 5 };
+        string[] pages = { "status", "quick-settings", "profiles", "applications", "displays", "settings" };
+        int[] widths = { 1280, 1440, 1920 };
         foreach (string theme in themes)
         {
-            ResourceDictionary colors = new ResourceDictionary
+            applyTheme.Invoke(null, new[] { Enum.Parse(themeSettingType, theme) });
+            foreach (int width in widths)
             {
-                Source = new Uri("pack://application:,,,/arzGUI;component/Theming/0_" + theme + "Colors.xaml", UriKind.Absolute)
-            };
-            app.Resources.MergedDictionaries.Add(colors);
-            for (int i = 0; i < pages.Length; i++)
-            {
-                Window window = (Window)Activator.CreateInstance(windowType);
-                window.Width = 1280;
-                window.Height = 800;
-                FrameworkElement root = (FrameworkElement)window.Content;
-                root.Measure(new Size(1280, 800));
-                root.Arrange(new Rect(0, 0, 1280, 800));
-                TabControl tabs = Find<TabControl>(root);
-                if (tabs == null) throw new InvalidOperationException("TabControl was not created.");
-                tabs.SelectedIndex = indices[i];
-                root.Measure(new Size(1280, 800));
-                root.Arrange(new Rect(0, 0, 1280, 800));
-                root.UpdateLayout();
-                if (i == 0)
+                for (int i = 0; i < pages.Length; i++)
                 {
-                    ListBox profiles = Find<ListBox>(root);
-                    if (profiles != null && profiles.Items.Count > 0) profiles.SelectedIndex = 0;
+                    Window window = (Window)Activator.CreateInstance(windowType);
+                    window.Width = width;
+                    window.Height = 800;
+                    FrameworkElement root = (FrameworkElement)window.Content;
+                    root.Measure(new Size(width, 800));
+                    root.Arrange(new Rect(0, 0, width, 800));
+                    TabControl tabs = Find<TabControl>(root);
+                    if (tabs == null) throw new InvalidOperationException("TabControl was not created.");
+                    tabs.SelectedIndex = i;
+                    root.Measure(new Size(width, 800));
+                    root.Arrange(new Rect(0, 0, width, 800));
                     root.UpdateLayout();
+                    if (i == 2)
+                    {
+                        ListBox profiles = Find<ListBox>(root);
+                        if (profiles != null && profiles.Items.Count > 0) profiles.SelectedIndex = 0;
+                        root.UpdateLayout();
+                    }
+                    RenderTargetBitmap bitmap = new RenderTargetBitmap(width, 800, 96, 96, PixelFormats.Pbgra32);
+                    bitmap.Render(root);
+                    PngBitmapEncoder encoder = new PngBitmapEncoder();
+                    encoder.Frames.Add(BitmapFrame.Create(bitmap));
+                    using (FileStream stream = File.Create(Path.Combine(outputPath, pages[i] + "-" + theme.ToLowerInvariant() + "-" + width + ".png")))
+                        encoder.Save(stream);
+                    window.DataContext = null;
                 }
-                RenderTargetBitmap bitmap = new RenderTargetBitmap(1280, 800, 96, 96, PixelFormats.Pbgra32);
-                bitmap.Render(root);
-                PngBitmapEncoder encoder = new PngBitmapEncoder();
-                encoder.Frames.Add(BitmapFrame.Create(bitmap));
-                using (FileStream stream = File.Create(Path.Combine(outputPath, pages[i] + "-" + theme.ToLowerInvariant() + ".png")))
-                    encoder.Save(stream);
-                window.DataContext = null;
             }
-            app.Resources.MergedDictionaries.Remove(colors);
         }
         Environment.Exit(0);
     }
