@@ -259,15 +259,10 @@
 
             <TabItem Header="{x:Static pres:ProjectLocales.Settings}" thm:Sidebar.Icon="&#xE713;">
 
-                    <Grid  >
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
-                        <ScrollViewer VerticalScrollBarVisibility="Auto">
-                            <local:UserAppSettingsView     DataContext="{Binding ElementName=MainWindow , Path=DataContext.Settings}" />
-                        </ScrollViewer>
-
-                    </Grid>
+                    <!-- No ScrollViewer around the page: it would give the page unlimited height, so
+                         the page's own scroll viewer never gets a viewport to scroll inside. Every
+                         other page scrolls itself the same way. -->
+                    <local:UserAppSettingsView DataContext="{Binding ElementName=MainWindow, Path=DataContext.Settings}"/>
             </TabItem>
         </TabControl>
     </Grid>
