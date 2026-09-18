@@ -1,0 +1,72 @@
+ArzFlow
+=======
+
+Run AutoActions.exe. It lives in the tray; closing the window only hides it.
+
+
+Your settings
+-------------
+
+Profiles, applications, hotkeys and presets are stored in
+
+    %AppData%\ArzFlow\UserSettings.json
+
+which no update touches: unzip a new version anywhere, run it, everything is
+still there.
+
+Coming from a version older than 1.9.30, or moving to another PC: close
+ArzFlow, copy UserSettings.json next to AutoActions.exe, start it. The file is
+imported into %AppData%\ArzFlow and renamed UserSettings.imported.json, so it
+happens once. Importing overwrites what is already in %AppData%\ArzFlow.
+
+
+Starting with Windows as administrator
+--------------------------------------
+
+The monitor device action (enable/disable a monitor in Device Manager) needs
+administrator rights for the whole program. ArzFlow's own Auto-Start setting
+goes through the Run key, which never runs elevated, so use a logon task
+instead. Open a Command Prompt as administrator, cd into this folder, then:
+
+    schtasks /create /tn ArzFlow /tr "\"%CD%\AutoActions.exe\"" /sc onlogon /rl highest /f
+
+Type that as its own command once the prompt is already in this folder. %CD%
+is expanded when the line is read, so chaining it after a cd on the same line
+(cd ... && schtasks ...) records the wrong folder. If in doubt, write the path
+out in full instead:
+
+    schtasks /create /tn ArzFlow /tr "\"C:\path\to\AutoActions.exe\"" /sc onlogon /rl highest /f
+
+Turn ArzFlow's own Auto-Start off in Settings afterwards, or two copies try to
+start at logon.
+
+To see the recorded path:   schtasks /query /tn ArzFlow /fo list /v
+To remove it:               schtasks /delete /tn ArzFlow /f
+
+The task stores the folder it was created from, so create it again after
+moving ArzFlow somewhere else.
+
+Nothing else needs administrator rights, and programs started by a run action
+are always launched as you, never elevated, even when ArzFlow is.
+
+
+Something went wrong
+--------------------
+
+AutoActions.log next to this file records what the app did; a crash is
+appended to AutoActions.crash.log. Both are next to the exe, not in %AppData%.
+
+Three checks ship with this build. Run them from this folder; each one waits
+for Enter at the end.
+
+    RunProgramCheck.exe      run-program actions, and that they are not
+                             elevated - run it as administrator, that is the
+                             case that matters
+    MonitorDeviceCheck.exe   the monitor enable/disable action; run it as
+                             administrator to include the live state change
+    GammaProbe.exe           why gamma, vibrance or brightness will not change
+                             on a display
+
+
+ArzFlow is a personal fork of AutoActions by Codectory.
+https://github.com/arz67mangos/arz-AutoActions-edit
