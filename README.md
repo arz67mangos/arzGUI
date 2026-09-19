@@ -189,14 +189,16 @@ Output goes to `Source\Debug_x64\`; run `arzGUI.exe` from there. Notes:
 `[app] Started|Closed|GotFocus|LostFocus: profile '…', N action(s)` and every display change with
 its result code. `arzGUI.crash.log` is written only if the process dies from an unhandled exception.
 
-Three checks ship in the release zip. Run them from the arzGUI folder; each waits for Enter at the
+Five checks ship in the release zip. Run them from the arzGUI folder; each waits for Enter at the
 end.
 
 | | |
 |---|---|
-| `RunProgramCheck.exe` | run-program actions, and that a started program is *not* elevated — run it as administrator, that is the case that matters |
+| `RunProgramCheck.exe` | run-program actions: that a started program is *not* elevated, that ticking *Run as administrator* keeps the rights, and that *only if not already running* skips — run it as administrator, that is the case that matters |
 | `MonitorDeviceCheck.exe` | the monitor enable/disable action; run it as administrator to include the live state change |
 | `GammaProbe.exe` | why gamma, vibrance or brightness will not change on a display |
+| `AudioCheck.exe` | the playback and recording device list, which one is default, and that switching it works |
+| `ObsCheck.exe` | the connection to OBS and the OBS action; needs OBS running and the password entered in Settings, and puts OBS back the way it found it |
 
 ## Contributing and security
 

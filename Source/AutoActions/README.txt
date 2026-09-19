@@ -89,7 +89,7 @@ Something went wrong
 arzGUI.log next to this file records what the app did; a crash is
 appended to arzGUI.crash.log. Both are next to the exe, not in %AppData%.
 
-Four checks ship with this build. Run them from this folder; each one waits
+Five checks ship with this build. Run them from this folder; each one waits
 for Enter at the end.
 
     RunProgramCheck.exe      run-program actions, and that they are not
@@ -101,6 +101,10 @@ for Enter at the end.
                              on a display
     AudioCheck.exe           the playback and recording device list, which one is
                              default, and that switching it works
+    ObsCheck.exe             the connection to OBS and the OBS action. Needs OBS
+                             running and the password entered in Settings. It
+                             switches scene, profile and scene collection and puts
+                             all three back the way it found them
 
 
 arzGUI is a modified version of AutoActions by Codectory.
