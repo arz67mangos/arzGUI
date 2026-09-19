@@ -55,7 +55,32 @@ The task stores the folder it was created from, so create it again after
 moving arzGUI somewhere else.
 
 Nothing else needs administrator rights, and programs started by a run action
-are always launched as you, never elevated, even when arzGUI is.
+are launched as you, never elevated, even when arzGUI is - unless you tick
+"Run as administrator" on that action, which is there for the programs that
+want the rights (OBS Studio, for encoding without dropped frames).
+
+
+OBS Studio
+----------
+
+The OBS Studio action switches the OBS profile, scene collection and scene when
+an application starts, closes or is focused. It needs the WebSocket server that
+ships inside OBS 28 and later:
+
+    OBS: Tools > WebSocket Server Settings > Enable WebSocket server,
+         then Show Connect Info and copy the password
+    arzGUI: Settings > OBS Studio, paste it, press Test connection
+
+Leave the port at 4455 unless you changed it in OBS. The password is stored
+encrypted for your Windows account, so if you carry UserSettings.json to
+another PC, enter it again there.
+
+It does not matter whether OBS or arzGUI runs as administrator; they talk over a
+local socket, which works in both directions.
+
+In the action, a field left empty is left alone. If the same profile also starts
+OBS, put the run action first and leave "Wait for OBS" at 15 seconds so the OBS
+action waits for it to finish loading.
 
 
 Something went wrong

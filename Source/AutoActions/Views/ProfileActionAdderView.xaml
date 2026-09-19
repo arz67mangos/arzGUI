@@ -36,6 +36,9 @@
         <DataTemplate DataType="{x:Type prflActns:MonitorDeviceAction}">
             <local:MonitorDeviceActionView/>
         </DataTemplate>
+        <DataTemplate DataType="{x:Type prflActns:ObsStudioAction}">
+            <local:ObsStudioActionView/>
+        </DataTemplate>
         <DataTemplate x:Key="ActionTypeTemplate" DataType="ActionTypeDescription">
             <TextBlock Style="{StaticResource DefaultTextBlock}"  Text="{Binding TypeDescription }"/>
         </DataTemplate>

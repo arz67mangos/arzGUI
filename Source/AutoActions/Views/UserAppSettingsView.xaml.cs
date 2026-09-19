@@ -21,6 +21,24 @@ namespace AutoActions.Views
         }
 
         /// <summary>
+        /// A PasswordBox cannot be bound, so the OBS password is copied in and out by hand. It is
+        /// masked rather than a text box because this page ends up in screenshots.
+        /// </summary>
+        private void ObsPasswordBox_Loaded(object sender, RoutedEventArgs e)
+        {
+            UserAppSettings settings = DataContext as UserAppSettings;
+            if (settings != null && ObsPasswordBox.Password != settings.ObsPassword)
+                ObsPasswordBox.Password = settings.ObsPassword;
+        }
+
+        private void ObsPasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
+        {
+            UserAppSettings settings = DataContext as UserAppSettings;
+            if (settings != null && settings.ObsPassword != ObsPasswordBox.Password)
+                settings.ObsPassword = ObsPasswordBox.Password;
+        }
+
+        /// <summary>
         /// The wheel scrolls this page from anywhere on it. Taken at the page root rather than on the
         /// scroll viewer: half the page is the shortcut column, the gaps between cards have nothing
         /// in them to receive the wheel, and combo boxes and text boxes swallow it where they are.

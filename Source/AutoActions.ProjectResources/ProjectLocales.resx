@@ -1358,4 +1358,55 @@ Public License instead of this License.  But first, please read
   <data name="Browse" xml:space="preserve">
     <value>Browse</value>
   </data>
+  <data name="ObsStudioAction" xml:space="preserve">
+    <value>OBS Studio</value>
+  </data>
+  <data name="ObsProfile" xml:space="preserve">
+    <value>Profile</value>
+  </data>
+  <data name="ObsSceneCollection" xml:space="preserve">
+    <value>Scene collection</value>
+  </data>
+  <data name="ObsScene" xml:space="preserve">
+    <value>Scene</value>
+  </data>
+  <data name="ObsRefresh" xml:space="preserve">
+    <value>Refresh from OBS</value>
+  </data>
+  <data name="ObsRefreshing" xml:space="preserve">
+    <value>Asking OBS...</value>
+  </data>
+  <data name="ObsWaitSeconds" xml:space="preserve">
+    <value>Wait for OBS (seconds)</value>
+  </data>
+  <data name="ObsActionHint" xml:space="preserve">
+    <value>An empty field is left unchanged. The connection to OBS is set up in Settings.</value>
+  </data>
+  <data name="MessageMissingObsSetting" xml:space="preserve">
+    <value>Enter at least one of: profile, scene collection, scene</value>
+  </data>
+  <data name="ObsWebSocketPort" xml:space="preserve">
+    <value>WebSocket port</value>
+  </data>
+  <data name="ObsWebSocketPassword" xml:space="preserve">
+    <value>WebSocket password</value>
+  </data>
+  <data name="ObsTestConnection" xml:space="preserve">
+    <value>Test connection</value>
+  </data>
+  <data name="ObsTesting" xml:space="preserve">
+    <value>Connecting...</value>
+  </data>
+  <data name="ObsWebSocketHint" xml:space="preserve">
+    <value>Enable the server in OBS under Tools > WebSocket Server Settings, then paste its password here. It is stored encrypted for this Windows account, so it has to be entered again on another PC. Works with OBS running as administrator.</value>
+  </data>
+  <data name="OnlyIfNotRunning" xml:space="preserve">
+    <value>Only if not already running</value>
+  </data>
+  <data name="RunAsAdministrator" xml:space="preserve">
+    <value>Run as administrator</value>
+  </data>
+  <data name="ObsIsOn" xml:space="preserve">
+    <value>OBS is on:</value>
+  </data>
 </root>

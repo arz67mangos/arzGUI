@@ -1,5 +1,6 @@
 ﻿using AutoActions.Displays;
 using AutoActions.Audio;
+using AutoActions.Obs;
 using AutoActions.Profiles;
 using AutoActions.Profiles.Actions;
 using AutoActions.Theming;
@@ -141,6 +142,39 @@ namespace AutoActions
             }
         }
 
+        private int _obsWebSocketPort = 4455;
+        private string _obsWebSocketPassword = string.Empty;
+        private string _obsTestResult = string.Empty;
+
+        /// <summary>Port of the obs-websocket server built into OBS 28+; 4455 is its default.</summary>
+        [JsonProperty]
+        public int ObsWebSocketPort { get => _obsWebSocketPort; set { _obsWebSocketPort = value; OnPropertyChanged(); } }
+
+        /// <summary>
+        /// The obs-websocket password as stored: DPAPI-encrypted for this Windows account. A settings
+        /// file carried to another machine keeps working, minus this one value, which has to be
+        /// re-entered there.
+        /// </summary>
+        [JsonProperty]
+        public string ObsWebSocketPassword
+        {
+            get => _obsWebSocketPassword;
+            set { _obsWebSocketPassword = value ?? string.Empty; OnPropertyChanged(); OnPropertyChanged(nameof(ObsPassword)); }
+        }
+
+        /// <summary>The same password in the clear, for the settings box and the connection itself.</summary>
+        [JsonIgnore]
+        public string ObsPassword
+        {
+            get => ProtectedText.Unprotect(_obsWebSocketPassword);
+            set { ObsWebSocketPassword = ProtectedText.Protect(value); }
+        }
+
+        [JsonIgnore]
+        public string ObsTestResult { get => _obsTestResult; set { _obsTestResult = value; OnPropertyChanged(); } }
+
+        public RelayCommand ObsTestCommand { get; private set; }
+
         // The four members below are the picker-facing view of the two IDs above (same pattern as DefaultProfile / DefaultProfileGuid).
         public IReadOnlyList<MonitoringEndpoint> MicMonitoringEndpoints
         {
@@ -203,6 +237,19 @@ namespace AutoActions
             ApplicationProfiles = new DispatchingObservableCollection<Profile>();
             ActionShortcuts = new DispatchingObservableCollection<ProfileActionShortcut>();
             Displays = new DispatchingObservableCollection<Display>();
+            ObsTestCommand = new RelayCommand(TestObsConnection);
+        }
+
+        /// <summary>Off the UI thread: reaching OBS has a timeout measured in seconds.</summary>
+        private void TestObsConnection()
+        {
+            ObsTestResult = ProjectLocales.ObsTesting;
+            System.Threading.Tasks.Task.Run(() =>
+            {
+                string message;
+                ObsStudio.Test(out message);
+                ObsTestResult = message;
+            });
         }
 
         public static UserAppSettings ReadSettings(string path)

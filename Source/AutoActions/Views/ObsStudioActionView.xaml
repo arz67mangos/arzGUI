@@ -1,0 +1,46 @@
+<UserControl x:Class="AutoActions.Views.ObsStudioActionView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:AutoActions.Views"
+             xmlns:pres="clr-namespace:AutoActions.ProjectResources;assembly=AutoActions.ProjectResources"
+             xmlns:prflActns="clr-namespace:AutoActions.Profiles.Actions"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance Type=prflActns:ObsStudioAction, IsDesignTimeCreatable=False}"
+             Loaded="UserControl_Loaded">
+
+    <Grid VerticalAlignment="Top">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Style="{StaticResource DefaultTextBlock}" Grid.Row="0" Grid.Column="0" Margin="5" Text="{x:Static pres:ProjectLocales.ObsProfile}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+        <ComboBox Grid.Row="0" Grid.Column="1" Margin="5" MinWidth="220" IsEditable="True" ItemsSource="{Binding ObsProfiles}" Text="{Binding ProfileName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        <Button Grid.Row="0" Grid.Column="2" Style="{StaticResource ActionIconButton}" Content="&#xE72C;" ToolTip="{x:Static pres:ProjectLocales.ObsRefresh}" AutomationProperties.Name="{x:Static pres:ProjectLocales.ObsRefresh}" Command="{Binding RefreshCommand}" HorizontalAlignment="Left" Margin="5" VerticalAlignment="Center"/>
+
+        <TextBlock Style="{StaticResource DefaultTextBlock}" Grid.Row="1" Grid.Column="0" Margin="5" Text="{x:Static pres:ProjectLocales.ObsSceneCollection}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+        <ComboBox Grid.Row="1" Grid.Column="1" Margin="5" MinWidth="220" IsEditable="True" ItemsSource="{Binding ObsSceneCollections}" Text="{Binding SceneCollectionName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+        <TextBlock Style="{StaticResource DefaultTextBlock}" Grid.Row="2" Grid.Column="0" Margin="5" Text="{x:Static pres:ProjectLocales.ObsScene}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+        <ComboBox Grid.Row="2" Grid.Column="1" Margin="5" MinWidth="220" IsEditable="True" ItemsSource="{Binding ObsScenes}" Text="{Binding SceneName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+        <TextBlock Style="{StaticResource DefaultTextBlock}" Grid.Row="3" Grid.Column="0" Margin="5" Text="{x:Static pres:ProjectLocales.ObsWaitSeconds}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+        <TextBox Grid.Row="3" Grid.Column="1" Margin="5" Width="70" HorizontalAlignment="Left" Text="{Binding WaitForObsSeconds, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"/>
+
+        <TextBlock Style="{StaticResource DefaultTextBlock}" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" Margin="5,6,5,0" Foreground="{DynamicResource DangerBrush}" TextWrapping="Wrap" Text="{Binding RefreshStatus}"/>
+        <TextBlock Style="{StaticResource DefaultTextBlock}" Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="3" Margin="5,6,5,0" Foreground="{DynamicResource TextSecondaryBrush}" TextWrapping="Wrap" Text="{Binding ObsIsOn}"/>
+        <TextBlock Style="{StaticResource DefaultTextBlock}" Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="3" Margin="5,10,5,5" Foreground="{DynamicResource TextSecondaryBrush}" TextWrapping="Wrap" Text="{x:Static pres:ProjectLocales.ObsActionHint}"/>
+    </Grid>
+</UserControl>

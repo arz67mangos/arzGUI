@@ -1775,6 +1775,142 @@ namespace AutoActions.ProjectResources {
                 return ResourceManager.GetString("Browse", resourceCulture);
             }
         }
+        /// <summary>
+        ///   Looks up a localized string similar to OBS Studio.
+        /// </summary>
+        public static string ObsStudioAction {
+            get {
+                return ResourceManager.GetString("ObsStudioAction", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Profile.
+        /// </summary>
+        public static string ObsProfile {
+            get {
+                return ResourceManager.GetString("ObsProfile", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Scene collection.
+        /// </summary>
+        public static string ObsSceneCollection {
+            get {
+                return ResourceManager.GetString("ObsSceneCollection", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Scene.
+        /// </summary>
+        public static string ObsScene {
+            get {
+                return ResourceManager.GetString("ObsScene", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Refresh from OBS.
+        /// </summary>
+        public static string ObsRefresh {
+            get {
+                return ResourceManager.GetString("ObsRefresh", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Asking OBS....
+        /// </summary>
+        public static string ObsRefreshing {
+            get {
+                return ResourceManager.GetString("ObsRefreshing", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Wait for OBS (seconds).
+        /// </summary>
+        public static string ObsWaitSeconds {
+            get {
+                return ResourceManager.GetString("ObsWaitSeconds", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to An empty field is left unchanged. The connection to OBS is set up in Settings..
+        /// </summary>
+        public static string ObsActionHint {
+            get {
+                return ResourceManager.GetString("ObsActionHint", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Enter at least one of: profile, scene collection, scene.
+        /// </summary>
+        public static string MessageMissingObsSetting {
+            get {
+                return ResourceManager.GetString("MessageMissingObsSetting", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to WebSocket port.
+        /// </summary>
+        public static string ObsWebSocketPort {
+            get {
+                return ResourceManager.GetString("ObsWebSocketPort", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to WebSocket password.
+        /// </summary>
+        public static string ObsWebSocketPassword {
+            get {
+                return ResourceManager.GetString("ObsWebSocketPassword", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Test connection.
+        /// </summary>
+        public static string ObsTestConnection {
+            get {
+                return ResourceManager.GetString("ObsTestConnection", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Connecting....
+        /// </summary>
+        public static string ObsTesting {
+            get {
+                return ResourceManager.GetString("ObsTesting", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Enable the server in OBS under Tools > WebSocket Server Settings, then paste its password here. It is stored encrypted for this Windows account, so it has to be entered again on another PC. Works with OBS running as administrator..
+        /// </summary>
+        public static string ObsWebSocketHint {
+            get {
+                return ResourceManager.GetString("ObsWebSocketHint", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Only if not already running.
+        /// </summary>
+        public static string OnlyIfNotRunning {
+            get {
+                return ResourceManager.GetString("OnlyIfNotRunning", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Run as administrator.
+        /// </summary>
+        public static string RunAsAdministrator {
+            get {
+                return ResourceManager.GetString("RunAsAdministrator", resourceCulture);
+            }
+        }
         
+        /// <summary>
+        ///   Looks up a localized string similar to OBS is on:.
+        /// </summary>
+        public static string ObsIsOn {
+            get {
+                return ResourceManager.GetString("ObsIsOn", resourceCulture);
+            }
+        }
     }
 }

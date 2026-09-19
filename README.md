@@ -28,6 +28,9 @@ Upstream: <https://github.com/Codectory/AutoActions>
   desktop monitor and speakers afterwards.
 - **Voice-chat setup:** switch playback or recording devices and enable microphone monitoring only
   for games or apps that need it.
+- **Streaming and recording:** start OBS Studio if it is not already running, then put it on the
+  profile, scene collection and scene you built for that game — and back to the desktop scene when
+  the game closes.
 - **Launch a complete setup:** start companion programs, apply a saved preset, or run any action from
   a global hotkey instead of opening the full app.
 
@@ -68,10 +71,23 @@ AutoActions and by ArzFlow (the fork's previous name) load unchanged.
   *Microphone* line of a playback device. arzGUI controls exactly those: a card on the Status page
   and a tray entry for manual use, a *Microphone monitoring* profile action for per-game use, device
   and line pickers in Settings. The state a profile changes on start is put back on close.
-- **Programs started by an action are never elevated.** A child process inherits its parent's token,
-  so a run-program action fired from an elevated arzGUI would start the program as administrator,
-  which breaks programs that refuse to run that way (OpenTabletDriver). The action starts them as
-  the logged-on user instead, and falls back to a normal start with a line in the log if it cannot.
+- **OBS Studio profiles and scenes.** An *OBS Studio* action switches the OBS profile, scene
+  collection and program scene, so a game can bring up its own encoder settings and its own scene
+  without touching OBS. It talks to the obs-websocket server built into OBS 28 and later — nothing to
+  install, and it works whether or not OBS runs as administrator, which synthetic hotkeys do not. A
+  field left empty is left alone, anything already set is not switched again, and the action waits
+  for OBS to finish starting (and for a scene collection to finish reloading) rather than failing.
+  See [Connecting OBS Studio](#connecting-obs-studio).
+- **Programs started by an action are never elevated — unless you say so.** A child process inherits
+  its parent's token, so a run-program action fired from an elevated arzGUI would start the program
+  as administrator, which breaks programs that refuse to run that way (OpenTabletDriver). The action
+  starts them as the logged-on user instead, and falls back to a normal start with a line in the log
+  if it cannot. *Run as administrator* on the action opts back in, for the programs that want the
+  rights — OBS Studio encoding without dropped frames being the usual reason.
+- **Actions that are already done do nothing.** *Only if not already running* — on by default — makes
+  a run-program action skip a program that is already up, instead of a second copy or an error dialog
+  every time you launch a game. Closing a program that is not running is likewise a no-op, not a
+  failed action.
 
 ### Using it
 
@@ -116,6 +132,23 @@ schtasks /create /tn arzGUI /tr "\"%CD%\arzGUI.exe\"" /sc onlogon /rl highest /f
 Type it as its own command: `%CD%` is expanded when the line is read, so chaining it after a `cd` on
 the same line records the wrong folder. Turn arzGUI's own Auto-Start off afterwards, or two copies
 start at logon.
+
+## Connecting OBS Studio
+
+The OBS Studio action needs the obs-websocket server, which ships inside OBS 28 and later and is off
+until you turn it on. In OBS: **Tools → WebSocket Server Settings → Enable WebSocket server**, then
+**Show Connect Info** and copy the password. In arzGUI: **Settings → OBS Studio**, paste it, leave the
+port at 4455 unless you changed it, and press **Test connection** — it answers with the OBS version
+and the scene OBS is on.
+
+The password is stored encrypted for your Windows account, so a `UserSettings.json` carried to
+another PC keeps everything except this one value, which is entered again there.
+
+Nothing about this cares which side runs as administrator. It is a loopback socket, so an ordinary
+arzGUI drives an OBS started as administrator and the other way round — unlike sending OBS a hotkey,
+which Windows blocks across that boundary. If a profile also *starts* OBS, put the run-program action
+before the OBS action, tick **Run as administrator** on it if that is how you run OBS, and leave the
+OBS action's wait at its default so it waits for OBS to come up.
 
 ## Building
 

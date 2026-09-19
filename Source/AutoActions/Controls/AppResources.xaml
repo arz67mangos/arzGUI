@@ -361,6 +361,45 @@
     </Setter>
   </Style>
   <Style TargetType="TextBox" BasedOn="{StaticResource DefaultTextBox}" />
+  <!-- A PasswordBox is not a TextBoxBase, so it cannot reuse the template above; this is the same
+         box, so a masked field does not look foreign next to the others. -->
+  <Style x:Key="DefaultPasswordBox" TargetType="PasswordBox">
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
+    <Setter Property="Background" Value="{DynamicResource ControlBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource StrokeStrongBrush}" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="CaretBrush" Value="{DynamicResource TextPrimaryBrush}" />
+    <Setter Property="SelectionBrush" Value="{DynamicResource AccentBrush}" />
+    <Setter Property="FontSize" Value="{StaticResource DefaultFontSize}" />
+    <Setter Property="Padding" Value="8,6" />
+    <Setter Property="MinHeight" Value="32" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+    <Setter Property="SnapsToDevicePixels" Value="True" />
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="PasswordBox">
+          <Border x:Name="Bd" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="{StaticResource DefaultCornerRadius}">
+            <ScrollViewer x:Name="PART_ContentHost" Margin="{TemplateBinding Padding}" Focusable="False" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+          </Border>
+          <ControlTemplate.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+              <Setter TargetName="Bd" Property="BorderBrush" Value="{DynamicResource TextSecondaryBrush}" />
+            </Trigger>
+            <Trigger Property="IsKeyboardFocusWithin" Value="True">
+              <Setter TargetName="Bd" Property="BorderBrush" Value="{DynamicResource AccentBrush}" />
+              <Setter TargetName="Bd" Property="BorderThickness" Value="1.5" />
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+              <Setter TargetName="Bd" Property="Background" Value="{DynamicResource ControlDisabledBrush}" />
+              <Setter TargetName="Bd" Property="BorderBrush" Value="{DynamicResource StrokeBrush}" />
+              <Setter Property="Foreground" Value="{DynamicResource TextDisabledBrush}" />
+            </Trigger>
+          </ControlTemplate.Triggers>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+  <Style TargetType="PasswordBox" BasedOn="{StaticResource DefaultPasswordBox}" />
   <!-- Primary (filled accent) button -->
   <Style x:Key="DefaultButton" TargetType="Button">
     <Setter Property="Background" Value="{DynamicResource AccentBrush}" />
