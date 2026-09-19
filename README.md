@@ -48,6 +48,26 @@ Download the latest `arzGUI-<version>-x64.zip` from
 `arzGUI.exe`. It lives in the tray; closing the window only hides it. `README.txt` in the zip covers
 the same ground as this section.
 
+### Windows will warn you the first time
+
+arzGUI is not code-signed — a certificate that Windows trusts costs a few hundred a year — so
+Microsoft Defender SmartScreen shows **"Windows protected your PC — Microsoft Defender SmartScreen
+prevented an unrecognised app from starting"** the first time you run it. That message means *this
+program is not signed and Windows has not seen it before*. It is not a detection of anything.
+
+To run it: click **More info**, then **Run anyway**. Once per version.
+
+To avoid the message entirely, clear the download flag on the zip *before* unzipping:
+right-click `arzGUI-<version>-x64.zip` → **Properties** → tick **Unblock** → OK → then extract. The
+flag is what triggers the check, and it is copied to every file that comes out of the archive.
+
+If you want to be sure the download is the one published here, compare its SHA-256 with the value in
+the release notes:
+
+```powershell
+Get-FileHash .\arzGUI-1.12.0-x64.zip -Algorithm SHA256
+```
+
 Settings live in `%AppData%\arzGUI\UserSettings.json`, **not** next to the exe, so updating is:
 exit arzGUI, unzip the new version, run it. Profiles, applications, hotkeys and presets are all
 still there. A `UserSettings.json` dropped next to `arzGUI.exe` is imported once and renamed — that

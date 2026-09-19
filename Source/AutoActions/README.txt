@@ -3,6 +3,17 @@ arzGUI
 
 Run arzGUI.exe. It lives in the tray; closing the window only hides it.
 
+The first time, Windows may say "Windows protected your PC - Microsoft
+Defender SmartScreen prevented an unrecognised app from starting". That is
+because arzGUI is not code-signed, not because anything was detected: click
+More info, then Run anyway.
+
+To skip that message, clear the download flag on the zip before unzipping:
+right-click the .zip, Properties, tick Unblock, OK, then extract. The flag is
+what Windows checks, and it is copied to every file taken out of the archive.
+The release notes list the zip's SHA-256 if you want to verify the download:
+Get-FileHash .\arzGUI-<version>-x64.zip -Algorithm SHA256
+
 arzGUI is a modified version of Codectory/AutoActions. It was built to automate
 the different display, colour, audio, and companion-app settings used by its
 maintainer and friends for different games. See NOTICE.md, LICENSE, and
