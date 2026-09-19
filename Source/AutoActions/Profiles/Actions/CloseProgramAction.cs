@@ -58,6 +58,7 @@ namespace AutoActions.Profiles.Actions
                 {
                     if (process.ProcessName == searchName)
                     {
+                        processFound = true;
                         try
                         {
                             CallNewLog(new LogEntry($"Closing {ProcessName}..."));
@@ -94,7 +95,11 @@ namespace AutoActions.Profiles.Actions
                     }
                 }
                 if (!processFound)
-                    CallNewLog(new LogEntry($"Process {ProcessName} not found."));
+                {
+                    // Nothing to close is the action having nothing to do, not the action failing.
+                    CallNewLog(new LogEntry($"Process {ProcessName} is not running, nothing to close."));
+                    return new ActionEndResult(true);
+                }
 
                 return new ActionEndResult(result);
             }

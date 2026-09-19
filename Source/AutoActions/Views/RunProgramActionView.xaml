@@ -22,6 +22,8 @@
             <RowDefinition Height="Auto"/>
 
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <TextBlock Style="{StaticResource DefaultTextBlock}" Grid.Row="0" Grid.Column="0" Text="{x:Static pres:ProjectLocales.FilePath}" HorizontalAlignment="Left" VerticalAlignment="Top"/>
@@ -35,5 +37,11 @@
 
 
         <CheckBox Grid.Row="2"  Grid.Column="1" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" IsChecked="{Binding WaitForEnd, Mode=TwoWay}" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5,0,0,0"  />
+
+        <TextBlock Style="{StaticResource DefaultTextBlock}" Grid.Row="3" Grid.Column="0" Text="{x:Static pres:ProjectLocales.OnlyIfNotRunning}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+        <CheckBox Grid.Row="3" Grid.Column="1" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" IsChecked="{Binding OnlyIfNotRunning, Mode=TwoWay}" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5,0,0,0"/>
+
+        <TextBlock Style="{StaticResource DefaultTextBlock}" Grid.Row="4" Grid.Column="0" Text="{x:Static pres:ProjectLocales.RunAsAdministrator}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+        <CheckBox Grid.Row="4" Grid.Column="1" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" IsChecked="{Binding RunAsAdministrator, Mode=TwoWay}" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5,0,0,0"/>
     </Grid>
 </UserControl>

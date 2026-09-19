@@ -3,6 +3,7 @@ using AutoActions.Displays;
 using AutoActions.Profiles;
 using AutoActions.Profiles.Actions;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 
@@ -35,7 +36,6 @@ static class RunProgramCheck
         string system = Environment.GetFolderPath(Environment.SpecialFolder.System);
         string report = Path.Combine(Path.GetTempPath(), "arzgui-runprogram-check.txt");
         if (File.Exists(report))
-            if (failures == 0)
             File.Delete(report);
 
         Console.WriteLine("  arzGUI is elevated: " + MonitorDeviceControl.IsElevated);
@@ -45,7 +45,9 @@ static class RunProgramCheck
             FilePath = Path.Combine(system, "cmd.exe"),
             // The full path: a bash shell on PATH brings its own whoami, and cmd mangles a leading quote.
             Arguments = "/c " + Path.Combine(system, "whoami.exe") + " /groups > \"" + report + "\" 2>&1",
-            WaitForEnd = true
+            WaitForEnd = true,
+            // The point of this one is the token, so do not let a stray cmd.exe skip it.
+            OnlyIfNotRunning = false
         };
         action.NewLog += (o, e) => Console.WriteLine("  [log] " + e);
 
@@ -69,6 +71,54 @@ static class RunProgramCheck
         Console.WriteLine("== a missing file ==");
         Check(!new RunProgramAction { FilePath = @"C:\nosuch\nosuch.exe" }.RunAction(ApplicationChangedType.Started).Success,
             "a file that does not exist fails instead of throwing");
+
+        Console.WriteLine("== only if not already running ==");
+        Check(new RunProgramAction().OnlyIfNotRunning, "a new action skips programs that are already running by default");
+        // explorer.exe is always running, so the action must do nothing at all - if the check is wrong,
+        // a second Explorer window opens and the count below goes up.
+        string explorer = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows), "explorer.exe");
+        int before = Process.GetProcessesByName("explorer").Length;
+        RunProgramAction skipped = new RunProgramAction { FilePath = explorer, OnlyIfNotRunning = true };
+        skipped.NewLog += (o, e) => Console.WriteLine("  [log] " + e);
+        Check(skipped.RunAction(ApplicationChangedType.Started).Success, "the skipped action still counts as success");
+        System.Threading.Thread.Sleep(500);
+        Check(Process.GetProcessesByName("explorer").Length == before,
+            "no second copy was started (" + before + " before, " + Process.GetProcessesByName("explorer").Length + " after)");
+        // The same check has to see a process running above us, or it would start a second OBS every
+        // time OBS is the one running as administrator.
+        Check(Process.GetProcessesByName("lsass").Length > 0,
+            "a process at a higher integrity level is visible by name" + (MonitorDeviceControl.IsElevated ? "" : " (from a normal process)"));
+
+        Console.WriteLine("== run as administrator ==");
+        Check(!new RunProgramAction().RunAsAdministrator, "a new action does not ask for administrator rights");
+        if (MonitorDeviceControl.IsElevated)
+        {
+            string adminReport = Path.Combine(Path.GetTempPath(), "arzgui-runprogram-admin-check.txt");
+            if (File.Exists(adminReport))
+                File.Delete(adminReport);
+            RunProgramAction asAdmin = new RunProgramAction
+            {
+                FilePath = Path.Combine(system, "cmd.exe"),
+                Arguments = "/c " + Path.Combine(system, "whoami.exe") + " /groups > \"" + adminReport + "\" 2>&1",
+                WaitForEnd = true,
+                RunAsAdministrator = true,
+                OnlyIfNotRunning = false
+            };
+            asAdmin.NewLog += (o, e) => Console.WriteLine("  [log] " + e);
+            Check(asAdmin.RunAction(ApplicationChangedType.Started).Success, "the action reports success");
+            string adminLine = File.Exists(adminReport)
+                ? File.ReadAllLines(adminReport).FirstOrDefault(l => l.Contains("Mandatory Level"))
+                : null;
+            Console.WriteLine("  " + (adminLine == null ? "no integrity level in the output" : adminLine.Trim()));
+            Check(adminLine != null && adminLine.Contains("High Mandatory Level"),
+                "with the box ticked, the program DOES keep administrator rights");
+            if (File.Exists(adminReport))
+                File.Delete(adminReport);
+        }
+        else
+        {
+            Console.WriteLine("  (not elevated: ticking the box here would raise a UAC prompt, so this case needs an elevated run)");
+        }
 
         if (failures == 0)
             File.Delete(report);

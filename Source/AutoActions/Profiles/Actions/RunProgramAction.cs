@@ -39,9 +39,31 @@ namespace AutoActions.Profiles.Actions
         [JsonProperty]
         public bool WaitForEnd { get => _waitForEnd; set { _waitForEnd = value; OnPropertyChanged(); } }
 
+        private bool _onlyIfNotRunning = true;
+
+        /// <summary>
+        /// Skip the action when the program is already running - starting a second OBS, launcher or
+        /// tray helper is either an error dialog or a duplicate. On by default, including for settings
+        /// files written before this existed, because a second copy is almost never what was meant.
+        /// </summary>
+        [JsonProperty]
+        public bool OnlyIfNotRunning { get => _onlyIfNotRunning; set { _onlyIfNotRunning = value; OnPropertyChanged(); } }
+
+        private bool _runAsAdministrator = false;
+
+        /// <summary>
+        /// Keep arzGUI's administrator rights instead of handing the program back to the logged-on
+        /// user. For the programs that want them (OBS Studio, for frame-drop-free encoding); when
+        /// arzGUI is not elevated this asks for elevation, which means a UAC prompt.
+        /// </summary>
+        [JsonProperty]
+        public bool RunAsAdministrator { get => _runAsAdministrator; set { _runAsAdministrator = value; OnPropertyChanged(); } }
 
 
         public override string ActionDescription => $"{Path.GetFileName(FilePath)} {Arguments}";
+
+        /// <summary>The name <see cref="OnlyIfNotRunning"/> looks for: the file name without its extension.</summary>
+        private string ProcessName => Path.GetFileNameWithoutExtension(FilePath);
 
         public RelayCommand GetFileCommand { get; private set; }
 
@@ -61,12 +83,17 @@ namespace AutoActions.Profiles.Actions
                     CallNewLog(new CodectoryCore.Logging.LogEntry($"File {FilePath} doesn't exist.", CodectoryCore.Logging.LogEntryType.Error));
                     return new ActionEndResult(false);
                 }
+                if (OnlyIfNotRunning && IsRunning())
+                {
+                    CallNewLog(new CodectoryCore.Logging.LogEntry($"{ProcessName} is already running, not starting it again."));
+                    return new ActionEndResult(true);
+                }
                 CallNewLog(new CodectoryCore.Logging.LogEntry($"Starting {FilePath}"));
 
                 // A child inherits our token, so an elevated arzGUI would start the program as
                 // administrator - which breaks programs that refuse to run that way.
                 int processId = 0;
-                if (MonitorDeviceControl.IsElevated)
+                if (!RunAsAdministrator && MonitorDeviceControl.IsElevated)
                 {
                     string error;
                     processId = Windows.UnelevatedProcess.Start(FilePath, Arguments, out error);
@@ -83,6 +110,17 @@ namespace AutoActions.Profiles.Actions
                         proc.StartInfo = new ProcessStartInfo(FilePath);
                         if (!string.IsNullOrEmpty(Arguments))
                             proc.StartInfo.Arguments = Arguments;
+                        // Otherwise the program inherits arzGUI's directory; OBS for one refuses to
+                        // start from anywhere but its own.
+                        string folder = Path.GetDirectoryName(FilePath);
+                        if (!string.IsNullOrEmpty(folder))
+                            proc.StartInfo.WorkingDirectory = folder;
+                        if (RunAsAdministrator)
+                        {
+                            // Silent when arzGUI is already elevated, a UAC prompt when it is not.
+                            proc.StartInfo.UseShellExecute = true;
+                            proc.StartInfo.Verb = "runas";
+                        }
 
                         proc.Start();
                         if (WaitForEnd)
@@ -106,11 +144,24 @@ namespace AutoActions.Profiles.Actions
                 }
                 return new ActionEndResult(true);
             }
+            catch (System.ComponentModel.Win32Exception ex) when (ex.NativeErrorCode == 1223)
+            {
+                CallNewLog(new CodectoryCore.Logging.LogEntry($"Starting {FilePath} as administrator was refused at the UAC prompt.", CodectoryCore.Logging.LogEntryType.Error));
+                return new ActionEndResult(false, ex.Message, ex);
+            }
             catch (Exception ex)
             {
                 CallNewLog(new CodectoryCore.Logging.LogEntry($"{ ex.Message }\r\n{ ex.StackTrace}", CodectoryCore.Logging.LogEntryType.Error));
                 return new ActionEndResult(false, ex.Message, ex);
             }
+        }
+
+        private bool IsRunning()
+        {
+            string name = ProcessName;
+            // By name only: the full path of an elevated process cannot be read from a normal one,
+            // and OBS is exactly that case.
+            return !string.IsNullOrEmpty(name) && Process.GetProcessesByName(name).Length > 0;
         }
 
         public void GetFile()
