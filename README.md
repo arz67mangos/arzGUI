@@ -209,8 +209,11 @@ Output goes to `Source\Debug_x64\`; run `arzGUI.exe` from there. Notes:
 `[app] Started|Closed|GotFocus|LostFocus: profile '…', N action(s)` and every display change with
 its result code. `arzGUI.crash.log` is written only if the process dies from an unhandled exception.
 
-Five checks ship in the release zip. Run them from the arzGUI folder; each waits for Enter at the
-end.
+Five diagnostic tools live under `Source/Tools/`, each with the `csc` command that builds it in a
+comment at the top of its `.cs` file. They are **not** in the release zip: they are small unsigned
+console programs that start processes and read device state, and Defender's machine-learning scanner
+flags that shape as `Trojan:Win32/Wacatac.B!ml` — wrongly, but it quarantines the whole archive when
+it does. The app itself is not flagged. Build one when you need it.
 
 | | |
 |---|---|

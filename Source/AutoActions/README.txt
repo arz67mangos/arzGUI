@@ -100,22 +100,16 @@ Something went wrong
 arzGUI.log next to this file records what the app did; a crash is
 appended to arzGUI.crash.log. Both are next to the exe, not in %AppData%.
 
-Five checks ship with this build. Run them from this folder; each one waits
-for Enter at the end.
+Five diagnostic tools live in the source tree under Source/Tools - one each for
+run-program actions, the monitor enable/disable action, display colour, audio
+devices and the OBS connection. Each one has the command to build it in a
+comment at the top of its .cs file.
 
-    RunProgramCheck.exe      run-program actions, and that they are not
-                             elevated - run it as administrator, that is the
-                             case that matters
-    MonitorDeviceCheck.exe   the monitor enable/disable action; run it as
-                             administrator to include the live state change
-    GammaProbe.exe           why gamma, vibrance or brightness will not change
-                             on a display
-    AudioCheck.exe           the playback and recording device list, which one is
-                             default, and that switching it works
-    ObsCheck.exe             the connection to OBS and the OBS action. Needs OBS
-                             running and the password entered in Settings. It
-                             switches scene, profile and scene collection and puts
-                             all three back the way it found them
+They used to ship in this zip and no longer do: they are small unsigned console
+programs that start processes and read device state, which Defender's
+machine-learning scanner flags as a threat - wrongly, but it quarantines the
+whole download when it does. The app itself was never flagged. Building them
+yourself when you actually need one avoids the problem entirely.
 
 
 arzGUI is a modified version of AutoActions by Codectory.
