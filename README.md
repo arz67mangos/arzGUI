@@ -126,6 +126,11 @@ AutoActions and by ArzFlow (the fork's previous name) load unchanged.
   buffer off for a week.
 - **Duplicate an action, or a whole profile.** Six games usually want six nearly identical profiles;
   the copy shares nothing with the original, so editing one leaves the other alone.
+- **Start with Windows as administrator, from Settings.** One tick box registers the logon task, and
+  it points at the copy you ticked it in. Writing that task by hand is a trap: the documented command
+  uses `%CD%`, an administrator Command Prompt opens in `System32`, and the task ends up starting
+  `C:\Windows\System32\arzGUI.exe` and failing at every logon. arzGUI also turns off its own
+  Auto-Start when you tick it, since the Run key copy is never elevated and wins the race.
 - **Activity on the Status page.** The last forty log lines with their times, errors in red, so "did
   that work?" is answered in the window rather than in `arzGUI.log` in a text editor.
 - **A redesigned UI with light and dark themes.** Design tokens, a left sidebar, card-based Status
@@ -226,7 +231,7 @@ Output goes to `Source\Debug_x64\`; run `arzGUI.exe` from there. Notes:
 `[app] Started|Closed|GotFocus|LostFocus: profile '…', N action(s)` and every display change with
 its result code. `arzGUI.crash.log` is written only if the process dies from an unhandled exception.
 
-Five diagnostic tools live under `Source/Tools/`, each with the `csc` command that builds it in a
+Six diagnostic tools live under `Source/Tools/`, each with the `csc` command that builds it in a
 comment at the top of its `.cs` file. They are **not** in the release zip: they are small unsigned
 console programs that start processes and read device state, and Defender's machine-learning scanner
 flags that shape as `Trojan:Win32/Wacatac.B!ml` — wrongly, but it quarantines the whole archive when
@@ -239,6 +244,7 @@ it does. The app itself is not flagged. Build one when you need it.
 | `GammaProbe.exe` | why gamma, vibrance or brightness will not change on a display |
 | `AudioCheck.exe` | the playback and recording device list, which one is default, and that switching it works |
 | `ObsCheck.exe` | the connection to OBS and the OBS action; needs OBS running and the password entered in Settings, and puts OBS back the way it found it |
+| `LogonTaskCheck.exe` | the logon task behind *Start with Windows as administrator*: what it would register, and — run elevated — that Windows keeps the settings it was given |
 
 ## Contributing and security
 

@@ -4,6 +4,7 @@ using AutoActions.Obs;
 using AutoActions.Profiles;
 using AutoActions.Profiles.Actions;
 using AutoActions.Theming;
+using AutoActions.Windows;
 using CodectoryCore;
 using CodectoryCore.UI.Wpf;
 using Newtonsoft.Json;
@@ -172,6 +173,66 @@ namespace AutoActions
 
         [JsonIgnore]
         public string ObsTestResult { get => _obsTestResult; set { _obsTestResult = value; OnPropertyChanged(); } }
+
+        private bool _startWithWindowsElevated = false;
+        private string _logonTaskStatus = string.Empty;
+        private bool _logonTaskBusy = false;
+
+        /// <summary>
+        /// Whether the logon task that starts this copy as administrator is registered. Not a stored
+        /// setting: the truth lives in Task Scheduler, this is the last answer it gave. Writing it
+        /// asks for administrator rights, so it happens off the UI thread and the property corrects
+        /// itself afterwards - a declined prompt puts the box back.
+        /// </summary>
+        [JsonIgnore]
+        public bool StartWithWindowsElevated
+        {
+            get => _startWithWindowsElevated;
+            set
+            {
+                if (value == _startWithWindowsElevated || _logonTaskBusy)
+                    return;
+                _logonTaskBusy = true;
+                LogonTaskStatus = value ? "Asking Windows to register the logon task..." : "Removing the logon task...";
+                System.Threading.Tasks.Task.Run(() =>
+                {
+                    string error;
+                    bool ok = value ? LogonTask.Create(out error) : LogonTask.Delete(out error);
+                    // Two copies at logon otherwise: the Run key one is not elevated and wins the mutex.
+                    if (ok && value)
+                        AutoStart = false;
+                    _logonTaskBusy = false;
+                    RefreshLogonTask(ok ? null : error);
+                });
+            }
+        }
+
+        [JsonIgnore]
+        public string LogonTaskStatus { get => _logonTaskStatus; set { _logonTaskStatus = value; OnPropertyChanged(); } }
+
+        /// <summary>
+        /// Re-reads Task Scheduler. Says so when a task exists but starts something else - an older
+        /// copy in another folder, or the path a hand-written command recorded by mistake - because
+        /// that looks like autostart being on while nothing starts.
+        /// </summary>
+        public void RefreshLogonTask(string error = null)
+        {
+            System.Threading.Tasks.Task.Run(() =>
+            {
+                string registered = LogonTask.RegisteredProgram();
+                bool mine = !string.IsNullOrEmpty(registered) && LogonTask.StartsThisCopy();
+                _startWithWindowsElevated = mine;
+                OnPropertyChanged(nameof(StartWithWindowsElevated));
+                if (!string.IsNullOrEmpty(error))
+                    LogonTaskStatus = "That did not work: " + error + ".";
+                else if (mine)
+                    LogonTaskStatus = "arzGUI starts as administrator when you log on.";
+                else if (!string.IsNullOrEmpty(registered))
+                    LogonTaskStatus = "A logon task exists, but it starts " + registered + ". Turn this on to point it at this copy.";
+                else
+                    LogonTaskStatus = "Off. Auto-Start above never runs as administrator, which the monitor device action needs.";
+            });
+        }
 
         private string _obsInstallStatus = string.Empty;
 

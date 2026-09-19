@@ -33,6 +33,7 @@ namespace AutoActions.Views
                 ObsPasswordBox.Password = settings.ObsPassword;
             // Where OBS is and whether it is running: read when the card appears, not at startup.
             settings.RefreshObsInstall();
+            settings.RefreshLogonTask();
         }
 
         private void ObsPasswordBox_PasswordChanged(object sender, RoutedEventArgs e)

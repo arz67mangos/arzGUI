@@ -280,6 +280,7 @@
     </Compile>
     <Compile Include="WinAPIFunctions.cs" />
     <Compile Include="Windows\UI.cs" />
+    <Compile Include="Windows\LogonTask.cs" />
     <Compile Include="Windows\UnelevatedProcess.cs" />
     <Compile Include="Obs\ObsInstall.cs" />
     <Compile Include="Obs\ObsStudio.cs" />

@@ -44,8 +44,17 @@ Starting with Windows as administrator
 
 The monitor device action (enable/disable a monitor in Device Manager) needs
 administrator rights for the whole program. arzGUI's own Auto-Start setting
-goes through the Run key, which never runs elevated, so use a logon task
-instead. Open a Command Prompt as administrator, cd into this folder, then:
+goes through the Run key, which never runs elevated, so a logon task is needed
+instead.
+
+Settings > "Start with Windows as administrator" registers one, pointing at
+this copy of arzGUI. It asks for administrator rights once, when you tick it,
+and turns Auto-Start off so two copies do not race at logon. Untick it to
+remove the task. Moved arzGUI to another folder, or unzipped a new version?
+Tick it again there; the line under the box says which copy the task starts.
+
+The rest of this section is the same thing by hand, for anyone who would
+rather. Open a Command Prompt as administrator, cd into this folder, then:
 
     schtasks /create /tn arzGUI /tr "\"%CD%\arzGUI.exe\"" /sc onlogon /rl highest /f
 
@@ -125,9 +134,9 @@ Something went wrong
 arzGUI.log next to this file records what the app did; a crash is
 appended to arzGUI.crash.log. Both are next to the exe, not in %AppData%.
 
-Five diagnostic tools live in the source tree under Source/Tools - one each for
+Six diagnostic tools live in the source tree under Source/Tools - one each for
 run-program actions, the monitor enable/disable action, display colour, audio
-devices and the OBS connection. Each one has the command to build it in a
+devices, the OBS connection and the logon task. Each one has the command to build it in a
 comment at the top of its .cs file.
 
 They used to ship in this zip and no longer do: they are small unsigned console
