@@ -1,4 +1,4 @@
-using AutoActions;
+﻿using AutoActions;
 using AutoActions.Obs;
 using AutoActions.Profiles.Actions;
 using System;
@@ -17,7 +17,7 @@ using System.Threading;
 //
 //   $csc = "<VS>\MSBuild\Current\Bin\Roslyn\csc.exe"; $out = ".\Source\Debug_x64"
 //   & $csc /platform:x64 /langversion:7.3 /out:"$out\ObsCheck.exe" -r:"$out\arzGUI.exe" `
-//       -r:System.dll -r:System.Core.dll .\Source\Tools\ObsCheck\ObsCheck.cs
+//       -r:"$out\ArzGUI.Foundation.dll" -r:System.dll -r:System.Core.dll .\Source\Tools\ObsCheck\ObsCheck.cs
 //   Push-Location $out; .\ObsCheck.exe; Pop-Location
 static class ObsCheck
 {
@@ -37,6 +37,20 @@ static class ObsCheck
         UserAppSettings settings = Globals.Instance.Settings;
         Console.WriteLine("port " + settings.ObsWebSocketPort + ", password "
             + (string.IsNullOrEmpty(settings.ObsPassword) ? "not set" : "set"));
+
+        Console.WriteLine("== finding the OBS installation, so an action can offer it ==");
+        string obsPath = ObsInstall.FindExecutable();
+        Check(!string.IsNullOrEmpty(obsPath) && System.IO.File.Exists(obsPath), "obs64.exe found: " + obsPath);
+        bool obsElevated;
+        bool obsRunning = ObsInstall.IsRunning(out obsElevated);
+        Check(obsRunning, "and OBS is running" + (obsRunning && obsElevated ? ", as administrator" : string.Empty));
+        Check(!string.IsNullOrEmpty(ObsInstall.Describe()), "the settings card has a line to show: " + ObsInstall.Describe());
+        RunProgramAction runObs = new RunProgramAction();
+        Check(runObs.ObsIsInstalled, "the run action offers to fill OBS in");
+        runObs.UseObsCommand.Execute(null);
+        Check(runObs.FilePath == obsPath, "and filling it in sets the path");
+        Check(runObs.OnlyIfNotRunning, "with 'only if not running' ticked, since OBS is already up");
+        Check(runObs.CanSave, "which is an action that can be saved");
 
         Console.WriteLine("== the password is stored encrypted ==");
         string storedBefore = settings.ObsWebSocketPassword;

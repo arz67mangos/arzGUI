@@ -1,4 +1,4 @@
-// A new action type has to survive the settings file: Newtonsoft resolves it by assembly-qualified
+﻿// A new action type has to survive the settings file: Newtonsoft resolves it by assembly-qualified
 // name, and the assembly is called arzGUI while the namespace still says AutoActions. It also checks
 // that a settings file written before a property existed still loads, and lands on the intended
 // default. Writes to a temp file only - it never touches %AppData%\arzGUI.
@@ -123,12 +123,56 @@ static class SettingsRoundTrip
         }
         File.Delete(orderPath);
 
+        Console.WriteLine("== duplicating an action and a whole profile ==");
+        ObsStudioAction original = (ObsStudioAction)ordering.ApplicationStarted.First(a => a is ObsStudioAction && ((ObsStudioAction)a).SceneName == "one");
+        int before = ordering.ApplicationStarted.Count;
+        ordering.DuplicateProfileAction(original);
+        Check(ordering.ApplicationStarted.Count == before + 1, "the lane grew by one");
+        ObsStudioAction copy = ordering.ApplicationStarted[ordering.ApplicationStarted.IndexOf(original) + 1] as ObsStudioAction;
+        Check(copy != null, "the copy sits directly under the original");
+        if (copy != null)
+        {
+            Check(!ReferenceEquals(copy, original), "and is not the same object");
+            Check(copy.SceneName == "one", "with the same settings");
+            copy.SceneName = "changed";
+            Check(original.SceneName == "one", "editing the copy leaves the original alone");
+        }
+        ordering.RemoveProfileAction(copy);
+
+        Profile duplicated = DeepCopy.Of(ordering);
+        duplicated.GUID = Guid.NewGuid();
+        Check(duplicated.GUID != ordering.GUID, "a duplicated profile gets its own GUID");
+        Check(duplicated.ApplicationStarted.Count == ordering.ApplicationStarted.Count
+            && duplicated.ApplicationClosed.Count == ordering.ApplicationClosed.Count, "with every lane copied");
+        Check(!duplicated.ApplicationStarted.Any(a => ordering.ApplicationStarted.Contains(a)),
+            "and no action shared with the profile it came from");
+
+        Console.WriteLine("== an action can be switched off without deleting it ==");
+        ObsStudioAction off = new ObsStudioAction() { SceneName = "off", Enabled = false };
+        Profile switching = new Profile() { Name = "Switching" };
+        switching.ApplicationStarted.Add(off);
+        Check(new ObsStudioAction().Enabled, "a new action is on");
+        string offPath = path + ".off";
+        UserAppSettings offSettings = new UserAppSettings();
+        offSettings.ApplicationProfiles.Add(switching);
+        offSettings.SaveSettings(offPath);
+        Profile readBack = UserAppSettings.ReadSettings(offPath).ApplicationProfiles.FirstOrDefault();
+        Check(readBack != null && readBack.ApplicationStarted.Count == 1 && !readBack.ApplicationStarted[0].Enabled,
+            "and off survives a round trip");
+        File.Delete(offPath);
+
+        Console.WriteLine("== the arrows know where the ends of a lane are ==");
+        Check(!ordering.CanMoveProfileAction((ProfileActionBase)ordering.ApplicationStarted[0], -1), "the top action cannot move up");
+        Check(ordering.CanMoveProfileAction((ProfileActionBase)ordering.ApplicationStarted[0], 1), "but can move down");
+        Check(!ordering.CanMoveProfileAction((ProfileActionBase)ordering.ApplicationStarted.Last(), 1), "the bottom action cannot move down");
+        Check(!ordering.CanMoveProfileAction(null, -1), "and nothing selected cannot move at all");
+
         Console.WriteLine("== a settings file written before these existed ==");
         string olderPath = path + ".older";
         string older = Regex.Replace(File.ReadAllText(path),
-            "[ \\t]*\"(OnlyIfNotRunning|RunAsAdministrator)\": (true|false),?\\r?\\n", string.Empty);
-        Check(!older.Contains("RunAsAdministrator") && !older.Contains("OnlyIfNotRunning"),
-            "the simulated older file really has neither key");
+            "[ \\t]*\"(OnlyIfNotRunning|RunAsAdministrator|Enabled)\": (true|false),?\\r?\\n", string.Empty);
+        Check(!older.Contains("RunAsAdministrator") && !older.Contains("OnlyIfNotRunning") && !older.Contains("Enabled"),
+            "the simulated older file really has none of the keys");
         File.WriteAllText(olderPath, older);
         UserAppSettings legacy = UserAppSettings.ReadSettings(olderPath);
         RunProgramAction legacyRun = legacy == null ? null
@@ -138,6 +182,7 @@ static class SettingsRoundTrip
         {
             Check(legacyRun.OnlyIfNotRunning, "an action with no OnlyIfNotRunning key gets the new default (on)");
             Check(!legacyRun.RunAsAdministrator, "and does not suddenly ask for administrator rights");
+            Check(legacyRun.Enabled, "and an action with no Enabled key still runs");
         }
         File.Delete(olderPath);
 

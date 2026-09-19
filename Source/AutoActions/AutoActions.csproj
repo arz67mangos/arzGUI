@@ -281,6 +281,7 @@
     <Compile Include="WinAPIFunctions.cs" />
     <Compile Include="Windows\UI.cs" />
     <Compile Include="Windows\UnelevatedProcess.cs" />
+    <Compile Include="Obs\ObsInstall.cs" />
     <Compile Include="Obs\ObsStudio.cs" />
     <Page Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -305,6 +306,7 @@
     <Compile Include="Profiles\Actions\ListOfProfileActions.cs" />
     <Compile Include="Profiles\Actions\ProfileActionAdder.cs" />
     <Compile Include="Profiles\Actions\ProfileActionBase.cs" />
+    <Compile Include="Profiles\DeepCopy.cs" />
     <Compile Include="Profiles\Profile.cs" />
     <Compile Include="Views\AudioActionView.xaml.cs">
       <DependentUpon>AudioActionView.xaml</DependentUpon>

@@ -31,7 +31,11 @@
         <TextBlock Style="{StaticResource DefaultTextBlock}" Grid.Row="2" Grid.Column="0" Text="{x:Static pres:ProjectLocales.WaitForProgramEnd}" HorizontalAlignment="Left" VerticalAlignment="Top"/>
 
         <TextBox Grid.Row="0" Grid.Column="1" Margin="5" Text="{Binding FilePath, UpdateSourceTrigger=PropertyChanged}" />
-        <Button Grid.Row="0" Grid.Column="2" Style="{StaticResource ActionIconButton}" Content="&#xE712;" ToolTip="{x:Static pres:ProjectLocales.Browse}" AutomationProperties.Name="{x:Static pres:ProjectLocales.Browse}" Command="{Binding GetFileCommand}" HorizontalAlignment="Left" Margin="5" VerticalAlignment="Center"/>
+        <StackPanel Grid.Row="0" Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
+            <Button Style="{StaticResource ActionIconButton}" Content="&#xE712;" ToolTip="{x:Static pres:ProjectLocales.Browse}" AutomationProperties.Name="{x:Static pres:ProjectLocales.Browse}" Command="{Binding GetFileCommand}" Margin="5"/>
+            <!-- obs64.exe sits four folders deep; when OBS is installed, offer it instead of asking. -->
+            <Button Style="{StaticResource GhostButton}" Content="Use OBS" ToolTip="Fill in the installed OBS Studio" Command="{Binding UseObsCommand}" Visibility="{Binding ObsIsInstalled, Converter={StaticResource VisibilityBooleanConverter}}" Margin="0,5,5,5"/>
+        </StackPanel>
 
         <TextBox Grid.Row="1" Grid.ColumnSpan="2" Grid.Column="1" Margin="5"  Text="{Binding Arguments}" />
 

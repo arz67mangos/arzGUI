@@ -173,6 +173,12 @@ namespace AutoActions
         [JsonIgnore]
         public string ObsTestResult { get => _obsTestResult; set { _obsTestResult = value; OnPropertyChanged(); } }
 
+        private string _obsInstallStatus = string.Empty;
+
+        /// <summary>Where OBS is and what it is doing, so the card can say it instead of asking.</summary>
+        [JsonIgnore]
+        public string ObsInstallStatus { get => _obsInstallStatus; set { _obsInstallStatus = value; OnPropertyChanged(); } }
+
         public RelayCommand ObsTestCommand { get; private set; }
 
         // The four members below are the picker-facing view of the two IDs above (same pattern as DefaultProfile / DefaultProfileGuid).
@@ -250,6 +256,17 @@ namespace AutoActions
                 ObsStudio.Test(out message);
                 ObsTestResult = message;
             });
+            RefreshObsInstall();
+        }
+
+        /// <summary>
+        /// Re-reads where OBS is installed and whether it is running. Off the UI thread as well: it
+        /// reads the registry and enumerates processes. Called when the settings page opens and
+        /// whenever the connection is tested.
+        /// </summary>
+        public void RefreshObsInstall()
+        {
+            System.Threading.Tasks.Task.Run(() => { ObsInstallStatus = ObsInstall.Describe(); });
         }
 
         public static UserAppSettings ReadSettings(string path)

@@ -53,6 +53,8 @@ namespace AutoActions.Profiles
         public RelayCommand<ProfileActionBase> RemoveProfileActionCommand { get; private set; }
         public RelayCommand<ProfileActionBase> MoveProfileActionUpCommand { get; private set; }
         public RelayCommand<ProfileActionBase> MoveProfileActionDownCommand { get; private set; }
+        public RelayCommand<ProfileActionBase> DuplicateProfileActionCommand { get; private set; }
+        public RelayCommand<ProfileActionListType> TestProfileActionsCommand { get; private set; }
 
 
 
@@ -65,8 +67,13 @@ namespace AutoActions.Profiles
             AddLostFocusActionCommand = new RelayCommand(() => AddProfileAction(ProfileActionListType.LostFocus));
             EditProfileActionCommand = new RelayCommand<ProfileActionBase>((pa) => EditProfileAction(pa));
             RemoveProfileActionCommand = new RelayCommand<ProfileActionBase>((pa) => RemoveProfileAction(pa));
-            MoveProfileActionUpCommand = new RelayCommand<ProfileActionBase>((pa) => MoveProfileAction(pa, -1));
-            MoveProfileActionDownCommand = new RelayCommand<ProfileActionBase>((pa) => MoveProfileAction(pa, 1));
+            // The predicates grey out the arrows at the ends of a lane, where the button would be
+            // live but do nothing. RelayCommand's CanExecuteChanged is the CommandManager's, so a
+            // move re-queries them by itself.
+            MoveProfileActionUpCommand = new RelayCommand<ProfileActionBase>((pa) => MoveProfileAction(pa, -1), (pa) => CanMoveProfileAction(pa as ProfileActionBase, -1));
+            MoveProfileActionDownCommand = new RelayCommand<ProfileActionBase>((pa) => MoveProfileAction(pa, 1), (pa) => CanMoveProfileAction(pa as ProfileActionBase, 1));
+            DuplicateProfileActionCommand = new RelayCommand<ProfileActionBase>((pa) => DuplicateProfileAction(pa));
+            TestProfileActionsCommand = new RelayCommand<ProfileActionListType>((lt) => TestProfileActions(lt), (lt) => !IsTesting);
         }
 
         private Guid _guid = Guid.Empty;
@@ -217,6 +224,114 @@ namespace AutoActions.Profiles
             if (index < 0 || target < 0 || target >= actions.Count)
                 return;
             actions.Move(index, target);
+        }
+
+        /// <summary>Whether there is somewhere for the action to move to. Drives the arrow buttons.</summary>
+        public bool CanMoveProfileAction(ProfileActionBase profileAction, int offset)
+        {
+            if (profileAction == null)
+                return false;
+            ListOfProfileActions actions = GetProfileActions(GetProfileActionListType(profileAction));
+            int index = actions.IndexOf(profileAction);
+            int target = index + offset;
+            return index >= 0 && target >= 0 && target < actions.Count;
+        }
+
+        /// <summary>
+        /// Copies an action and puts the copy directly under the original, in the same list. The copy
+        /// goes through the serialiser, so it shares nothing with the action it came from - editing
+        /// one does not change the other.
+        /// </summary>
+        public void DuplicateProfileAction(ProfileActionBase profileAction)
+        {
+            if (profileAction == null)
+                return;
+            ListOfProfileActions actions = GetProfileActions(GetProfileActionListType(profileAction));
+            int index = actions.IndexOf(profileAction);
+            if (index < 0)
+                return;
+            ProfileActionBase copy = DeepCopy.Of(profileAction);
+            if (copy != null)
+                actions.Insert(index + 1, copy);
+        }
+
+        private bool _isTesting = false;
+
+        /// <summary>True while <see cref="TestProfileActions"/> is running, so it cannot be started twice.</summary>
+        public bool IsTesting
+        {
+            get { return _isTesting; }
+            private set { _isTesting = value; OnPropertyChanged(); }
+        }
+
+        /// <summary>
+        /// Runs one list of actions now, as though the application had just started, closed or changed
+        /// focus - so a profile can be tried without launching the game. Off the UI thread: an action
+        /// blocks for seconds (a display mode change, waiting for OBS). It deliberately does not take
+        /// the daemon's lock, the same way an action shortcut does not; pressing this at the exact
+        /// moment an assigned application starts runs both, which is the user's own doing.
+        /// </summary>
+        public void TestProfileActions(ProfileActionListType listType)
+        {
+            if (IsTesting)
+                return;
+            List<IProfileAction> actions = GetProfileActions(listType).ToList();
+            ApplicationChangedType changedType = ChangedTypeOf(listType);
+            IsTesting = true;
+            Task.Run(() =>
+            {
+                try
+                {
+                    Globals.Logs.Add($"Test run of '{Name}': {actions.Count} {listType} action(s).", false);
+                    foreach (IProfileAction action in actions)
+                    {
+                        if (!action.Enabled)
+                        {
+                            Globals.Logs.Add($"Test run: skipping the disabled action {action.ActionTypeName}.", false);
+                            continue;
+                        }
+                        EventHandler<CodectoryCore.Logging.LogEntry> log = (o, e) => Globals.Logs.AppendLogEntry(e);
+                        action.NewLog += log;
+                        try
+                        {
+                            ActionEndResult result = action.RunAction(changedType);
+                            if (result != null && !result.Success)
+                                Globals.Logs.Add($"Test run: {action.ActionTypeName} failed. {result.ErrorInfo}", false, CodectoryCore.Logging.LogEntryType.Error);
+                        }
+                        finally
+                        {
+                            action.NewLog -= log;
+                        }
+                        System.Threading.Thread.Sleep(100);
+                    }
+                    Globals.Logs.Add($"Test run of '{Name}' finished.", false);
+                }
+                catch (Exception ex)
+                {
+                    Globals.Logs.AddException(ex);
+                }
+                finally
+                {
+                    IsTesting = false;
+                }
+            });
+        }
+
+        private static ApplicationChangedType ChangedTypeOf(ProfileActionListType listType)
+        {
+            switch (listType)
+            {
+                case ProfileActionListType.Started:
+                    return ApplicationChangedType.Started;
+                case ProfileActionListType.Closed:
+                    return ApplicationChangedType.Closed;
+                case ProfileActionListType.GotFocus:
+                    return ApplicationChangedType.GotFocus;
+                case ProfileActionListType.LostFocus:
+                    return ApplicationChangedType.LostFocus;
+                default:
+                    return ApplicationChangedType.None;
+            }
         }
 
         public void RemoveProfileAction(ProfileActionBase profileAction)

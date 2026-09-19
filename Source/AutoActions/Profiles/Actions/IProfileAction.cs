@@ -11,6 +11,8 @@ namespace AutoActions.Profiles.Actions
         string ActionTypeName { get; }
         ActionEndResult RunAction(ApplicationChangedType applicationChangedType);
 
+        bool Enabled { get; set; }
+
         bool CanSave { get; }
 
         string CannotSaveMessage { get; }

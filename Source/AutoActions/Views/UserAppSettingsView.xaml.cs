@@ -27,8 +27,12 @@ namespace AutoActions.Views
         private void ObsPasswordBox_Loaded(object sender, RoutedEventArgs e)
         {
             UserAppSettings settings = DataContext as UserAppSettings;
-            if (settings != null && ObsPasswordBox.Password != settings.ObsPassword)
+            if (settings == null)
+                return;
+            if (ObsPasswordBox.Password != settings.ObsPassword)
                 ObsPasswordBox.Password = settings.ObsPassword;
+            // Where OBS is and whether it is running: read when the card appears, not at startup.
+            settings.RefreshObsInstall();
         }
 
         private void ObsPasswordBox_PasswordChanged(object sender, RoutedEventArgs e)

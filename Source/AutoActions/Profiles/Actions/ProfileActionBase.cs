@@ -17,6 +17,21 @@ namespace AutoActions.Profiles.Actions
     public abstract class ProfileActionBase : BaseViewModel, IProfileAction
     {
         public EventHandler<LogEntry> NewLog { get; set; }
+
+        private bool _enabled = true;
+
+        /// <summary>
+        /// Off means the daemon walks past this action without running it. For trying a profile
+        /// without an action rather than deleting and rebuilding it. On for every action written
+        /// before this existed, which is what those files meant.
+        /// </summary>
+        [JsonProperty]
+        public bool Enabled
+        {
+            get { return _enabled; }
+            set { _enabled = value; OnPropertyChanged(); }
+        }
+
         public abstract string ActionDescription { get; }
         public abstract string ActionTypeName { get; }
         public abstract bool CanSave { get; }

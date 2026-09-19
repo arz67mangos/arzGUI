@@ -116,7 +116,18 @@ AutoActions and by ArzFlow (the fork's previous name) load unchanged.
 - **Action shortcuts.** Any profile action can be bound to a global hotkey and run on demand.
 - **Actions run in the order you put them in, and that order is editable.** Each row has move up and
   move down buttons, because the order is not cosmetic — an OBS action above the run action that
-  starts OBS would sit waiting for a program that is not running yet.
+  starts OBS would sit waiting for a program that is not running yet. The arrows grey out at the ends
+  of a list.
+- **Try a profile without launching the game.** Every list of actions has a ▷ button that runs it now,
+  as though the application had just started, closed or changed focus. Building a profile no longer
+  means opening and closing a game to see whether it worked.
+- **Switch an action off instead of deleting it.** The tick box on each row keeps the action where it
+  is and steps over it — for finding out which action is the one causing trouble, or turning the replay
+  buffer off for a week.
+- **Duplicate an action, or a whole profile.** Six games usually want six nearly identical profiles;
+  the copy shares nothing with the original, so editing one leaves the other alone.
+- **Activity on the Status page.** The last forty log lines with their times, errors in red, so "did
+  that work?" is answered in the window rather than in `arzGUI.log` in a text editor.
 - **A redesigned UI with light and dark themes.** Design tokens, a left sidebar, card-based Status
   page, proper hover/pressed/focus/disabled states everywhere. The theme follows Windows by default
   and can be forced in Settings.
@@ -162,7 +173,10 @@ The OBS Studio action needs the obs-websocket server, which ships inside OBS 28 
 until you turn it on. In OBS: **Tools → WebSocket Server Settings → Enable WebSocket server**, then
 **Show Connect Info** and copy the password. In arzGUI: **Settings → OBS Studio**, paste it, leave the
 port at 4455 unless you changed it, and press **Test connection** — it answers with the OBS version
-and the scene OBS is on.
+and the scene OBS is on, and says where OBS is installed and whether it is running as administrator.
+
+When a profile has to *start* OBS, the run-program action has a **Use OBS** button that fills in the
+installed `obs64.exe` for you rather than making you find it four folders deep.
 
 The password is stored encrypted for your Windows account, so a `UserSettings.json` carried to
 another PC keeps everything except this one value, which is entered again there.

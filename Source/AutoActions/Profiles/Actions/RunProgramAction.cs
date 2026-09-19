@@ -67,11 +67,33 @@ namespace AutoActions.Profiles.Actions
 
         public RelayCommand GetFileCommand { get; private set; }
 
+        public RelayCommand UseObsCommand { get; private set; }
+
+        /// <summary>
+        /// Whether the button that fills in OBS is worth showing. Read once when the action is opened
+        /// - OBS is not going to be installed halfway through editing an action.
+        /// </summary>
+        public bool ObsIsInstalled => !string.IsNullOrEmpty(Obs.ObsInstall.FindExecutable());
 
         public RunProgramAction() : base()
         {
             GetFileCommand = new RelayCommand(GetFile);
+            UseObsCommand = new RelayCommand(UseObs);
+        }
 
+        /// <summary>
+        /// Fills in the installed OBS, so nobody has to find obs64.exe four folders deep. It ticks
+        /// "only if not running" too, because starting a second OBS is an error dialog, not a second
+        /// OBS - but leaves administrator alone: that is a choice about performance, and it costs a
+        /// UAC prompt when arzGUI is not already elevated.
+        /// </summary>
+        private void UseObs()
+        {
+            string path = Obs.ObsInstall.FindExecutable();
+            if (string.IsNullOrEmpty(path))
+                return;
+            FilePath = path;
+            OnlyIfNotRunning = true;
         }
 
         public override ActionEndResult RunAction(ApplicationChangedType applicationChangedType)

@@ -72,6 +72,7 @@ namespace AutoActions
 
         public RelayCommand AddProfileCommand { get; private set; }
         public RelayCommand<Profile> RemoveProfileCommand { get; private set; }
+        public RelayCommand<Profile> DuplicateProfileCommand { get; private set; }
         public RelayCommand ShowInfoCommand { get; private set; }
         public RelayCommand ShowLogsCommand { get; private set; }
         public RelayCommand ShowLicenseCommand { get; private set; }
@@ -87,6 +88,28 @@ namespace AutoActions
         public UserAppSettings Settings { get => Globals.Instance.Settings; set { Globals.Instance.Settings = value; OnPropertyChanged(); } }
         public Profile CurrentProfile { get => _currentProfile; set { _currentProfile = value; OnPropertyChanged(); } }
         public ObservableCollection<IProfileAction> LastActions { get => _lastActions; set { _lastActions = value; OnPropertyChanged(); } }
+
+        /// <summary>
+        /// The tail of the log, newest first, for the card on the status page - so "did that action
+        /// work?" is answered in the window instead of in arzGUI.log in a text editor. Bounded,
+        /// because this one is alive for as long as the program is.
+        /// </summary>
+        public ObservableCollection<LogEntry> RecentLog { get; } = new ObservableCollection<LogEntry>();
+
+        private const int RecentLogLength = 40;
+
+        private void RememberLogEntry(object sender, LogEntry entry)
+        {
+            Application application = App.Current;
+            if (application == null)
+                return;
+            application.Dispatcher.BeginInvoke(new Action(() =>
+            {
+                RecentLog.Insert(0, entry);
+                while (RecentLog.Count > RecentLogLength)
+                    RecentLog.RemoveAt(RecentLog.Count - 1);
+            }));
+        }
 
 
 
@@ -158,6 +181,7 @@ namespace AutoActions
                     _threadManager = new ThreadManager();
                     _threadManager.NewLog += (o, e) => Globals.Logs.Add(e, false);
                     _logsStorage = new LogsStorage();
+                    Globals.Logs.NewLog += RememberLogEntry;
                     _lastActions = new ObservableCollection<IProfileAction>();
                     InitializeApplicationWatcher();
                     InitializeSettings();
@@ -261,7 +285,7 @@ namespace AutoActions
                 }
                 Globals.Logs.Add($"[{application.ApplicationName}] {changedType}: profile '{profile.Name}', {actions.Count} action(s) to run.", false);
 
-                bool touchesMicMonitoring = actions.OfType<MicMonitoringAction>().Any();
+                bool touchesMicMonitoring = actions.OfType<MicMonitoringAction>().Any(a => a.Enabled);
                 if (changedType == ApplicationChangedType.Started && touchesMicMonitoring && MicMonitoringStatus != null)
                 {
                     MicMonitoringSnapshot snapshot = MicMonitoringStatus.Capture();
@@ -270,7 +294,7 @@ namespace AutoActions
                     Globals.Logs.Add($"[{application.ApplicationName}] mic monitoring before Started actions: {snapshot}", false);
                 }
 
-                bool touchesDisplayColor = actions.OfType<DisplayColorAction>().Any();
+                bool touchesDisplayColor = actions.OfType<DisplayColorAction>().Any(a => a.Enabled);
                 if (touchesDisplayColor && (changedType == ApplicationChangedType.Started || changedType == ApplicationChangedType.GotFocus))
                 {
                     bool alreadyCaptured;
@@ -285,7 +309,7 @@ namespace AutoActions
                     }
                 }
 
-                bool touchesMonitorDevice = actions.OfType<MonitorDeviceAction>().Any();
+                bool touchesMonitorDevice = actions.OfType<MonitorDeviceAction>().Any(a => a.Enabled);
                 if (touchesMonitorDevice && changedType == ApplicationChangedType.Started)
                 {
                     MonitorDeviceSnapshot snapshot = MonitorDeviceControl.Capture();
@@ -298,6 +322,11 @@ namespace AutoActions
                     App.Current.Dispatcher.Invoke(() => LastActions.Clear());
                 foreach (var action in actions)
                 {
+                    if (!action.Enabled)
+                    {
+                        Globals.Logs.Add($"[{application.ApplicationName}] skipping the disabled action {action.ActionTypeName}.", false);
+                        continue;
+                    }
                     App.Current.Dispatcher.Invoke(() => LastActions.Add(action));
                     action.NewLog += ActionLog;
                     action.RunAction(changedType);
@@ -537,6 +566,7 @@ namespace AutoActions
 
             AddProfileCommand = new RelayCommand(AddProfile);
             RemoveProfileCommand = new RelayCommand<Profile>(RemoveProfile);
+            DuplicateProfileCommand = new RelayCommand<Profile>(DuplicateProfile);
 
 
             ClosingCommand = new RelayCommand(Closing);
@@ -779,6 +809,30 @@ namespace AutoActions
             }
         }
 
+
+        /// <summary>
+        /// Copies a profile with all four action lists. Six games usually want six nearly identical
+        /// profiles, and building each from nothing is the slowest part of setting the program up.
+        /// The copy is a new profile, so it gets its own GUID and is assigned to nothing.
+        /// </summary>
+        private void DuplicateProfile(Profile profile)
+        {
+            if (profile == null)
+                return;
+            lock (_accessLock)
+            {
+                Profile copy = DeepCopy.Of(profile);
+                if (copy == null)
+                    return;
+                copy.GUID = Guid.NewGuid();
+                string name = $"{profile.Name} copy";
+                int count = 1;
+                while (Settings.ApplicationProfiles.Any(p => p.Name.ToUpperInvariant().Equals(name.ToUpperInvariant())))
+                    name = $"{profile.Name} copy {++count}";
+                copy.Name = name;
+                Settings.ApplicationProfiles.Add(copy);
+            }
+        }
 
         private void RemoveProfile(Profile profile)
         {

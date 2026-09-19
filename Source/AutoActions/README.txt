@@ -71,6 +71,24 @@ are launched as you, never elevated, even when arzGUI is - unless you tick
 want the rights (OBS Studio, for encoding without dropped frames).
 
 
+Building a profile
+------------------
+
+Actions in a list run top to bottom, and the order matters: an OBS action above
+the run action that starts OBS would wait for a program that is not there yet.
+Each row has buttons to move it up or down, to copy it, to edit it and to remove
+it, and a tick box that switches the action off without deleting it - useful for
+working out which action is the one misbehaving.
+
+The play button on a list header runs that list now, without the application, so
+a profile can be tried without opening and closing a game every time. Duplicate
+profile, at the bottom of the profile list, copies a whole profile when the next
+game wants nearly the same one.
+
+The Status page has an Activity card: the last forty things arzGUI did, with
+times, errors in red. Show all opens the full log.
+
+
 OBS Studio
 ----------
 
@@ -81,6 +99,9 @@ focused. It needs the WebSocket server that ships inside OBS 28 and later:
     OBS: Tools > WebSocket Server Settings > Enable WebSocket server,
          then Show Connect Info and copy the password
     arzGUI: Settings > OBS Studio, paste it, press Test connection
+
+The card also says where OBS is installed and whether it is running, and a run
+action has a "Use OBS" button that fills that path in for you.
 
 Leave the port at 4455 unless you changed it in OBS. The password is stored
 encrypted for your Windows account, so if you carry UserSettings.json to
