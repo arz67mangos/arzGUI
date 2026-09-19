@@ -91,9 +91,9 @@ AutoActions and by ArzFlow (the fork's previous name) load unchanged.
   *Microphone* line of a playback device. arzGUI controls exactly those: a card on the Status page
   and a tray entry for manual use, a *Microphone monitoring* profile action for per-game use, device
   and line pickers in Settings. The state a profile changes on start is put back on close.
-- **OBS Studio profiles and scenes.** An *OBS Studio* action switches the OBS profile, scene
-  collection and program scene, so a game can bring up its own encoder settings and its own scene
-  without touching OBS. It talks to the obs-websocket server built into OBS 28 and later — nothing to
+- **OBS Studio profiles, scenes and the replay buffer.** An *OBS Studio* action switches the OBS
+  profile, scene collection and program scene, and starts or stops the replay buffer, so a game can
+  bring up its own encoder settings, its own scene and a rolling recording without touching OBS. It talks to the obs-websocket server built into OBS 28 and later — nothing to
   install, and it works whether or not OBS runs as administrator, which synthetic hotkeys do not. A
   field left empty is left alone, anything already set is not switched again, and the action waits
   for OBS to finish starting (and for a scene collection to finish reloading) rather than failing.

@@ -1,4 +1,5 @@
 using AutoActions;
+using AutoActions.Obs;
 using AutoActions.Profiles.Actions;
 using System;
 using System.Collections.Generic;
@@ -116,6 +117,34 @@ static class ObsCheck
             Check(Probe().CurrentSceneCollection == startingCollection, "OBS is back on collection '" + startingCollection + "'");
         }
 
+        Console.WriteLine("== the replay buffer ==");
+        // Whatever it is doing now is what it goes back to at the end.
+        bool bufferWasRunning = ReplayBufferRunning();
+        Console.WriteLine("  it is " + (bufferWasRunning ? "running" : "not running") + " to begin with");
+        ObsStudioAction start = new ObsStudioAction() { ReplayBuffer = ObsOutputChange.Start };
+        Check(start.CanSave, "a replay-buffer-only action is savable, without any names");
+        ActionEndResult started = start.RunAction(ApplicationChangedType.Started);
+        if (!started.Success && started.ErrorInfo != null && started.ErrorInfo.Contains("Settings > Output"))
+        {
+            Console.WriteLine("  SKIP  the replay buffer is turned off in OBS, so it cannot be started:");
+            Console.WriteLine("        " + started.ErrorInfo);
+        }
+        else
+        {
+            Check(started.Success, "starting it succeeds" + (started.Success ? "" : ": " + started.ErrorInfo));
+            Check(ReplayBufferRunning(), "and OBS says it is running");
+            Check(Run(new ObsStudioAction() { ReplayBuffer = ObsOutputChange.Start }),
+                "starting one that is already running is a no-op, not an error");
+            Check(Run(new ObsStudioAction() { ReplayBuffer = ObsOutputChange.Stop }), "stopping it succeeds");
+            Check(!ReplayBufferRunning(), "and OBS says it stopped");
+            Check(Run(new ObsStudioAction() { ReplayBuffer = ObsOutputChange.Stop }),
+                "stopping one that is already stopped is a no-op too");
+            if (bufferWasRunning)
+                Run(new ObsStudioAction() { ReplayBuffer = ObsOutputChange.Start });
+            Check(ReplayBufferRunning() == bufferWasRunning, "it is back the way it was found");
+        }
+        Check(!new ObsStudioAction().CanSave, "an action that changes nothing at all is not savable");
+
         Console.WriteLine("== names are matched the way a user types them ==");
         Check(Run(new ObsStudioAction() { SceneName = startingScene.ToUpperInvariant() }), "a differently cased scene name still resolves");
 
@@ -182,6 +211,11 @@ static class ObsCheck
     static string Current()
     {
         return Probe().CurrentScene;
+    }
+
+    static bool ReplayBufferRunning()
+    {
+        return Probe().ReplayBufferRunning;
     }
 
     static ObsStudioAction Probe()

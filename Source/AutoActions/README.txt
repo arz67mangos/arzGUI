@@ -74,9 +74,9 @@ want the rights (OBS Studio, for encoding without dropped frames).
 OBS Studio
 ----------
 
-The OBS Studio action switches the OBS profile, scene collection and scene when
-an application starts, closes or is focused. It needs the WebSocket server that
-ships inside OBS 28 and later:
+The OBS Studio action switches the OBS profile, scene collection and scene, and
+starts or stops the replay buffer, when an application starts, closes or is
+focused. It needs the WebSocket server that ships inside OBS 28 and later:
 
     OBS: Tools > WebSocket Server Settings > Enable WebSocket server,
          then Show Connect Info and copy the password
@@ -92,6 +92,10 @@ local socket, which works in both directions.
 In the action, a field left empty is left alone. If the same profile also starts
 OBS, put the run action first and leave "Wait for OBS" at 15 seconds so the OBS
 action waits for it to finish loading.
+
+Starting the replay buffer needs it turned on in OBS first, under Settings >
+Output > Replay Buffer. The action runs it after any profile or scene collection
+switch, because those stop a running buffer.
 
 
 Something went wrong

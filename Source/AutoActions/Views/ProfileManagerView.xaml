@@ -14,6 +14,7 @@
   <DataTemplate DataType="{x:Type actions:CloseProgramAction}"><TextBlock FontFamily="{StaticResource IconFont}" Text="&#xE8BB;"/></DataTemplate>
   <DataTemplate DataType="{x:Type actions:MonitorDeviceAction}"><TextBlock FontFamily="{StaticResource IconFont}" Text="&#xE7F8;"/></DataTemplate>
   <DataTemplate DataType="{x:Type actions:ReferenceProfileAction}"><TextBlock FontFamily="{StaticResource IconFont}" Text="&#xE8FD;"/></DataTemplate>
+  <DataTemplate DataType="{x:Type actions:ObsStudioAction}"><TextBlock FontFamily="{StaticResource IconFont}" Text="&#xE714;"/></DataTemplate>
   <DataTemplate x:Key="ProfileActionItemTemplate">
    <Border Height="66" Margin="0,4" Padding="10,7" CornerRadius="{StaticResource SmallCornerRadius}" Background="{DynamicResource GlassRaisedBrush}" BorderBrush="{DynamicResource GlassStrokeBrush}" BorderThickness="1">
     <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="34"/><ColumnDefinition Width="*"/><ColumnDefinition Width="36"/><ColumnDefinition Width="36"/></Grid.ColumnDefinitions>

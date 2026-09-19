@@ -1840,7 +1840,7 @@ namespace AutoActions.ProjectResources {
             }
         }
         /// <summary>
-        ///   Looks up a localized string similar to Enter at least one of: profile, scene collection, scene.
+        ///   Looks up a localized string similar to Enter at least one of: profile, scene collection, scene, replay buffer.
         /// </summary>
         public static string MessageMissingObsSetting {
             get {
@@ -1910,6 +1910,46 @@ namespace AutoActions.ProjectResources {
         public static string ObsIsOn {
             get {
                 return ResourceManager.GetString("ObsIsOn", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Replay buffer.
+        /// </summary>
+        public static string ObsReplayBuffer {
+            get {
+                return ResourceManager.GetString("ObsReplayBuffer", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Leave as it is.
+        /// </summary>
+        public static string ObsOutputLeave {
+            get {
+                return ResourceManager.GetString("ObsOutputLeave", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Start.
+        /// </summary>
+        public static string ObsOutputStart {
+            get {
+                return ResourceManager.GetString("ObsOutputStart", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Stop.
+        /// </summary>
+        public static string ObsOutputStop {
+            get {
+                return ResourceManager.GetString("ObsOutputStop", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to replay buffer running.
+        /// </summary>
+        public static string ObsReplayBufferRunning {
+            get {
+                return ResourceManager.GetString("ObsReplayBufferRunning", resourceCulture);
             }
         }
     }

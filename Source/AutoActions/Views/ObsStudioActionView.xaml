@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:AutoActions.Views"
              xmlns:pres="clr-namespace:AutoActions.ProjectResources;assembly=AutoActions.ProjectResources"
              xmlns:prflActns="clr-namespace:AutoActions.Profiles.Actions"
+             xmlns:obs="clr-namespace:AutoActions.Obs"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance Type=prflActns:ObsStudioAction, IsDesignTimeCreatable=False}"
              Loaded="UserControl_Loaded">
@@ -17,6 +18,7 @@
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -36,11 +38,18 @@
         <TextBlock Style="{StaticResource DefaultTextBlock}" Grid.Row="2" Grid.Column="0" Margin="5" Text="{x:Static pres:ProjectLocales.ObsScene}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
         <ComboBox Grid.Row="2" Grid.Column="1" Margin="5" MinWidth="220" IsEditable="True" ItemsSource="{Binding ObsScenes}" Text="{Binding SceneName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
-        <TextBlock Style="{StaticResource DefaultTextBlock}" Grid.Row="3" Grid.Column="0" Margin="5" Text="{x:Static pres:ProjectLocales.ObsWaitSeconds}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-        <TextBox Grid.Row="3" Grid.Column="1" Margin="5" Width="70" HorizontalAlignment="Left" Text="{Binding WaitForObsSeconds, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"/>
+        <TextBlock Style="{StaticResource DefaultTextBlock}" Grid.Row="3" Grid.Column="0" Margin="5" Text="{x:Static pres:ProjectLocales.ObsReplayBuffer}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+        <ComboBox Grid.Row="3" Grid.Column="1" Margin="5" MinWidth="220" HorizontalAlignment="Left" SelectedValuePath="Tag" SelectedValue="{Binding ReplayBuffer, Mode=TwoWay}">
+            <ComboBoxItem Content="{x:Static pres:ProjectLocales.ObsOutputLeave}" Tag="{x:Static obs:ObsOutputChange.Leave}"/>
+            <ComboBoxItem Content="{x:Static pres:ProjectLocales.ObsOutputStart}" Tag="{x:Static obs:ObsOutputChange.Start}"/>
+            <ComboBoxItem Content="{x:Static pres:ProjectLocales.ObsOutputStop}" Tag="{x:Static obs:ObsOutputChange.Stop}"/>
+        </ComboBox>
 
-        <TextBlock Style="{StaticResource DefaultTextBlock}" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" Margin="5,6,5,0" Foreground="{DynamicResource DangerBrush}" TextWrapping="Wrap" Text="{Binding RefreshStatus}"/>
-        <TextBlock Style="{StaticResource DefaultTextBlock}" Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="3" Margin="5,6,5,0" Foreground="{DynamicResource TextSecondaryBrush}" TextWrapping="Wrap" Text="{Binding ObsIsOn}"/>
-        <TextBlock Style="{StaticResource DefaultTextBlock}" Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="3" Margin="5,10,5,5" Foreground="{DynamicResource TextSecondaryBrush}" TextWrapping="Wrap" Text="{x:Static pres:ProjectLocales.ObsActionHint}"/>
+        <TextBlock Style="{StaticResource DefaultTextBlock}" Grid.Row="4" Grid.Column="0" Margin="5" Text="{x:Static pres:ProjectLocales.ObsWaitSeconds}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+        <TextBox Grid.Row="4" Grid.Column="1" Margin="5" Width="70" HorizontalAlignment="Left" Text="{Binding WaitForObsSeconds, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"/>
+
+        <TextBlock Style="{StaticResource DefaultTextBlock}" Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="3" Margin="5,6,5,0" Foreground="{DynamicResource DangerBrush}" TextWrapping="Wrap" Text="{Binding RefreshStatus}"/>
+        <TextBlock Style="{StaticResource DefaultTextBlock}" Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="3" Margin="5,6,5,0" Foreground="{DynamicResource TextSecondaryBrush}" TextWrapping="Wrap" Text="{Binding ObsIsOn}"/>
+        <TextBlock Style="{StaticResource DefaultTextBlock}" Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="3" Margin="5,10,5,5" Foreground="{DynamicResource TextSecondaryBrush}" TextWrapping="Wrap" Text="{x:Static pres:ProjectLocales.ObsActionHint}"/>
     </Grid>
 </UserControl>

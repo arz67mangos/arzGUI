@@ -243,6 +243,14 @@ namespace AutoActions.Obs
         }
     }
 
+    /// <summary>What an action wants done to an OBS output that is either running or not.</summary>
+    public enum ObsOutputChange
+    {
+        Leave = 0,
+        Start = 1,
+        Stop = 2,
+    }
+
     /// <summary>What OBS holds and what it is currently on.</summary>
     public sealed class ObsSnapshot
     {
@@ -252,6 +260,7 @@ namespace AutoActions.Obs
         public string CurrentProfile = string.Empty;
         public string CurrentSceneCollection = string.Empty;
         public string CurrentScene = string.Empty;
+        public bool ReplayBufferRunning;
     }
 
     /// <summary>What the app actually asks OBS to do, over <see cref="ObsWebSocket"/>.</summary>
@@ -275,7 +284,7 @@ namespace AutoActions.Obs
         /// needless collection switch costs seconds and reloads every source in it.
         /// </summary>
         public static bool Apply(string profileName, string sceneCollectionName, string sceneName,
-            int waitForObsSeconds, Action<string> log, out string error)
+            ObsOutputChange replayBuffer, int waitForObsSeconds, Action<string> log, out string error)
         {
             using (ObsWebSocket obs = Open(TimeSpan.FromSeconds(Math.Max(0, waitForObsSeconds)), out error))
             {
@@ -296,9 +305,49 @@ namespace AutoActions.Obs
                 if (!string.IsNullOrWhiteSpace(sceneName) && !SwitchScene(obs, sceneName, log, out error))
                     return false;
 
+                // Last: switching profile or scene collection stops a running replay buffer, so
+                // starting it before that would be undone a moment later.
+                if (!SwitchReplayBuffer(obs, replayBuffer, log, out error))
+                    return false;
+
                 error = null;
                 return true;
             }
+        }
+
+        static bool SwitchReplayBuffer(ObsWebSocket obs, ObsOutputChange wanted, Action<string> log, out string error)
+        {
+            error = null;
+            if (wanted == ObsOutputChange.Leave)
+                return true;
+
+            bool start = wanted == ObsOutputChange.Start;
+            if (IsReplayBufferRunning(obs) == start)
+                return true;
+
+            log(start ? "Starting the OBS replay buffer" : "Stopping the OBS replay buffer");
+            if (!obs.Request(start ? "StartReplayBuffer" : "StopReplayBuffer", null, out error))
+            {
+                if (start)
+                    error += ". Is the replay buffer turned on in OBS under Settings > Output?";
+                return false;
+            }
+
+            // Accepted is not the same as done here either: outputActive flips a moment later.
+            if (!WaitUntil(() => IsReplayBufferRunning(obs) == start, SwitchBudget))
+            {
+                error = start ? "OBS did not start the replay buffer in time" : "OBS did not stop the replay buffer in time";
+                return false;
+            }
+            return true;
+        }
+
+        static bool IsReplayBufferRunning(ObsWebSocket obs)
+        {
+            JObject status;
+            string error;
+            return obs.Request("GetReplayBufferStatus", null, out status, out error)
+                && status != null && status["outputActive"] != null && (bool)status["outputActive"];
         }
 
         static bool SwitchScene(ObsWebSocket obs, string sceneName, Action<string> log, out string error)
@@ -410,6 +459,9 @@ namespace AutoActions.Obs
                     snapshot.Scenes.AddRange(response["scenes"].Select(s => (string)s["sceneName"]).Where(n => n != null));
                     snapshot.CurrentScene = (string)response["currentProgramSceneName"] ?? string.Empty;
                 }
+                if (obs.Request("GetReplayBufferStatus", null, out response, out error) && response != null
+                        && response["outputActive"] != null)
+                    snapshot.ReplayBufferRunning = (bool)response["outputActive"];
                 error = null;
                 return snapshot;
             }

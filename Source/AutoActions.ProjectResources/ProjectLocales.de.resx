@@ -667,7 +667,7 @@
     <value>Ein leeres Feld bleibt unveraendert. Die Verbindung zu OBS wird in den Einstellungen eingerichtet.</value>
   </data>
   <data name="MessageMissingObsSetting" xml:space="preserve">
-    <value>Mindestens eins angeben: Profil, Szenensammlung, Szene</value>
+    <value>Mindestens eins angeben: Profil, Szenensammlung, Szene, Wiederholungspuffer</value>
   </data>
   <data name="ObsWebSocketPort" xml:space="preserve">
     <value>WebSocket-Port</value>
@@ -692,5 +692,20 @@
   </data>
   <data name="ObsIsOn" xml:space="preserve">
     <value>OBS steht auf:</value>
+  </data>
+  <data name="ObsReplayBuffer" xml:space="preserve">
+    <value>Wiederholungspuffer</value>
+  </data>
+  <data name="ObsOutputLeave" xml:space="preserve">
+    <value>Unveraendert lassen</value>
+  </data>
+  <data name="ObsOutputStart" xml:space="preserve">
+    <value>Starten</value>
+  </data>
+  <data name="ObsOutputStop" xml:space="preserve">
+    <value>Stoppen</value>
+  </data>
+  <data name="ObsReplayBufferRunning" xml:space="preserve">
+    <value>Wiederholungspuffer laeuft</value>
   </data>
 </root>

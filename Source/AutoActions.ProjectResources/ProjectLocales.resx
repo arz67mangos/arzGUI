@@ -1383,7 +1383,7 @@ Public License instead of this License.  But first, please read
     <value>An empty field is left unchanged. The connection to OBS is set up in Settings.</value>
   </data>
   <data name="MessageMissingObsSetting" xml:space="preserve">
-    <value>Enter at least one of: profile, scene collection, scene</value>
+    <value>Enter at least one of: profile, scene collection, scene, replay buffer</value>
   </data>
   <data name="ObsWebSocketPort" xml:space="preserve">
     <value>WebSocket port</value>
@@ -1408,5 +1408,20 @@ Public License instead of this License.  But first, please read
   </data>
   <data name="ObsIsOn" xml:space="preserve">
     <value>OBS is on:</value>
+  </data>
+  <data name="ObsReplayBuffer" xml:space="preserve">
+    <value>Replay buffer</value>
+  </data>
+  <data name="ObsOutputLeave" xml:space="preserve">
+    <value>Leave as it is</value>
+  </data>
+  <data name="ObsOutputStart" xml:space="preserve">
+    <value>Start</value>
+  </data>
+  <data name="ObsOutputStop" xml:space="preserve">
+    <value>Stop</value>
+  </data>
+  <data name="ObsReplayBufferRunning" xml:space="preserve">
+    <value>replay buffer running</value>
   </data>
 </root>

@@ -20,6 +20,7 @@ namespace AutoActions.Profiles.Actions
         private string _profileName = string.Empty;
         private string _sceneCollectionName = string.Empty;
         private string _sceneName = string.Empty;
+        private ObsOutputChange _replayBuffer = ObsOutputChange.Leave;
         private int _waitForObsSeconds = 15;
 
         private List<string> _obsProfiles = new List<string>();
@@ -30,6 +31,7 @@ namespace AutoActions.Profiles.Actions
         private string _currentProfile = string.Empty;
         private string _currentSceneCollection = string.Empty;
         private string _currentScene = string.Empty;
+        private bool _replayBufferRunning = false;
 
         [JsonProperty]
         public string ProfileName { get => _profileName; set { _profileName = value ?? string.Empty; OnPropertyChanged(); } }
@@ -39,6 +41,13 @@ namespace AutoActions.Profiles.Actions
 
         [JsonProperty]
         public string SceneName { get => _sceneName; set { _sceneName = value ?? string.Empty; OnPropertyChanged(); } }
+
+        /// <summary>
+        /// Start or stop the replay buffer - the rolling recording you save with a hotkey afterwards.
+        /// Runs after any profile or scene collection switch, because those stop it.
+        /// </summary>
+        [JsonProperty]
+        public ObsOutputChange ReplayBuffer { get => _replayBuffer; set { _replayBuffer = value; OnPropertyChanged(); } }
 
         /// <summary>
         /// How long to keep trying to reach OBS. A profile that starts OBS and then switches its scene
@@ -63,16 +72,26 @@ namespace AutoActions.Profiles.Actions
 
         public string CurrentScene { get => _currentScene; private set { _currentScene = value; OnPropertyChanged(); OnPropertyChanged(nameof(ObsIsOn)); } }
 
+        public bool ReplayBufferRunning { get => _replayBufferRunning; private set { _replayBufferRunning = value; OnPropertyChanged(); OnPropertyChanged(nameof(ObsIsOn)); } }
+
         /// <summary>What OBS was on at the last refresh - the quickest way to see it answered at all.</summary>
-        public string ObsIsOn => string.IsNullOrEmpty(CurrentScene) && string.IsNullOrEmpty(CurrentProfile)
-            ? string.Empty
-            : $"{ProjectLocales.ObsIsOn} {CurrentProfile} / {CurrentSceneCollection} / {CurrentScene}";
+        public string ObsIsOn
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(CurrentScene) && string.IsNullOrEmpty(CurrentProfile))
+                    return string.Empty;
+                string on = $"{ProjectLocales.ObsIsOn} {CurrentProfile} / {CurrentSceneCollection} / {CurrentScene}";
+                return ReplayBufferRunning ? $"{on} - {ProjectLocales.ObsReplayBufferRunning}" : on;
+            }
+        }
 
         public RelayCommand RefreshCommand { get; private set; }
 
         public override bool CanSave => !string.IsNullOrWhiteSpace(ProfileName)
             || !string.IsNullOrWhiteSpace(SceneCollectionName)
-            || !string.IsNullOrWhiteSpace(SceneName);
+            || !string.IsNullOrWhiteSpace(SceneName)
+            || ReplayBuffer != ObsOutputChange.Leave;
 
         public override string CannotSaveMessage => ProjectLocales.MessageMissingObsSetting;
         public override string ActionTypeName => ProjectLocales.ObsStudioAction;
@@ -88,6 +107,8 @@ namespace AutoActions.Profiles.Actions
                     parts.Add($"{ProjectLocales.ObsSceneCollection}: {SceneCollectionName}");
                 if (!string.IsNullOrWhiteSpace(SceneName))
                     parts.Add($"{ProjectLocales.ObsScene}: {SceneName}");
+                if (ReplayBuffer != ObsOutputChange.Leave)
+                    parts.Add($"{ProjectLocales.ObsReplayBuffer}: {(ReplayBuffer == ObsOutputChange.Start ? ProjectLocales.ObsOutputStart : ProjectLocales.ObsOutputStop)}");
                 return $"[{string.Join(", ", parts)}]";
             }
         }
@@ -122,6 +143,7 @@ namespace AutoActions.Profiles.Actions
                     CurrentProfile = snapshot.CurrentProfile;
                     CurrentSceneCollection = snapshot.CurrentSceneCollection;
                     CurrentScene = snapshot.CurrentScene;
+                    ReplayBufferRunning = snapshot.ReplayBufferRunning;
                     RefreshStatus = string.Empty;
                 }
                 finally
@@ -136,7 +158,7 @@ namespace AutoActions.Profiles.Actions
             try
             {
                 string error;
-                if (ObsStudio.Apply(ProfileName, SceneCollectionName, SceneName, WaitForObsSeconds,
+                if (ObsStudio.Apply(ProfileName, SceneCollectionName, SceneName, ReplayBuffer, WaitForObsSeconds,
                         message => CallNewLog(new LogEntry(message)), out error))
                     return new ActionEndResult(true);
 
