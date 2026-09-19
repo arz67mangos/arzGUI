@@ -17,11 +17,15 @@
   <DataTemplate DataType="{x:Type actions:ObsStudioAction}"><TextBlock FontFamily="{StaticResource IconFont}" Text="&#xE714;"/></DataTemplate>
   <DataTemplate x:Key="ProfileActionItemTemplate">
    <Border Height="66" Margin="0,4" Padding="10,7" CornerRadius="{StaticResource SmallCornerRadius}" Background="{DynamicResource GlassRaisedBrush}" BorderBrush="{DynamicResource GlassStrokeBrush}" BorderThickness="1">
-    <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="34"/><ColumnDefinition Width="*"/><ColumnDefinition Width="36"/><ColumnDefinition Width="36"/></Grid.ColumnDefinitions>
+    <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="34"/><ColumnDefinition Width="*"/><ColumnDefinition Width="26"/><ColumnDefinition Width="26"/><ColumnDefinition Width="36"/><ColumnDefinition Width="36"/></Grid.ColumnDefinitions>
      <ContentControl Content="{Binding}" FontSize="18" Foreground="{DynamicResource TextSecondaryBrush}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
      <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="7,0,8,0"><TextBlock Style="{StaticResource DefaultTextBlock}" Text="{Binding ActionTypeName}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" Margin="0"/><TextBlock Style="{StaticResource CaptionTextBlock}" Text="{Binding ActionDescription}" TextTrimming="CharacterEllipsis" ToolTip="{Binding ActionDescription}" Margin="0,3,0,0"/></StackPanel>
-     <Button Grid.Column="2" Style="{StaticResource ActionIconButton}" Content="&#xE712;" ToolTip="Edit action" AutomationProperties.Name="Edit action" Command="{Binding ElementName=ProfileList, Path=SelectedItem.EditProfileActionCommand}" CommandParameter="{Binding}"/>
-     <Button Grid.Column="3" Style="{StaticResource ActionDeleteButton}" Content="&#xE711;" ToolTip="Remove action" AutomationProperties.Name="Remove action" Command="{Binding ElementName=ProfileList, Path=SelectedItem.RemoveProfileActionCommand}" CommandParameter="{Binding}"/>
+     <!-- Order is what the actions run in, so it has to be changeable: an OBS action above the run
+          action that starts OBS waits for a program that is not there yet. -->
+     <Button Grid.Column="2" Style="{StaticResource ActionIconButton}" FontSize="12" Content="&#xE70E;" ToolTip="Move up" AutomationProperties.Name="Move action up" Command="{Binding ElementName=ProfileList, Path=SelectedItem.MoveProfileActionUpCommand}" CommandParameter="{Binding}"/>
+     <Button Grid.Column="3" Style="{StaticResource ActionIconButton}" FontSize="12" Content="&#xE70D;" ToolTip="Move down" AutomationProperties.Name="Move action down" Command="{Binding ElementName=ProfileList, Path=SelectedItem.MoveProfileActionDownCommand}" CommandParameter="{Binding}"/>
+     <Button Grid.Column="4" Style="{StaticResource ActionIconButton}" Content="&#xE712;" ToolTip="Edit action" AutomationProperties.Name="Edit action" Command="{Binding ElementName=ProfileList, Path=SelectedItem.EditProfileActionCommand}" CommandParameter="{Binding}"/>
+     <Button Grid.Column="5" Style="{StaticResource ActionDeleteButton}" Content="&#xE711;" ToolTip="Remove action" AutomationProperties.Name="Remove action" Command="{Binding ElementName=ProfileList, Path=SelectedItem.RemoveProfileActionCommand}" CommandParameter="{Binding}"/>
     </Grid>
    </Border>
   </DataTemplate>

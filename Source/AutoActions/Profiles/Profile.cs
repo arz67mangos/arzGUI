@@ -51,6 +51,8 @@ namespace AutoActions.Profiles
 
         public RelayCommand<ProfileActionBase> EditProfileActionCommand { get; private set; }
         public RelayCommand<ProfileActionBase> RemoveProfileActionCommand { get; private set; }
+        public RelayCommand<ProfileActionBase> MoveProfileActionUpCommand { get; private set; }
+        public RelayCommand<ProfileActionBase> MoveProfileActionDownCommand { get; private set; }
 
 
 
@@ -63,6 +65,8 @@ namespace AutoActions.Profiles
             AddLostFocusActionCommand = new RelayCommand(() => AddProfileAction(ProfileActionListType.LostFocus));
             EditProfileActionCommand = new RelayCommand<ProfileActionBase>((pa) => EditProfileAction(pa));
             RemoveProfileActionCommand = new RelayCommand<ProfileActionBase>((pa) => RemoveProfileAction(pa));
+            MoveProfileActionUpCommand = new RelayCommand<ProfileActionBase>((pa) => MoveProfileAction(pa, -1));
+            MoveProfileActionDownCommand = new RelayCommand<ProfileActionBase>((pa) => MoveProfileAction(pa, 1));
         }
 
         private Guid _guid = Guid.Empty;
@@ -195,6 +199,24 @@ namespace AutoActions.Profiles
                     return new ListOfProfileActions();
 
             }
+        }
+
+        /// <summary>
+        /// Moves an action one place up or down inside whichever list it is in. The order of a list is
+        /// the order the daemon runs it in, so this is not cosmetic: an OBS action placed above the
+        /// run action that starts OBS waits for a program that is not running yet. Moving off either
+        /// end does nothing. The collection change saves the settings by itself.
+        /// </summary>
+        public void MoveProfileAction(ProfileActionBase profileAction, int offset)
+        {
+            if (profileAction == null)
+                return;
+            ListOfProfileActions actions = GetProfileActions(GetProfileActionListType(profileAction));
+            int index = actions.IndexOf(profileAction);
+            int target = index + offset;
+            if (index < 0 || target < 0 || target >= actions.Count)
+                return;
+            actions.Move(index, target);
         }
 
         public void RemoveProfileAction(ProfileActionBase profileAction)

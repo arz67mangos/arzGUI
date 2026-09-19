@@ -82,6 +82,47 @@ static class SettingsRoundTrip
         RunProgramAction run = readProfile.ApplicationStarted.OfType<RunProgramAction>().FirstOrDefault();
         Check(run != null && run.OnlyIfNotRunning && run.RunAsAdministrator, "the run-program flags came back");
 
+        Console.WriteLine("== reordering actions, which is the order they run in ==");
+        Profile ordering = new Profile() { Name = "Ordering" };
+        ObsStudioAction first = new ObsStudioAction() { SceneName = "one" };
+        RunProgramAction second = new RunProgramAction() { FilePath = @"C:\Windows\System32\cmd.exe" };
+        ObsStudioAction third = new ObsStudioAction() { SceneName = "three" };
+        ordering.ApplicationStarted.Add(first);
+        ordering.ApplicationStarted.Add(second);
+        ordering.ApplicationStarted.Add(third);
+        // Also in another lane, to prove a move finds the list the action is actually in.
+        ordering.ApplicationClosed.Add(new ObsStudioAction() { SceneName = "closed" });
+
+        ordering.MoveProfileAction(third, -1);
+        Check(ordering.ApplicationStarted.IndexOf(third) == 1, "moving up swaps with the one above");
+        Check(ordering.ApplicationStarted.IndexOf(second) == 2, "and the one above comes down");
+        ordering.MoveProfileAction(third, 1);
+        Check(ordering.ApplicationStarted.IndexOf(third) == 2, "moving down puts it back");
+        ordering.MoveProfileAction(first, -1);
+        Check(ordering.ApplicationStarted.IndexOf(first) == 0, "moving the top one up does nothing");
+        ordering.MoveProfileAction(third, 1);
+        Check(ordering.ApplicationStarted.IndexOf(third) == 2, "moving the bottom one down does nothing");
+        Check(ordering.ApplicationClosed.Count == 1, "the other lane was not touched");
+        ordering.MoveProfileAction(null, -1);
+        Check(true, "moving nothing does not throw");
+
+        // Leaves the lane as: cmd, "one", "three".
+        ordering.MoveProfileAction(first, 1);
+        string orderPath = path + ".order";
+        UserAppSettings ordered = new UserAppSettings();
+        ordered.ApplicationProfiles.Add(ordering);
+        ordered.SaveSettings(orderPath);
+        Profile reread = UserAppSettings.ReadSettings(orderPath).ApplicationProfiles.FirstOrDefault();
+        Check(reread != null && reread.ApplicationStarted.Count == 3, "the lane comes back with all three");
+        if (reread != null && reread.ApplicationStarted.Count == 3)
+        {
+            string[] order = reread.ApplicationStarted
+                .Select(a => a is RunProgramAction ? "cmd" : ((ObsStudioAction)a).SceneName).ToArray();
+            Check(order[0] == "cmd" && order[1] == "one" && order[2] == "three",
+                "in the order it was left in: " + string.Join(", ", order));
+        }
+        File.Delete(orderPath);
+
         Console.WriteLine("== a settings file written before these existed ==");
         string olderPath = path + ".older";
         string older = Regex.Replace(File.ReadAllText(path),

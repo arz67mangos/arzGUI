@@ -114,6 +114,9 @@ AutoActions and by ArzFlow (the fork's previous name) load unchanged.
 - **Quick settings.** A page for driving display colour, audio devices, mic monitoring and HDR by
   hand, without building a profile. Any combination can be saved as a named preset.
 - **Action shortcuts.** Any profile action can be bound to a global hotkey and run on demand.
+- **Actions run in the order you put them in, and that order is editable.** Each row has move up and
+  move down buttons, because the order is not cosmetic — an OBS action above the run action that
+  starts OBS would sit waiting for a program that is not running yet.
 - **A redesigned UI with light and dark themes.** Design tokens, a left sidebar, card-based Status
   page, proper hover/pressed/focus/disabled states everywhere. The theme follows Windows by default
   and can be forced in Settings.
