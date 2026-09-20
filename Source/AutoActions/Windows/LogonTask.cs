@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
@@ -191,9 +191,12 @@ namespace AutoActions.Windows
                         UseShellExecute = false,
                         RedirectStandardOutput = true,
                         RedirectStandardError = true,
-                        CreateNoWindow = true,
-                        // /xml comes back as UTF-16 when it is redirected.
-                        StandardOutputEncoding = Encoding.Unicode
+                        CreateNoWindow = true
+                        // No StandardOutputEncoding: /xml declares UTF-16 but writes the console's
+                        // own code page, so the default - which is that same code page - is the one
+                        // that reads it back. Forcing Unicode here turned every task into mojibake,
+                        // the Command element never matched, and a task that had just been
+                        // registered read as "no task", which is what left the box unticked.
                     };
                     process.Start();
                     output = process.StandardOutput.ReadToEnd();

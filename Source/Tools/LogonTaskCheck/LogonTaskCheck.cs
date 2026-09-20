@@ -80,7 +80,22 @@ static class LogonTaskCheck
                 "and a broken definition fails earlier, at the XML: " + broken.Trim().Split('\n')[0]);
             File.Delete(path);
             Check(Query(ProbeName).Length == 0, "nothing was registered");
-            Console.WriteLine("  (run this elevated to cover registering the task for real)");
+
+            // Everything above the rights check can be exercised without them except reading a task
+            // back, which is where this went wrong: registering at LeastPrivilege needs no rights and
+            // is otherwise the same definition, so the decoding of the answer is covered either way.
+            Console.WriteLine("== reading back a task that really exists ==");
+            File.WriteAllText(path, xml.Replace("HighestAvailable", "LeastPrivilege"), Encoding.Unicode);
+            Check(Schtasks("/create /tn \"" + ProbeName + "\" /xml \"" + path + "\" /f") == 0,
+                "registered an unelevated copy of the same definition");
+            File.Delete(path);
+            Match read = Regex.Match(Query(ProbeName), "<Command>(.*?)</Command>", RegexOptions.Singleline);
+            Check(read.Success, "the answer is readable text, not mojibake from the wrong encoding");
+            Check(read.Success && read.Groups[1].Value.Trim().Trim('"').Equals(program, StringComparison.OrdinalIgnoreCase),
+                "and it names the program the definition named");
+            Check(Schtasks("/delete /tn \"" + ProbeName + "\" /f") == 0, "the probe task is removed");
+
+            Console.WriteLine("  (run this elevated to cover registering an elevated task for real)");
             return Finish();
         }
 
@@ -163,8 +178,9 @@ static class LogonTaskCheck
                 UseShellExecute = false,
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
-                CreateNoWindow = true,
-                StandardOutputEncoding = Encoding.Unicode
+                CreateNoWindow = true
+                // Deliberately the default: schtasks /xml declares UTF-16 and writes the console
+                // code page. Reading it as Unicode is the bug this check exists to catch.
             };
             process.Start();
             output = process.StandardOutput.ReadToEnd();
